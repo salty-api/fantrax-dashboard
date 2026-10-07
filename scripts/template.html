@@ -54,6 +54,24 @@ select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-
 .heat td:first-child, .heat th:first-child { text-align: left; }
 input.search { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 8px 12px; font-size: 14px; font-family: inherit; width: 340px; max-width: 100%; }
 img.face { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; object-position: top; vertical-align: middle; margin-right: 8px; background: #1e293b; }
+img.face.xl { width: 150px; height: 150px; margin: 0 28px 0 0; border: 3px solid #f97316; flex-shrink: 0; background: #1e293b; }
+.hero { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 8px 0 28px; }
+.hname { font-size: 34px; font-weight: 700; color: #f8fafc; line-height: 1.1; }
+.hmeta { font-size: 14px; color: #94a3b8; margin-top: 6px; }
+.hnow { font-size: 13px; color: #cbd5e1; margin-top: 10px; display: flex; align-items: center; }
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; }
+.stat { background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 10px; text-align: center; }
+.stat.hl { border-color: #f97316; }
+.stat .sv { font-size: 22px; font-weight: 700; color: #f8fafc; font-variant-numeric: tabular-nums; }
+.stat .sk { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-top: 4px; }
+.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.tl { background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; }
+.tl.empty { opacity: .45; }
+.tls { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
+.tlo { display: flex; align-items: center; gap: 0; margin-bottom: 6px; }
+.tlo .logo { width: 34px; height: 34px; margin-right: 10px; border-radius: 7px; }
+.pick { font-size: 11px; color: #fb923c; font-weight: 600; margin-top: 4px; }
+@media (max-width: 800px) { img.face.xl { width: 100px; height: 100px; margin-right: 16px; } .hname { font-size: 26px; } }
 img.face.lg { width: 72px; height: 72px; margin: 0 16px 0 0; border: 2px solid #1e293b; }
 .hdr { display: flex; align-items: center; margin-bottom: 4px; }
 button.share { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 8px 14px; font-size: 13px; font-family: inherit; cursor: pointer; margin-left: 4px; }
@@ -284,7 +302,7 @@ function goR() { location.hash = 'rivalry/' + encodeURIComponent(document.getEle
 /* ---------- Weekly Recap ---------- */
 const pname = pid => (D.players[pid] || ['#' + pid, ''])[0];
 const ppos = pid => (D.players[pid] || ['', ''])[1];
-const face = (pid, lg) => D.heads[pid] ? `<img class="face${lg ? ' lg' : ''}" src="https://fantraximg.com/si/headshots/NBA/hs${pid}_96_${D.heads[pid]}.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">` : '';
+const face = (pid, lg) => D.heads[pid] ? `<img class="face${lg === 2 ? ' xl' : lg ? ' lg' : ''}" src="https://fantraximg.com/si/headshots/NBA/hs${pid}_96_${D.heads[pid]}.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">` : '';
 const plink = pid => `${face(pid)}<a class="pl" href="#whohas/${pid}">${pname(pid)}</a>`;
 const pwSeasons = [...new Set(D.pw.map(x => x[0]))].sort();
 function wkLabel(season, wk) {
@@ -384,21 +402,31 @@ function viewWho(pid) {
   const bySeason = {}; st.forEach(x => (bySeason[x[0]] = bySeason[x[0]] || []).push(x));
   const cnt = {}; Object.values(bySeason).forEach(v => [...new Set(v.map(x => x[1]))].forEach(o => cnt[o] = (cnt[o] || 0) + 1));
   const nowS = D.seasonsAll[D.seasonsAll.length - 1], now = (bySeason[nowS] || []).slice(-1)[0];
-  return `<div class="hdr">${face(pid, 1)}<div><h1>${pname(pid)}</h1><div class="subtitle" style="margin-bottom:0">${ppos(pid) || 'Player'} · ${now ? 'Currently on ' + now[1] + ' (' + nowS + ')' : 'Not rostered in ' + nowS}</div></div></div><div style="height:20px"></div>${box}
-  <div class="grid"><div class="card"><div class="v">${Object.keys(cnt).length}</div><div class="k">Owners</div></div>
-  <div class="card"><div class="v">${Object.keys(bySeason).length}</div><div class="k">Seasons rostered</div></div>
-  <div class="card"><div class="v">${pk.length}</div><div class="k">Times drafted</div></div></div>
-  <div class="two"><div class="section"><div class="section-title">Ownership by season</div>` + T([
-    {h: 'Season', k: x => x[0], v: x => x[0] + String(x[2]).padStart(2, '0')},
-    {h: 'Owner', k: x => ownerLink(x[1]), v: x => x[1]},
-    {h: 'When', k: x => stintLabel(x[0], x[2], x[3]), v: x => x[2], num: 1},
-  ], st) + `</div><div class="section"><div class="section-title">Draft history</div>` + (pk.length ? T([
-    {h: 'Season', k: x => x[0], v: x => x[0]},
-    {h: 'Drafted by', k: x => ownerLink(x[1]), v: x => x[1]},
-    {h: 'Round', k: x => x[2], v: x => x[2], num: 1},
-    {h: 'Pick', k: x => x[3], v: x => x[3], num: 1},
-  ], pk) : '<div class="mute">Never drafted (pickup only).</div>') +
-  `<div class="section-title" style="margin-top:28px">Seasons per owner</div>` + Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([o, n]) => `<span class="stint">${ownerCell(o)}&nbsp;<span class="mute">${n}</span></span>`).join('') + `</div></div>`;
+  const S = D.stats[pid], sTag = (k, v, hl) => `<div class="stat ${hl ? 'hl' : ''}"><div class="sv">${v}</div><div class="sk">${k}</div></div>`;
+  const pickOf = (se, o) => (pk.find(x => x[0] === se && x[1] === o) || null);
+  const cards = D.seasonsAll.map(se => {
+    const v = bySeason[se];
+    if (!v) return `<div class="tl empty"><div class="tls">${se}</div><div class="mute" style="font-size:12px;margin-top:14px">Not rostered</div></div>`;
+    return `<div class="tl"><div class="tls">${se}</div>` + v.map(x => {
+      const dp = pickOf(se, x[1]);
+      return `<div class="tlo">${logo(x[1])}<div><div class="name">${x[1]}</div><div class="mute" style="font-size:11px">${stintLabel(se, x[2], x[3])}</div></div></div>` +
+        (dp && x === v[0] ? `<div class="pick">Drafted R${dp[2]} · #${dp[3]}</div>` : '');
+    }).join('') + '</div>';
+  }).join('');
+  return `<div class="hero">${face(pid, 2)}<div class="hinfo"><div class="hname">${pname(pid)}</div>
+    <div class="hmeta">${[ppos(pid), S && S.tm && S.tm !== '(N/A)' ? S.tm : ''].filter(Boolean).join(' · ')}</div>
+    <div class="hnow">${now ? 'Currently on ' + ownerCell(now[1]) + ' &nbsp;<span class="mute">(' + nowS + (D.seasons.includes(nowS) ? '' : ' roster') + ')</span>' : '<span class="mute">Not rostered in ' + nowS + '</span>'}</div>
+    <div style="margin-top:14px">${box.replace('class="controls"', 'class="controls" style="margin:0"')}</div></div></div>
+  ${S && S.g ? `<div class="section"><div class="section-title">${D.statsSeason} season · per game</div><div class="stats">
+    ${sTag('FP rank', '#' + S.rk, 1)}${sTag('FPts', f0(S.fpts))}${sTag('FP/G', S.fpg.toFixed(1))}${sTag('Games', S.g)}
+    ${sTag('PTS', S.pts.toFixed(1))}${sTag('REB', S.reb.toFixed(1))}${sTag('AST', S.ast.toFixed(1))}${sTag('STL', S.st.toFixed(1))}${sTag('BLK', S.blk.toFixed(1))}${sTag('TO', S.to.toFixed(1))}
+  </div></div>` : `<div class="section"><div class="section-title">${D.statsSeason} season</div><div class="mute">No ${D.statsSeason} stats (did not play).</div></div>`}
+  <div class="section"><div class="section-title">Ownership timeline</div><div class="timeline">${cards}</div></div>
+  <div class="section"><div class="section-title">Owners all-time</div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">
+    <div class="card"><div class="v">${Object.keys(cnt).length}</div><div class="k">Different owners</div></div>
+    <div class="card"><div class="v">${Object.keys(bySeason).length}</div><div class="k">Seasons rostered</div></div>
+    <div class="card"><div class="v">${pk.length}</div><div class="k">Times drafted</div></div></div>` +
+    Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([o, n]) => `<span class="stint">${ownerCell(o)}&nbsp;<span class="mute">${n} season${n > 1 ? 's' : ''}</span></span>`).join('') + `</div>`;
 }
 function shareLink(btn, pid) {
   const base = location.protocol === 'file:' ? 'https://fantrax.whohashim.com/' : location.origin + location.pathname;

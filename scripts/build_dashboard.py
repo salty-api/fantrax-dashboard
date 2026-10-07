@@ -111,7 +111,9 @@ def tracker_and_recap(standings, own, played):
         m = re.search(r"_96_(\d+)\.png", hs.get(pid, ""))
         if m:
             heads[pid] = m.group(1)
-    return {"players": players, "heads": heads, "stints": {k: stints[k] for k in pids if k in stints},
+    ps = json.load(open(D / "player_stats.json")) if (D / "player_stats.json").exists() else {}
+    stats = {k: v for k, v in ps.items() if k in players and k != "_season"}
+    return {"players": players, "heads": heads, "stats": stats, "statsSeason": ps.get("_season", ""), "stints": {k: stints[k] for k in pids if k in stints},
             "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw,
             "seasonsAll": sorted({r["season"] for r in standings})}
 
