@@ -1,0 +1,4 @@
+.fantrax_cookie
+*.cookie
+.env
+.DS_Store

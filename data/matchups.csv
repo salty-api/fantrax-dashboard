@@ -1,0 +1,580 @@
+season,phase,period,away,away_id,away_pts,home,home_id,home_pts
+2022-23,regular,1,BlackJack,rt1ug69sl97ijzno,1234.25,Xrossbone,xa5w57ngl93mbh2g,1210.25
+2022-23,regular,1,Bucky Conway,lax5yix5l97irroa,1201.25,Ejbuser,tnykxdccl93mdr11,1074.5
+2022-23,regular,1,Salty,pqp9fc6yl93j5xul,1321.75,Stephenrooney90,jk0ke7gol93k5zd7,1079.75
+2022-23,regular,1,picurtis,gl61mmryl93md0at,1185.25,RileyRojo,6bpping1l96ajun5,1297.0
+2022-23,regular,1,Guckien,nygi7tael97irroa,1143.75,tyhoward,ibf4yutil93mhju7,1247.5
+2022-23,regular,2,Xrossbone,xa5w57ngl93mbh2g,1330.5,Bucky Conway,lax5yix5l97irroa,1255.5
+2022-23,regular,2,BlackJack,rt1ug69sl97ijzno,1224.25,Salty,pqp9fc6yl93j5xul,1046.25
+2022-23,regular,2,Ejbuser,tnykxdccl93mdr11,1068.75,picurtis,gl61mmryl93md0at,1110.0
+2022-23,regular,2,Stephenrooney90,jk0ke7gol93k5zd7,1213.75,Guckien,nygi7tael97irroa,1052.75
+2022-23,regular,2,RileyRojo,6bpping1l96ajun5,1048.25,tyhoward,ibf4yutil93mhju7,1083.25
+2022-23,regular,3,Salty,pqp9fc6yl93j5xul,1171.5,Xrossbone,xa5w57ngl93mbh2g,1187.75
+2022-23,regular,3,picurtis,gl61mmryl93md0at,962.5,Bucky Conway,lax5yix5l97irroa,1213.0
+2022-23,regular,3,Guckien,nygi7tael97irroa,1267.25,BlackJack,rt1ug69sl97ijzno,1223.0
+2022-23,regular,3,tyhoward,ibf4yutil93mhju7,1239.0,Ejbuser,tnykxdccl93mdr11,1165.0
+2022-23,regular,3,RileyRojo,6bpping1l96ajun5,1259.75,Stephenrooney90,jk0ke7gol93k5zd7,1279.25
+2022-23,regular,4,Xrossbone,xa5w57ngl93mbh2g,941.0,picurtis,gl61mmryl93md0at,941.25
+2022-23,regular,4,Salty,pqp9fc6yl93j5xul,1006.75,Guckien,nygi7tael97irroa,1283.25
+2022-23,regular,4,Bucky Conway,lax5yix5l97irroa,1011.0,tyhoward,ibf4yutil93mhju7,966.25
+2022-23,regular,4,BlackJack,rt1ug69sl97ijzno,1072.0,RileyRojo,6bpping1l96ajun5,1018.5
+2022-23,regular,4,Ejbuser,tnykxdccl93mdr11,999.5,Stephenrooney90,jk0ke7gol93k5zd7,1025.75
+2022-23,regular,5,Guckien,nygi7tael97irroa,1087.0,Xrossbone,xa5w57ngl93mbh2g,1011.25
+2022-23,regular,5,tyhoward,ibf4yutil93mhju7,1029.75,picurtis,gl61mmryl93md0at,939.5
+2022-23,regular,5,RileyRojo,6bpping1l96ajun5,1056.75,Salty,pqp9fc6yl93j5xul,1162.25
+2022-23,regular,5,Stephenrooney90,jk0ke7gol93k5zd7,1296.5,Bucky Conway,lax5yix5l97irroa,1126.75
+2022-23,regular,5,Ejbuser,tnykxdccl93mdr11,1035.75,BlackJack,rt1ug69sl97ijzno,1047.5
+2022-23,regular,6,Xrossbone,xa5w57ngl93mbh2g,958.5,tyhoward,ibf4yutil93mhju7,1170.5
+2022-23,regular,6,Guckien,nygi7tael97irroa,1122.5,RileyRojo,6bpping1l96ajun5,1073.0
+2022-23,regular,6,picurtis,gl61mmryl93md0at,1195.75,Stephenrooney90,jk0ke7gol93k5zd7,1362.75
+2022-23,regular,6,Salty,pqp9fc6yl93j5xul,1164.0,Ejbuser,tnykxdccl93mdr11,1065.25
+2022-23,regular,6,Bucky Conway,lax5yix5l97irroa,1156.5,BlackJack,rt1ug69sl97ijzno,1393.25
+2022-23,regular,7,RileyRojo,6bpping1l96ajun5,1158.0,Xrossbone,xa5w57ngl93mbh2g,1281.25
+2022-23,regular,7,Stephenrooney90,jk0ke7gol93k5zd7,1247.0,tyhoward,ibf4yutil93mhju7,1148.5
+2022-23,regular,7,Ejbuser,tnykxdccl93mdr11,1085.75,Guckien,nygi7tael97irroa,1211.75
+2022-23,regular,7,BlackJack,rt1ug69sl97ijzno,1089.0,picurtis,gl61mmryl93md0at,1025.25
+2022-23,regular,7,Bucky Conway,lax5yix5l97irroa,988.75,Salty,pqp9fc6yl93j5xul,919.0
+2022-23,regular,8,Xrossbone,xa5w57ngl93mbh2g,1128.25,Stephenrooney90,jk0ke7gol93k5zd7,1037.75
+2022-23,regular,8,RileyRojo,6bpping1l96ajun5,936.0,Ejbuser,tnykxdccl93mdr11,962.5
+2022-23,regular,8,tyhoward,ibf4yutil93mhju7,1000.5,BlackJack,rt1ug69sl97ijzno,1113.0
+2022-23,regular,8,Guckien,nygi7tael97irroa,1160.5,Bucky Conway,lax5yix5l97irroa,1210.25
+2022-23,regular,8,picurtis,gl61mmryl93md0at,1089.5,Salty,pqp9fc6yl93j5xul,1067.5
+2022-23,regular,9,Ejbuser,tnykxdccl93mdr11,1025.5,Xrossbone,xa5w57ngl93mbh2g,1062.25
+2022-23,regular,9,BlackJack,rt1ug69sl97ijzno,861.5,Stephenrooney90,jk0ke7gol93k5zd7,1077.25
+2022-23,regular,9,Bucky Conway,lax5yix5l97irroa,1119.75,RileyRojo,6bpping1l96ajun5,975.25
+2022-23,regular,9,Salty,pqp9fc6yl93j5xul,1058.25,tyhoward,ibf4yutil93mhju7,1491.0
+2022-23,regular,9,picurtis,gl61mmryl93md0at,1053.0,Guckien,nygi7tael97irroa,1211.5
+2022-23,regular,10,Xrossbone,xa5w57ngl93mbh2g,1079.5,BlackJack,rt1ug69sl97ijzno,894.75
+2022-23,regular,10,Ejbuser,tnykxdccl93mdr11,800.75,Bucky Conway,lax5yix5l97irroa,1030.25
+2022-23,regular,10,Stephenrooney90,jk0ke7gol93k5zd7,855.25,Salty,pqp9fc6yl93j5xul,1144.0
+2022-23,regular,10,RileyRojo,6bpping1l96ajun5,993.25,picurtis,gl61mmryl93md0at,896.75
+2022-23,regular,10,tyhoward,ibf4yutil93mhju7,1133.75,Guckien,nygi7tael97irroa,1171.0
+2022-23,regular,11,Bucky Conway,lax5yix5l97irroa,1351.0,Xrossbone,xa5w57ngl93mbh2g,1441.5
+2022-23,regular,11,Salty,pqp9fc6yl93j5xul,1226.75,BlackJack,rt1ug69sl97ijzno,1221.0
+2022-23,regular,11,picurtis,gl61mmryl93md0at,1453.0,Ejbuser,tnykxdccl93mdr11,1381.5
+2022-23,regular,11,Guckien,nygi7tael97irroa,1284.75,Stephenrooney90,jk0ke7gol93k5zd7,1088.5
+2022-23,regular,11,tyhoward,ibf4yutil93mhju7,1398.0,RileyRojo,6bpping1l96ajun5,1204.0
+2022-23,regular,12,Xrossbone,xa5w57ngl93mbh2g,958.75,Salty,pqp9fc6yl93j5xul,1035.0
+2022-23,regular,12,Bucky Conway,lax5yix5l97irroa,1223.5,picurtis,gl61mmryl93md0at,979.0
+2022-23,regular,12,BlackJack,rt1ug69sl97ijzno,1082.25,Guckien,nygi7tael97irroa,909.75
+2022-23,regular,12,Ejbuser,tnykxdccl93mdr11,1181.0,tyhoward,ibf4yutil93mhju7,1314.5
+2022-23,regular,12,Stephenrooney90,jk0ke7gol93k5zd7,1060.25,RileyRojo,6bpping1l96ajun5,1175.25
+2022-23,regular,13,picurtis,gl61mmryl93md0at,1195.25,Xrossbone,xa5w57ngl93mbh2g,1206.5
+2022-23,regular,13,Guckien,nygi7tael97irroa,1194.75,Salty,pqp9fc6yl93j5xul,1318.0
+2022-23,regular,13,tyhoward,ibf4yutil93mhju7,1302.25,Bucky Conway,lax5yix5l97irroa,1132.0
+2022-23,regular,13,RileyRojo,6bpping1l96ajun5,1243.25,BlackJack,rt1ug69sl97ijzno,1173.75
+2022-23,regular,13,Stephenrooney90,jk0ke7gol93k5zd7,1091.5,Ejbuser,tnykxdccl93mdr11,1226.75
+2022-23,regular,14,Xrossbone,xa5w57ngl93mbh2g,1212.5,Guckien,nygi7tael97irroa,1196.75
+2022-23,regular,14,picurtis,gl61mmryl93md0at,1051.25,tyhoward,ibf4yutil93mhju7,1161.5
+2022-23,regular,14,Salty,pqp9fc6yl93j5xul,1003.0,RileyRojo,6bpping1l96ajun5,960.75
+2022-23,regular,14,Bucky Conway,lax5yix5l97irroa,1082.75,Stephenrooney90,jk0ke7gol93k5zd7,1047.25
+2022-23,regular,14,BlackJack,rt1ug69sl97ijzno,978.25,Ejbuser,tnykxdccl93mdr11,1036.75
+2022-23,regular,15,tyhoward,ibf4yutil93mhju7,1198.5,Xrossbone,xa5w57ngl93mbh2g,1107.25
+2022-23,regular,15,RileyRojo,6bpping1l96ajun5,1029.75,Guckien,nygi7tael97irroa,1208.5
+2022-23,regular,15,Stephenrooney90,jk0ke7gol93k5zd7,1253.25,picurtis,gl61mmryl93md0at,1143.75
+2022-23,regular,15,Ejbuser,tnykxdccl93mdr11,1021.25,Salty,pqp9fc6yl93j5xul,1132.75
+2022-23,regular,15,BlackJack,rt1ug69sl97ijzno,916.0,Bucky Conway,lax5yix5l97irroa,1117.5
+2022-23,regular,16,Xrossbone,xa5w57ngl93mbh2g,954.75,RileyRojo,6bpping1l96ajun5,1083.75
+2022-23,regular,16,tyhoward,ibf4yutil93mhju7,1301.0,Stephenrooney90,jk0ke7gol93k5zd7,1285.75
+2022-23,regular,16,Guckien,nygi7tael97irroa,1086.5,Ejbuser,tnykxdccl93mdr11,1138.5
+2022-23,regular,16,picurtis,gl61mmryl93md0at,1052.25,BlackJack,rt1ug69sl97ijzno,929.5
+2022-23,regular,16,Salty,pqp9fc6yl93j5xul,1181.75,Bucky Conway,lax5yix5l97irroa,1089.0
+2022-23,regular,17,Stephenrooney90,jk0ke7gol93k5zd7,1200.5,Xrossbone,xa5w57ngl93mbh2g,1036.5
+2022-23,regular,17,Ejbuser,tnykxdccl93mdr11,1127.25,RileyRojo,6bpping1l96ajun5,1016.5
+2022-23,regular,17,BlackJack,rt1ug69sl97ijzno,1079.0,tyhoward,ibf4yutil93mhju7,1275.25
+2022-23,regular,17,Bucky Conway,lax5yix5l97irroa,1294.5,Guckien,nygi7tael97irroa,1047.75
+2022-23,regular,17,Salty,pqp9fc6yl93j5xul,1105.5,picurtis,gl61mmryl93md0at,998.75
+2022-23,regular,18,Xrossbone,xa5w57ngl93mbh2g,492.0,Ejbuser,tnykxdccl93mdr11,431.0
+2022-23,regular,18,Stephenrooney90,jk0ke7gol93k5zd7,389.0,BlackJack,rt1ug69sl97ijzno,479.0
+2022-23,regular,18,RileyRojo,6bpping1l96ajun5,427.75,Bucky Conway,lax5yix5l97irroa,248.0
+2022-23,regular,18,tyhoward,ibf4yutil93mhju7,482.75,Salty,pqp9fc6yl93j5xul,460.25
+2022-23,regular,18,Guckien,nygi7tael97irroa,345.5,picurtis,gl61mmryl93md0at,349.25
+2022-23,regular,19,BlackJack,rt1ug69sl97ijzno,694.25,Xrossbone,xa5w57ngl93mbh2g,845.25
+2022-23,regular,19,Bucky Conway,lax5yix5l97irroa,841.5,Ejbuser,tnykxdccl93mdr11,818.5
+2022-23,regular,19,Salty,pqp9fc6yl93j5xul,925.5,Stephenrooney90,jk0ke7gol93k5zd7,780.5
+2022-23,regular,19,picurtis,gl61mmryl93md0at,792.75,RileyRojo,6bpping1l96ajun5,779.0
+2022-23,regular,19,Guckien,nygi7tael97irroa,835.25,tyhoward,ibf4yutil93mhju7,862.5
+2022-23,regular,20,Xrossbone,xa5w57ngl93mbh2g,1013.0,Bucky Conway,lax5yix5l97irroa,1144.0
+2022-23,regular,20,BlackJack,rt1ug69sl97ijzno,1221.75,Salty,pqp9fc6yl93j5xul,1278.75
+2022-23,regular,20,Ejbuser,tnykxdccl93mdr11,1189.5,picurtis,gl61mmryl93md0at,1104.75
+2022-23,regular,20,Stephenrooney90,jk0ke7gol93k5zd7,1238.25,Guckien,nygi7tael97irroa,1261.25
+2022-23,regular,20,RileyRojo,6bpping1l96ajun5,1255.75,tyhoward,ibf4yutil93mhju7,1391.25
+2022-23,regular,21,Salty,pqp9fc6yl93j5xul,914.5,Xrossbone,xa5w57ngl93mbh2g,921.5
+2022-23,regular,21,picurtis,gl61mmryl93md0at,1219.0,Bucky Conway,lax5yix5l97irroa,1039.25
+2022-23,regular,21,Guckien,nygi7tael97irroa,1117.0,BlackJack,rt1ug69sl97ijzno,963.5
+2022-23,regular,21,tyhoward,ibf4yutil93mhju7,1228.0,Ejbuser,tnykxdccl93mdr11,1071.5
+2022-23,regular,21,RileyRojo,6bpping1l96ajun5,1212.0,Stephenrooney90,jk0ke7gol93k5zd7,1102.0
+2022-23,regular,22,Xrossbone,xa5w57ngl93mbh2g,1188.75,picurtis,gl61mmryl93md0at,855.75
+2022-23,regular,22,Salty,pqp9fc6yl93j5xul,1098.0,Guckien,nygi7tael97irroa,1222.5
+2022-23,regular,22,Bucky Conway,lax5yix5l97irroa,913.5,tyhoward,ibf4yutil93mhju7,1324.0
+2022-23,regular,22,BlackJack,rt1ug69sl97ijzno,1099.5,RileyRojo,6bpping1l96ajun5,1176.75
+2022-23,regular,22,Ejbuser,tnykxdccl93mdr11,1217.75,Stephenrooney90,jk0ke7gol93k5zd7,1122.5
+2022-23,playoff,2,Xrossbone,xa5w57ngl93mbh2g,929.5,tyhoward,ibf4yutil93mhju7,1014.75
+2022-23,playoff,1,Salty,pqp9fc6yl93j5xul,900.25,tyhoward,ibf4yutil93mhju7,1345.25
+2022-23,playoff,1,Bucky Conway,lax5yix5l97irroa,1036.5,Xrossbone,xa5w57ngl93mbh2g,1058.0
+2023-24,regular,1,Stephenrooney90,jixaa8l3lnvxil9y,1094.5,Guckien,b3jjri1ilnvxil9y,1180.0
+2023-24,regular,1,Xrossbone,eli9ckrglnvxil9y,1192.75,RileyRojo,n7acn7jolnvxil9y,1070.5
+2023-24,regular,1,Ejbuser,ts8qey4flnvxil9y,1095.75,Salty,qjg0vp84lnvxil9y,1192.75
+2023-24,regular,1,picurtis,y09j7i5alnvxil9y,1159.0,Bucky Conway,dljt8kz1lnvxil9y,1093.5
+2023-24,regular,1,BlackJack,po3bonl9lnvxil9y,1217.75,tyhoward,9duu1755lnvxil9y,1337.5
+2023-24,regular,2,Guckien,b3jjri1ilnvxil9y,1148.0,Xrossbone,eli9ckrglnvxil9y,1188.0
+2023-24,regular,2,Stephenrooney90,jixaa8l3lnvxil9y,997.5,Ejbuser,ts8qey4flnvxil9y,1199.5
+2023-24,regular,2,RileyRojo,n7acn7jolnvxil9y,1027.75,picurtis,y09j7i5alnvxil9y,1210.0
+2023-24,regular,2,Salty,qjg0vp84lnvxil9y,1322.25,BlackJack,po3bonl9lnvxil9y,1189.25
+2023-24,regular,2,Bucky Conway,dljt8kz1lnvxil9y,1059.25,tyhoward,9duu1755lnvxil9y,1181.0
+2023-24,regular,3,Ejbuser,ts8qey4flnvxil9y,855.0,Guckien,b3jjri1ilnvxil9y,871.25
+2023-24,regular,3,picurtis,y09j7i5alnvxil9y,1044.75,Xrossbone,eli9ckrglnvxil9y,1176.25
+2023-24,regular,3,BlackJack,po3bonl9lnvxil9y,976.25,Stephenrooney90,jixaa8l3lnvxil9y,875.25
+2023-24,regular,3,tyhoward,9duu1755lnvxil9y,981.75,RileyRojo,n7acn7jolnvxil9y,1106.0
+2023-24,regular,3,Bucky Conway,dljt8kz1lnvxil9y,903.0,Salty,qjg0vp84lnvxil9y,1124.5
+2023-24,regular,4,Guckien,b3jjri1ilnvxil9y,1299.5,picurtis,y09j7i5alnvxil9y,1275.0
+2023-24,regular,4,Ejbuser,ts8qey4flnvxil9y,1155.0,BlackJack,po3bonl9lnvxil9y,1196.75
+2023-24,regular,4,Xrossbone,eli9ckrglnvxil9y,1161.5,tyhoward,9duu1755lnvxil9y,1341.0
+2023-24,regular,4,Stephenrooney90,jixaa8l3lnvxil9y,1263.0,Bucky Conway,dljt8kz1lnvxil9y,941.25
+2023-24,regular,4,RileyRojo,n7acn7jolnvxil9y,1157.25,Salty,qjg0vp84lnvxil9y,1315.75
+2023-24,regular,5,BlackJack,po3bonl9lnvxil9y,1027.5,Guckien,b3jjri1ilnvxil9y,1248.5
+2023-24,regular,5,tyhoward,9duu1755lnvxil9y,1089.0,picurtis,y09j7i5alnvxil9y,1126.75
+2023-24,regular,5,Bucky Conway,dljt8kz1lnvxil9y,1043.5,Ejbuser,ts8qey4flnvxil9y,1154.0
+2023-24,regular,5,Salty,qjg0vp84lnvxil9y,1232.25,Xrossbone,eli9ckrglnvxil9y,1180.0
+2023-24,regular,5,RileyRojo,n7acn7jolnvxil9y,1140.75,Stephenrooney90,jixaa8l3lnvxil9y,1118.75
+2023-24,regular,6,Guckien,b3jjri1ilnvxil9y,1122.5,tyhoward,9duu1755lnvxil9y,1053.25
+2023-24,regular,6,BlackJack,po3bonl9lnvxil9y,922.25,Bucky Conway,dljt8kz1lnvxil9y,1081.75
+2023-24,regular,6,picurtis,y09j7i5alnvxil9y,914.25,Salty,qjg0vp84lnvxil9y,988.0
+2023-24,regular,6,Ejbuser,ts8qey4flnvxil9y,1130.0,RileyRojo,n7acn7jolnvxil9y,925.75
+2023-24,regular,6,Xrossbone,eli9ckrglnvxil9y,1137.75,Stephenrooney90,jixaa8l3lnvxil9y,1080.25
+2023-24,regular,7,Bucky Conway,dljt8kz1lnvxil9y,882.25,Guckien,b3jjri1ilnvxil9y,972.75
+2023-24,regular,7,Salty,qjg0vp84lnvxil9y,823.0,tyhoward,9duu1755lnvxil9y,1051.75
+2023-24,regular,7,RileyRojo,n7acn7jolnvxil9y,950.75,BlackJack,po3bonl9lnvxil9y,864.0
+2023-24,regular,7,Stephenrooney90,jixaa8l3lnvxil9y,916.5,picurtis,y09j7i5alnvxil9y,917.0
+2023-24,regular,7,Xrossbone,eli9ckrglnvxil9y,1129.25,Ejbuser,ts8qey4flnvxil9y,955.25
+2023-24,regular,8,Guckien,b3jjri1ilnvxil9y,1234.0,Salty,qjg0vp84lnvxil9y,1132.5
+2023-24,regular,8,Bucky Conway,dljt8kz1lnvxil9y,1343.25,RileyRojo,n7acn7jolnvxil9y,1455.25
+2023-24,regular,8,tyhoward,9duu1755lnvxil9y,1149.75,Stephenrooney90,jixaa8l3lnvxil9y,1268.5
+2023-24,regular,8,BlackJack,po3bonl9lnvxil9y,1257.25,Xrossbone,eli9ckrglnvxil9y,1428.75
+2023-24,regular,8,picurtis,y09j7i5alnvxil9y,1258.5,Ejbuser,ts8qey4flnvxil9y,1064.0
+2023-24,regular,9,RileyRojo,n7acn7jolnvxil9y,1243.5,Guckien,b3jjri1ilnvxil9y,1184.75
+2023-24,regular,9,Stephenrooney90,jixaa8l3lnvxil9y,1151.5,Salty,qjg0vp84lnvxil9y,1056.5
+2023-24,regular,9,Xrossbone,eli9ckrglnvxil9y,1227.75,Bucky Conway,dljt8kz1lnvxil9y,1026.5
+2023-24,regular,9,Ejbuser,ts8qey4flnvxil9y,986.25,tyhoward,9duu1755lnvxil9y,1053.0
+2023-24,regular,9,picurtis,y09j7i5alnvxil9y,847.25,BlackJack,po3bonl9lnvxil9y,1091.25
+2023-24,regular,10,Guckien,b3jjri1ilnvxil9y,1167.75,Stephenrooney90,jixaa8l3lnvxil9y,1140.5
+2023-24,regular,10,RileyRojo,n7acn7jolnvxil9y,1254.75,Xrossbone,eli9ckrglnvxil9y,1396.75
+2023-24,regular,10,Salty,qjg0vp84lnvxil9y,1277.25,Ejbuser,ts8qey4flnvxil9y,1253.0
+2023-24,regular,10,Bucky Conway,dljt8kz1lnvxil9y,1242.75,picurtis,y09j7i5alnvxil9y,1054.75
+2023-24,regular,10,tyhoward,9duu1755lnvxil9y,1305.25,BlackJack,po3bonl9lnvxil9y,1197.5
+2023-24,regular,11,Xrossbone,eli9ckrglnvxil9y,1265.0,Guckien,b3jjri1ilnvxil9y,1243.0
+2023-24,regular,11,Ejbuser,ts8qey4flnvxil9y,1137.5,Stephenrooney90,jixaa8l3lnvxil9y,1186.5
+2023-24,regular,11,picurtis,y09j7i5alnvxil9y,1151.0,RileyRojo,n7acn7jolnvxil9y,1307.75
+2023-24,regular,11,BlackJack,po3bonl9lnvxil9y,1121.0,Salty,qjg0vp84lnvxil9y,1093.25
+2023-24,regular,11,tyhoward,9duu1755lnvxil9y,1274.5,Bucky Conway,dljt8kz1lnvxil9y,1097.0
+2023-24,regular,12,Guckien,b3jjri1ilnvxil9y,1409.25,Ejbuser,ts8qey4flnvxil9y,1274.5
+2023-24,regular,12,Xrossbone,eli9ckrglnvxil9y,1352.0,picurtis,y09j7i5alnvxil9y,1036.75
+2023-24,regular,12,Stephenrooney90,jixaa8l3lnvxil9y,1122.5,BlackJack,po3bonl9lnvxil9y,976.0
+2023-24,regular,12,RileyRojo,n7acn7jolnvxil9y,1135.0,tyhoward,9duu1755lnvxil9y,1162.75
+2023-24,regular,12,Salty,qjg0vp84lnvxil9y,1123.5,Bucky Conway,dljt8kz1lnvxil9y,1112.75
+2023-24,regular,13,picurtis,y09j7i5alnvxil9y,1120.5,Guckien,b3jjri1ilnvxil9y,1116.25
+2023-24,regular,13,BlackJack,po3bonl9lnvxil9y,967.75,Ejbuser,ts8qey4flnvxil9y,906.0
+2023-24,regular,13,tyhoward,9duu1755lnvxil9y,1209.25,Xrossbone,eli9ckrglnvxil9y,1213.75
+2023-24,regular,13,Bucky Conway,dljt8kz1lnvxil9y,904.5,Stephenrooney90,jixaa8l3lnvxil9y,1170.5
+2023-24,regular,13,Salty,qjg0vp84lnvxil9y,1233.25,RileyRojo,n7acn7jolnvxil9y,1289.25
+2023-24,regular,14,Guckien,b3jjri1ilnvxil9y,1452.25,BlackJack,po3bonl9lnvxil9y,1136.25
+2023-24,regular,14,picurtis,y09j7i5alnvxil9y,1278.5,tyhoward,9duu1755lnvxil9y,1380.25
+2023-24,regular,14,Ejbuser,ts8qey4flnvxil9y,1257.25,Bucky Conway,dljt8kz1lnvxil9y,1269.25
+2023-24,regular,14,Xrossbone,eli9ckrglnvxil9y,1273.25,Salty,qjg0vp84lnvxil9y,1197.5
+2023-24,regular,14,Stephenrooney90,jixaa8l3lnvxil9y,1263.0,RileyRojo,n7acn7jolnvxil9y,1238.5
+2023-24,regular,15,tyhoward,9duu1755lnvxil9y,1226.5,Guckien,b3jjri1ilnvxil9y,1216.5
+2023-24,regular,15,Bucky Conway,dljt8kz1lnvxil9y,1176.75,BlackJack,po3bonl9lnvxil9y,955.5
+2023-24,regular,15,Salty,qjg0vp84lnvxil9y,1166.25,picurtis,y09j7i5alnvxil9y,1131.25
+2023-24,regular,15,RileyRojo,n7acn7jolnvxil9y,1073.0,Ejbuser,ts8qey4flnvxil9y,1025.75
+2023-24,regular,15,Stephenrooney90,jixaa8l3lnvxil9y,1132.5,Xrossbone,eli9ckrglnvxil9y,1277.5
+2023-24,regular,16,Guckien,b3jjri1ilnvxil9y,1095.5,Bucky Conway,dljt8kz1lnvxil9y,1232.5
+2023-24,regular,16,tyhoward,9duu1755lnvxil9y,1175.0,Salty,qjg0vp84lnvxil9y,1332.5
+2023-24,regular,16,BlackJack,po3bonl9lnvxil9y,1261.0,RileyRojo,n7acn7jolnvxil9y,1135.5
+2023-24,regular,16,picurtis,y09j7i5alnvxil9y,927.5,Stephenrooney90,jixaa8l3lnvxil9y,1135.25
+2023-24,regular,16,Ejbuser,ts8qey4flnvxil9y,1205.75,Xrossbone,eli9ckrglnvxil9y,1397.25
+2023-24,regular,17,Salty,qjg0vp84lnvxil9y,531.5,Guckien,b3jjri1ilnvxil9y,637.0
+2023-24,regular,17,RileyRojo,n7acn7jolnvxil9y,566.0,Bucky Conway,dljt8kz1lnvxil9y,398.0
+2023-24,regular,17,Stephenrooney90,jixaa8l3lnvxil9y,543.25,tyhoward,9duu1755lnvxil9y,491.75
+2023-24,regular,17,Xrossbone,eli9ckrglnvxil9y,500.75,BlackJack,po3bonl9lnvxil9y,408.75
+2023-24,regular,17,Ejbuser,ts8qey4flnvxil9y,586.5,picurtis,y09j7i5alnvxil9y,501.5
+2023-24,regular,18,Guckien,b3jjri1ilnvxil9y,960.5,RileyRojo,n7acn7jolnvxil9y,1025.0
+2023-24,regular,18,Salty,qjg0vp84lnvxil9y,966.75,Stephenrooney90,jixaa8l3lnvxil9y,904.25
+2023-24,regular,18,Bucky Conway,dljt8kz1lnvxil9y,672.0,Xrossbone,eli9ckrglnvxil9y,954.5
+2023-24,regular,18,tyhoward,9duu1755lnvxil9y,980.5,Ejbuser,ts8qey4flnvxil9y,1119.25
+2023-24,regular,18,BlackJack,po3bonl9lnvxil9y,790.25,picurtis,y09j7i5alnvxil9y,932.0
+2023-24,regular,19,Stephenrooney90,jixaa8l3lnvxil9y,1114.25,Guckien,b3jjri1ilnvxil9y,1370.75
+2023-24,regular,19,Xrossbone,eli9ckrglnvxil9y,1322.75,RileyRojo,n7acn7jolnvxil9y,1192.5
+2023-24,regular,19,Ejbuser,ts8qey4flnvxil9y,1126.75,Salty,qjg0vp84lnvxil9y,1250.0
+2023-24,regular,19,picurtis,y09j7i5alnvxil9y,1192.5,Bucky Conway,dljt8kz1lnvxil9y,992.0
+2023-24,regular,19,BlackJack,po3bonl9lnvxil9y,1054.25,tyhoward,9duu1755lnvxil9y,1183.5
+2023-24,regular,20,Guckien,b3jjri1ilnvxil9y,1202.25,Xrossbone,eli9ckrglnvxil9y,1461.5
+2023-24,regular,20,Stephenrooney90,jixaa8l3lnvxil9y,1224.25,Ejbuser,ts8qey4flnvxil9y,1355.5
+2023-24,regular,20,RileyRojo,n7acn7jolnvxil9y,1417.75,picurtis,y09j7i5alnvxil9y,1115.0
+2023-24,regular,20,Salty,qjg0vp84lnvxil9y,1155.0,BlackJack,po3bonl9lnvxil9y,831.25
+2023-24,regular,20,Bucky Conway,dljt8kz1lnvxil9y,1074.5,tyhoward,9duu1755lnvxil9y,1208.75
+2023-24,regular,21,Ejbuser,ts8qey4flnvxil9y,1194.25,Guckien,b3jjri1ilnvxil9y,1158.25
+2023-24,regular,21,picurtis,y09j7i5alnvxil9y,1114.0,Xrossbone,eli9ckrglnvxil9y,1357.5
+2023-24,regular,21,BlackJack,po3bonl9lnvxil9y,672.25,Stephenrooney90,jixaa8l3lnvxil9y,1251.25
+2023-24,regular,21,tyhoward,9duu1755lnvxil9y,955.75,RileyRojo,n7acn7jolnvxil9y,1129.0
+2023-24,regular,21,Bucky Conway,dljt8kz1lnvxil9y,863.0,Salty,qjg0vp84lnvxil9y,1019.0
+2023-24,regular,22,Guckien,b3jjri1ilnvxil9y,1147.5,picurtis,y09j7i5alnvxil9y,1056.25
+2023-24,regular,22,Ejbuser,ts8qey4flnvxil9y,1165.0,BlackJack,po3bonl9lnvxil9y,851.25
+2023-24,regular,22,Xrossbone,eli9ckrglnvxil9y,1270.25,tyhoward,9duu1755lnvxil9y,959.25
+2023-24,regular,22,Stephenrooney90,jixaa8l3lnvxil9y,1096.75,Bucky Conway,dljt8kz1lnvxil9y,1162.5
+2023-24,regular,22,RileyRojo,n7acn7jolnvxil9y,1215.5,Salty,qjg0vp84lnvxil9y,948.75
+2023-24,regular,23,BlackJack,po3bonl9lnvxil9y,885.75,Guckien,b3jjri1ilnvxil9y,1315.75
+2023-24,regular,23,tyhoward,9duu1755lnvxil9y,1026.25,picurtis,y09j7i5alnvxil9y,1002.0
+2023-24,regular,23,Bucky Conway,dljt8kz1lnvxil9y,846.75,Ejbuser,ts8qey4flnvxil9y,1232.0
+2023-24,regular,23,Salty,qjg0vp84lnvxil9y,915.75,Xrossbone,eli9ckrglnvxil9y,1173.25
+2023-24,regular,23,RileyRojo,n7acn7jolnvxil9y,1197.5,Stephenrooney90,jixaa8l3lnvxil9y,1184.75
+2023-24,playoff,2,Salty,qjg0vp84lnvxil9y,995.5,RileyRojo,n7acn7jolnvxil9y,989.25
+2023-24,playoff,1,Salty,qjg0vp84lnvxil9y,1051.5,Xrossbone,eli9ckrglnvxil9y,999.75
+2023-24,playoff,1,Guckien,b3jjri1ilnvxil9y,1250.25,RileyRojo,n7acn7jolnvxil9y,1320.0
+2024-25,regular,1,T-How,f9yq112sm1whgxxs,1318.0,Rooney,ogxmjjovm1whgxxs,1250.5
+2024-25,regular,1,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1101.5,Salty,7jwjf6hgm1whgxxs,1360.75
+2024-25,regular,1,Philadephia Blackjacks,rr8dwgn0m1whgxxs,825.5,Conway,yn3jui7nm1whgxxs,1073.75
+2024-25,regular,1,Jackson,c2198rgtm1whgxxs,1109.25,Buser has Wemby,gxxp9rr0m1whgxxs,1292.25
+2024-25,regular,1,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1241.5,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1199.0
+2024-25,regular,2,Rooney,ogxmjjovm1whgxxs,1245.75,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1251.25
+2024-25,regular,2,T-How,f9yq112sm1whgxxs,1456.25,Philadephia Blackjacks,rr8dwgn0m1whgxxs,771.5
+2024-25,regular,2,Salty,7jwjf6hgm1whgxxs,1339.75,Jackson,c2198rgtm1whgxxs,1308.25
+2024-25,regular,2,Conway,yn3jui7nm1whgxxs,1256.25,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1168.5
+2024-25,regular,2,Buser has Wemby,gxxp9rr0m1whgxxs,1317.5,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1279.75
+2024-25,regular,3,Philadephia Blackjacks,rr8dwgn0m1whgxxs,656.5,Rooney,ogxmjjovm1whgxxs,1055.5
+2024-25,regular,3,Jackson,c2198rgtm1whgxxs,1064.75,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1069.75
+2024-25,regular,3,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1117.25,T-How,f9yq112sm1whgxxs,1219.75
+2024-25,regular,3,Riley’s Hefty Leftys,kom4opqfm1whgxxs,937.75,Salty,7jwjf6hgm1whgxxs,1213.0
+2024-25,regular,3,Buser has Wemby,gxxp9rr0m1whgxxs,1125.0,Conway,yn3jui7nm1whgxxs,1134.0
+2024-25,regular,4,Rooney,ogxmjjovm1whgxxs,1523.75,Jackson,c2198rgtm1whgxxs,1351.75
+2024-25,regular,4,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1008.5,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1259.5
+2024-25,regular,4,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1245.25,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1118.0
+2024-25,regular,4,T-How,f9yq112sm1whgxxs,1200.5,Buser has Wemby,gxxp9rr0m1whgxxs,1148.5
+2024-25,regular,4,Salty,7jwjf6hgm1whgxxs,1317.5,Conway,yn3jui7nm1whgxxs,1161.75
+2024-25,regular,5,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1252.75,Rooney,ogxmjjovm1whgxxs,1250.75
+2024-25,regular,5,Riley’s Hefty Leftys,kom4opqfm1whgxxs,854.0,Jackson,c2198rgtm1whgxxs,1065.25
+2024-25,regular,5,Buser has Wemby,gxxp9rr0m1whgxxs,1094.0,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1056.5
+2024-25,regular,5,Conway,yn3jui7nm1whgxxs,1206.0,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,902.5
+2024-25,regular,5,Salty,7jwjf6hgm1whgxxs,1035.75,T-How,f9yq112sm1whgxxs,1075.5
+2024-25,regular,6,Rooney,ogxmjjovm1whgxxs,1289.0,Riley’s Hefty Leftys,kom4opqfm1whgxxs,946.0
+2024-25,regular,6,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,884.25,Buser has Wemby,gxxp9rr0m1whgxxs,1099.25
+2024-25,regular,6,Jackson,c2198rgtm1whgxxs,1186.0,Conway,yn3jui7nm1whgxxs,1133.5
+2024-25,regular,6,Philadephia Blackjacks,rr8dwgn0m1whgxxs,758.0,Salty,7jwjf6hgm1whgxxs,1229.0
+2024-25,regular,6,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1171.0,T-How,f9yq112sm1whgxxs,1075.5
+2024-25,regular,7,Buser has Wemby,gxxp9rr0m1whgxxs,1157.25,Rooney,ogxmjjovm1whgxxs,1329.25
+2024-25,regular,7,Conway,yn3jui7nm1whgxxs,1127.25,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1124.75
+2024-25,regular,7,Salty,7jwjf6hgm1whgxxs,1169.75,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1051.0
+2024-25,regular,7,T-How,f9yq112sm1whgxxs,1320.75,Jackson,c2198rgtm1whgxxs,1276.5
+2024-25,regular,7,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,899.5,Philadephia Blackjacks,rr8dwgn0m1whgxxs,997.5
+2024-25,regular,8,Rooney,ogxmjjovm1whgxxs,793.75,Conway,yn3jui7nm1whgxxs,798.0
+2024-25,regular,8,Buser has Wemby,gxxp9rr0m1whgxxs,770.75,Salty,7jwjf6hgm1whgxxs,640.5
+2024-25,regular,8,Riley’s Hefty Leftys,kom4opqfm1whgxxs,663.25,T-How,f9yq112sm1whgxxs,705.75
+2024-25,regular,8,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,492.25,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,553.5
+2024-25,regular,8,Jackson,c2198rgtm1whgxxs,772.5,Philadephia Blackjacks,rr8dwgn0m1whgxxs,643.75
+2024-25,regular,9,Salty,7jwjf6hgm1whgxxs,1098.0,Rooney,ogxmjjovm1whgxxs,1088.0
+2024-25,regular,9,T-How,f9yq112sm1whgxxs,1035.5,Conway,yn3jui7nm1whgxxs,986.25
+2024-25,regular,9,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,945.25,Buser has Wemby,gxxp9rr0m1whgxxs,1066.25
+2024-25,regular,9,Philadephia Blackjacks,rr8dwgn0m1whgxxs,977.5,Riley’s Hefty Leftys,kom4opqfm1whgxxs,962.5
+2024-25,regular,9,Jackson,c2198rgtm1whgxxs,930.0,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,964.0
+2024-25,regular,10,Rooney,ogxmjjovm1whgxxs,964.75,T-How,f9yq112sm1whgxxs,1256.0
+2024-25,regular,10,Salty,7jwjf6hgm1whgxxs,1033.75,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,992.75
+2024-25,regular,10,Conway,yn3jui7nm1whgxxs,923.75,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1157.25
+2024-25,regular,10,Buser has Wemby,gxxp9rr0m1whgxxs,1050.75,Jackson,c2198rgtm1whgxxs,969.0
+2024-25,regular,10,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1143.5,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,901.75
+2024-25,regular,11,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1107.5,Rooney,ogxmjjovm1whgxxs,1204.0
+2024-25,regular,11,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1148.75,T-How,f9yq112sm1whgxxs,1291.5
+2024-25,regular,11,Jackson,c2198rgtm1whgxxs,1150.75,Salty,7jwjf6hgm1whgxxs,1061.75
+2024-25,regular,11,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1083.25,Conway,yn3jui7nm1whgxxs,1302.0
+2024-25,regular,11,Riley’s Hefty Leftys,kom4opqfm1whgxxs,870.5,Buser has Wemby,gxxp9rr0m1whgxxs,1356.5
+2024-25,regular,12,Rooney,ogxmjjovm1whgxxs,1221.0,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1052.0
+2024-25,regular,12,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1150.25,Jackson,c2198rgtm1whgxxs,1212.25
+2024-25,regular,12,T-How,f9yq112sm1whgxxs,1042.75,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,964.5
+2024-25,regular,12,Salty,7jwjf6hgm1whgxxs,1128.25,Riley’s Hefty Leftys,kom4opqfm1whgxxs,905.25
+2024-25,regular,12,Conway,yn3jui7nm1whgxxs,1063.75,Buser has Wemby,gxxp9rr0m1whgxxs,1126.25
+2024-25,regular,13,Jackson,c2198rgtm1whgxxs,1275.75,Rooney,ogxmjjovm1whgxxs,908.25
+2024-25,regular,13,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1112.5,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1140.75
+2024-25,regular,13,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1329.75,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1200.75
+2024-25,regular,13,Buser has Wemby,gxxp9rr0m1whgxxs,1288.5,T-How,f9yq112sm1whgxxs,1251.0
+2024-25,regular,13,Conway,yn3jui7nm1whgxxs,955.75,Salty,7jwjf6hgm1whgxxs,1089.75
+2024-25,regular,14,Rooney,ogxmjjovm1whgxxs,1250.75,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1065.5
+2024-25,regular,14,Jackson,c2198rgtm1whgxxs,1209.0,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1037.5
+2024-25,regular,14,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1023.5,Buser has Wemby,gxxp9rr0m1whgxxs,1080.75
+2024-25,regular,14,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1287.25,Conway,yn3jui7nm1whgxxs,1174.25
+2024-25,regular,14,T-How,f9yq112sm1whgxxs,1323.0,Salty,7jwjf6hgm1whgxxs,1339.75
+2024-25,regular,15,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1191.0,Rooney,ogxmjjovm1whgxxs,1144.5
+2024-25,regular,15,Buser has Wemby,gxxp9rr0m1whgxxs,1217.75,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,939.75
+2024-25,regular,15,Conway,yn3jui7nm1whgxxs,1121.75,Jackson,c2198rgtm1whgxxs,1062.5
+2024-25,regular,15,Salty,7jwjf6hgm1whgxxs,1169.75,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1093.5
+2024-25,regular,15,T-How,f9yq112sm1whgxxs,1267.75,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1215.0
+2024-25,regular,16,Rooney,ogxmjjovm1whgxxs,1137.25,Buser has Wemby,gxxp9rr0m1whgxxs,1254.5
+2024-25,regular,16,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1074.25,Conway,yn3jui7nm1whgxxs,1150.0
+2024-25,regular,16,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1019.0,Salty,7jwjf6hgm1whgxxs,1380.5
+2024-25,regular,16,Jackson,c2198rgtm1whgxxs,1084.75,T-How,f9yq112sm1whgxxs,1535.75
+2024-25,regular,16,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1278.25,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1045.75
+2024-25,regular,17,Conway,yn3jui7nm1whgxxs,669.25,Rooney,ogxmjjovm1whgxxs,528.75
+2024-25,regular,17,Salty,7jwjf6hgm1whgxxs,732.0,Buser has Wemby,gxxp9rr0m1whgxxs,599.0
+2024-25,regular,17,T-How,f9yq112sm1whgxxs,516.0,Riley’s Hefty Leftys,kom4opqfm1whgxxs,447.5
+2024-25,regular,17,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,482.75,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,391.25
+2024-25,regular,17,Philadephia Blackjacks,rr8dwgn0m1whgxxs,563.5,Jackson,c2198rgtm1whgxxs,532.25
+2024-25,regular,18,Rooney,ogxmjjovm1whgxxs,1022.75,Salty,7jwjf6hgm1whgxxs,1039.75
+2024-25,regular,18,Conway,yn3jui7nm1whgxxs,798.25,T-How,f9yq112sm1whgxxs,1019.25
+2024-25,regular,18,Buser has Wemby,gxxp9rr0m1whgxxs,938.5,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1101.25
+2024-25,regular,18,Riley’s Hefty Leftys,kom4opqfm1whgxxs,778.25,Philadephia Blackjacks,rr8dwgn0m1whgxxs,790.5
+2024-25,regular,18,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,942.0,Jackson,c2198rgtm1whgxxs,944.25
+2024-25,regular,19,T-How,f9yq112sm1whgxxs,1059.25,Rooney,ogxmjjovm1whgxxs,1134.0
+2024-25,regular,19,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1256.75,Salty,7jwjf6hgm1whgxxs,1211.5
+2024-25,regular,19,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1122.75,Conway,yn3jui7nm1whgxxs,1012.0
+2024-25,regular,19,Jackson,c2198rgtm1whgxxs,1164.0,Buser has Wemby,gxxp9rr0m1whgxxs,1070.5
+2024-25,regular,19,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1227.75,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1231.25
+2024-25,regular,20,Rooney,ogxmjjovm1whgxxs,1236.25,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1429.5
+2024-25,regular,20,T-How,f9yq112sm1whgxxs,1499.0,Philadephia Blackjacks,rr8dwgn0m1whgxxs,1158.5
+2024-25,regular,20,Salty,7jwjf6hgm1whgxxs,1219.25,Jackson,c2198rgtm1whgxxs,1237.75
+2024-25,regular,20,Conway,yn3jui7nm1whgxxs,996.5,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1206.0
+2024-25,regular,20,Buser has Wemby,gxxp9rr0m1whgxxs,1165.75,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1303.75
+2024-25,regular,21,Philadephia Blackjacks,rr8dwgn0m1whgxxs,881.25,Rooney,ogxmjjovm1whgxxs,1150.0
+2024-25,regular,21,Jackson,c2198rgtm1whgxxs,1181.5,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1242.5
+2024-25,regular,21,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1080.25,T-How,f9yq112sm1whgxxs,1355.25
+2024-25,regular,21,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1136.75,Salty,7jwjf6hgm1whgxxs,1089.25
+2024-25,regular,21,Buser has Wemby,gxxp9rr0m1whgxxs,1057.75,Conway,yn3jui7nm1whgxxs,1114.0
+2024-25,regular,22,Rooney,ogxmjjovm1whgxxs,880.25,Jackson,c2198rgtm1whgxxs,1204.25
+2024-25,regular,22,Philadephia Blackjacks,rr8dwgn0m1whgxxs,908.75,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,982.25
+2024-25,regular,22,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1198.0,Riley’s Hefty Leftys,kom4opqfm1whgxxs,901.0
+2024-25,regular,22,T-How,f9yq112sm1whgxxs,1049.0,Buser has Wemby,gxxp9rr0m1whgxxs,1092.75
+2024-25,regular,22,Salty,7jwjf6hgm1whgxxs,1032.0,Conway,yn3jui7nm1whgxxs,1012.5
+2024-25,regular,23,Pierson’s AutoDrafters,xj5wwgasm1whgxxs,1053.75,Rooney,ogxmjjovm1whgxxs,975.75
+2024-25,regular,23,Riley’s Hefty Leftys,kom4opqfm1whgxxs,1007.5,Jackson,c2198rgtm1whgxxs,1053.25
+2024-25,regular,23,Buser has Wemby,gxxp9rr0m1whgxxs,1061.0,Philadephia Blackjacks,rr8dwgn0m1whgxxs,821.25
+2024-25,regular,23,Conway,yn3jui7nm1whgxxs,1084.25,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1171.75
+2024-25,regular,23,Salty,7jwjf6hgm1whgxxs,1274.25,T-How,f9yq112sm1whgxxs,1235.0
+2024-25,playoff,2,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1161.25,T-How,f9yq112sm1whgxxs,924.0
+2024-25,playoff,1,Guckien & Giddey & KCP & Deni Avdija,61xrt1smm1whgxxs,1347.75,Salty,7jwjf6hgm1whgxxs,1095.25
+2024-25,playoff,1,Buser has Wemby,gxxp9rr0m1whgxxs,809.25,T-How,f9yq112sm1whgxxs,1197.75
+2025-26,regular,1,Blackjacks,q86f43pcmd8zja6k,1116.5,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1141.75
+2025-26,regular,1,Riley McElwembanyama,mm10q3fvmd8zja6j,1407.75,Salty’s Aspirations,nmbx4rkzmd8zja6m,1252.0
+2025-26,regular,1,HaliBuser,nmlbr2ppmd8zja6n,1227.25,Guckien,8htzhjs2md8zja6l,1223.75
+2025-26,regular,1,Jackson,mjm1574cmd8zja6n,1215.0,Conway,sha0v3f8md8zja6k,1136.25
+2025-26,regular,1,Rooney,qxb6cn3omd8zja6h,1238.25,T-How,7kj0njiwmd8zja6g,1283.25
+2025-26,regular,2,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1135.25,Riley McElwembanyama,mm10q3fvmd8zja6j,1076.5
+2025-26,regular,2,Blackjacks,q86f43pcmd8zja6k,1043.0,HaliBuser,nmlbr2ppmd8zja6n,1057.75
+2025-26,regular,2,Salty’s Aspirations,nmbx4rkzmd8zja6m,1240.0,Jackson,mjm1574cmd8zja6n,1266.75
+2025-26,regular,2,Guckien,8htzhjs2md8zja6l,1172.25,Rooney,qxb6cn3omd8zja6h,1088.0
+2025-26,regular,2,Conway,sha0v3f8md8zja6k,1177.0,T-How,7kj0njiwmd8zja6g,978.0
+2025-26,regular,3,HaliBuser,nmlbr2ppmd8zja6n,1247.75,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,977.75
+2025-26,regular,3,Jackson,mjm1574cmd8zja6n,1313.25,Riley McElwembanyama,mm10q3fvmd8zja6j,1251.75
+2025-26,regular,3,Rooney,qxb6cn3omd8zja6h,1152.0,Blackjacks,q86f43pcmd8zja6k,1087.25
+2025-26,regular,3,T-How,7kj0njiwmd8zja6g,990.75,Salty’s Aspirations,nmbx4rkzmd8zja6m,1234.5
+2025-26,regular,3,Conway,sha0v3f8md8zja6k,1039.5,Guckien,8htzhjs2md8zja6l,1258.25
+2025-26,regular,4,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1219.5,Jackson,mjm1574cmd8zja6n,1329.75
+2025-26,regular,4,HaliBuser,nmlbr2ppmd8zja6n,1014.0,Rooney,qxb6cn3omd8zja6h,1042.0
+2025-26,regular,4,Riley McElwembanyama,mm10q3fvmd8zja6j,1269.75,T-How,7kj0njiwmd8zja6g,911.5
+2025-26,regular,4,Blackjacks,q86f43pcmd8zja6k,998.5,Conway,sha0v3f8md8zja6k,1273.0
+2025-26,regular,4,Salty’s Aspirations,nmbx4rkzmd8zja6m,1114.75,Guckien,8htzhjs2md8zja6l,1194.25
+2025-26,regular,5,Rooney,qxb6cn3omd8zja6h,1081.25,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1255.75
+2025-26,regular,5,T-How,7kj0njiwmd8zja6g,976.0,Jackson,mjm1574cmd8zja6n,1338.5
+2025-26,regular,5,Conway,sha0v3f8md8zja6k,1181.25,HaliBuser,nmlbr2ppmd8zja6n,1244.0
+2025-26,regular,5,Guckien,8htzhjs2md8zja6l,1148.75,Riley McElwembanyama,mm10q3fvmd8zja6j,1187.5
+2025-26,regular,5,Salty’s Aspirations,nmbx4rkzmd8zja6m,1074.0,Blackjacks,q86f43pcmd8zja6k,1016.0
+2025-26,regular,6,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1021.5,T-How,7kj0njiwmd8zja6g,860.25
+2025-26,regular,6,Rooney,qxb6cn3omd8zja6h,990.0,Conway,sha0v3f8md8zja6k,1009.5
+2025-26,regular,6,Jackson,mjm1574cmd8zja6n,1092.25,Guckien,8htzhjs2md8zja6l,1229.75
+2025-26,regular,6,HaliBuser,nmlbr2ppmd8zja6n,1125.5,Salty’s Aspirations,nmbx4rkzmd8zja6m,1097.25
+2025-26,regular,6,Riley McElwembanyama,mm10q3fvmd8zja6j,1250.5,Blackjacks,q86f43pcmd8zja6k,1210.75
+2025-26,regular,7,Conway,sha0v3f8md8zja6k,991.5,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1026.25
+2025-26,regular,7,Guckien,8htzhjs2md8zja6l,1196.75,T-How,7kj0njiwmd8zja6g,958.5
+2025-26,regular,7,Salty’s Aspirations,nmbx4rkzmd8zja6m,1054.0,Rooney,qxb6cn3omd8zja6h,1036.0
+2025-26,regular,7,Blackjacks,q86f43pcmd8zja6k,1027.75,Jackson,mjm1574cmd8zja6n,1001.5
+2025-26,regular,7,Riley McElwembanyama,mm10q3fvmd8zja6j,1108.0,HaliBuser,nmlbr2ppmd8zja6n,1053.5
+2025-26,regular,8,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,630.0,Guckien,8htzhjs2md8zja6l,770.0
+2025-26,regular,8,Conway,sha0v3f8md8zja6k,641.75,Salty’s Aspirations,nmbx4rkzmd8zja6m,710.75
+2025-26,regular,8,T-How,7kj0njiwmd8zja6g,680.75,Blackjacks,q86f43pcmd8zja6k,712.5
+2025-26,regular,8,Rooney,qxb6cn3omd8zja6h,668.5,Riley McElwembanyama,mm10q3fvmd8zja6j,695.5
+2025-26,regular,8,Jackson,mjm1574cmd8zja6n,751.5,HaliBuser,nmlbr2ppmd8zja6n,689.75
+2025-26,regular,9,Salty’s Aspirations,nmbx4rkzmd8zja6m,999.75,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,975.75
+2025-26,regular,9,Blackjacks,q86f43pcmd8zja6k,979.5,Guckien,8htzhjs2md8zja6l,926.0
+2025-26,regular,9,Riley McElwembanyama,mm10q3fvmd8zja6j,1064.0,Conway,sha0v3f8md8zja6k,991.25
+2025-26,regular,9,HaliBuser,nmlbr2ppmd8zja6n,975.25,T-How,7kj0njiwmd8zja6g,1026.75
+2025-26,regular,9,Jackson,mjm1574cmd8zja6n,887.75,Rooney,qxb6cn3omd8zja6h,871.5
+2025-26,regular,10,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1132.75,Blackjacks,q86f43pcmd8zja6k,1091.25
+2025-26,regular,10,Salty’s Aspirations,nmbx4rkzmd8zja6m,1448.5,Riley McElwembanyama,mm10q3fvmd8zja6j,1310.75
+2025-26,regular,10,Guckien,8htzhjs2md8zja6l,1206.5,HaliBuser,nmlbr2ppmd8zja6n,1179.25
+2025-26,regular,10,Conway,sha0v3f8md8zja6k,1118.0,Jackson,mjm1574cmd8zja6n,1102.5
+2025-26,regular,10,T-How,7kj0njiwmd8zja6g,1022.25,Rooney,qxb6cn3omd8zja6h,1039.75
+2025-26,regular,11,Riley McElwembanyama,mm10q3fvmd8zja6j,1045.25,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1030.5
+2025-26,regular,11,HaliBuser,nmlbr2ppmd8zja6n,1232.5,Blackjacks,q86f43pcmd8zja6k,1070.5
+2025-26,regular,11,Jackson,mjm1574cmd8zja6n,1112.75,Salty’s Aspirations,nmbx4rkzmd8zja6m,1324.5
+2025-26,regular,11,Rooney,qxb6cn3omd8zja6h,1012.25,Guckien,8htzhjs2md8zja6l,1420.75
+2025-26,regular,11,T-How,7kj0njiwmd8zja6g,968.0,Conway,sha0v3f8md8zja6k,1073.25
+2025-26,regular,12,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,953.0,HaliBuser,nmlbr2ppmd8zja6n,1159.0
+2025-26,regular,12,Riley McElwembanyama,mm10q3fvmd8zja6j,1202.75,Jackson,mjm1574cmd8zja6n,987.25
+2025-26,regular,12,Blackjacks,q86f43pcmd8zja6k,1273.0,Rooney,qxb6cn3omd8zja6h,1104.75
+2025-26,regular,12,Salty’s Aspirations,nmbx4rkzmd8zja6m,1385.0,T-How,7kj0njiwmd8zja6g,915.5
+2025-26,regular,12,Guckien,8htzhjs2md8zja6l,1282.5,Conway,sha0v3f8md8zja6k,1116.75
+2025-26,regular,13,Jackson,mjm1574cmd8zja6n,1108.0,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1035.25
+2025-26,regular,13,Rooney,qxb6cn3omd8zja6h,775.25,HaliBuser,nmlbr2ppmd8zja6n,984.5
+2025-26,regular,13,T-How,7kj0njiwmd8zja6g,982.25,Riley McElwembanyama,mm10q3fvmd8zja6j,1088.0
+2025-26,regular,13,Conway,sha0v3f8md8zja6k,1086.75,Blackjacks,q86f43pcmd8zja6k,1173.0
+2025-26,regular,13,Guckien,8htzhjs2md8zja6l,1355.0,Salty’s Aspirations,nmbx4rkzmd8zja6m,1325.25
+2025-26,regular,14,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,924.75,Rooney,qxb6cn3omd8zja6h,913.5
+2025-26,regular,14,Jackson,mjm1574cmd8zja6n,1111.5,T-How,7kj0njiwmd8zja6g,802.5
+2025-26,regular,14,HaliBuser,nmlbr2ppmd8zja6n,1051.0,Conway,sha0v3f8md8zja6k,1164.25
+2025-26,regular,14,Riley McElwembanyama,mm10q3fvmd8zja6j,1192.0,Guckien,8htzhjs2md8zja6l,1261.0
+2025-26,regular,14,Blackjacks,q86f43pcmd8zja6k,1187.75,Salty’s Aspirations,nmbx4rkzmd8zja6m,1041.5
+2025-26,regular,15,T-How,7kj0njiwmd8zja6g,993.5,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1039.25
+2025-26,regular,15,Conway,sha0v3f8md8zja6k,1139.25,Rooney,qxb6cn3omd8zja6h,1067.25
+2025-26,regular,15,Guckien,8htzhjs2md8zja6l,1353.75,Jackson,mjm1574cmd8zja6n,1015.5
+2025-26,regular,15,Salty’s Aspirations,nmbx4rkzmd8zja6m,1232.75,HaliBuser,nmlbr2ppmd8zja6n,1099.5
+2025-26,regular,15,Blackjacks,q86f43pcmd8zja6k,1197.5,Riley McElwembanyama,mm10q3fvmd8zja6j,1108.75
+2025-26,regular,16,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1289.5,Conway,sha0v3f8md8zja6k,967.5
+2025-26,regular,16,T-How,7kj0njiwmd8zja6g,825.25,Guckien,8htzhjs2md8zja6l,1304.75
+2025-26,regular,16,Rooney,qxb6cn3omd8zja6h,1078.25,Salty’s Aspirations,nmbx4rkzmd8zja6m,1088.5
+2025-26,regular,16,Jackson,mjm1574cmd8zja6n,908.25,Blackjacks,q86f43pcmd8zja6k,938.5
+2025-26,regular,16,HaliBuser,nmlbr2ppmd8zja6n,911.25,Riley McElwembanyama,mm10q3fvmd8zja6j,1240.75
+2025-26,regular,17,Guckien,8htzhjs2md8zja6l,470.0,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,465.5
+2025-26,regular,17,Salty’s Aspirations,nmbx4rkzmd8zja6m,487.0,Conway,sha0v3f8md8zja6k,361.75
+2025-26,regular,17,Blackjacks,q86f43pcmd8zja6k,351.0,T-How,7kj0njiwmd8zja6g,357.5
+2025-26,regular,17,Riley McElwembanyama,mm10q3fvmd8zja6j,538.5,Rooney,qxb6cn3omd8zja6h,426.5
+2025-26,regular,17,HaliBuser,nmlbr2ppmd8zja6n,462.25,Jackson,mjm1574cmd8zja6n,363.75
+2025-26,regular,18,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,864.0,Salty’s Aspirations,nmbx4rkzmd8zja6m,913.25
+2025-26,regular,18,Guckien,8htzhjs2md8zja6l,898.75,Blackjacks,q86f43pcmd8zja6k,771.0
+2025-26,regular,18,Conway,sha0v3f8md8zja6k,572.25,Riley McElwembanyama,mm10q3fvmd8zja6j,1023.5
+2025-26,regular,18,T-How,7kj0njiwmd8zja6g,673.0,HaliBuser,nmlbr2ppmd8zja6n,905.25
+2025-26,regular,18,Rooney,qxb6cn3omd8zja6h,749.5,Jackson,mjm1574cmd8zja6n,841.5
+2025-26,regular,19,Blackjacks,q86f43pcmd8zja6k,985.0,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,945.25
+2025-26,regular,19,Riley McElwembanyama,mm10q3fvmd8zja6j,1022.25,Salty’s Aspirations,nmbx4rkzmd8zja6m,1008.5
+2025-26,regular,19,HaliBuser,nmlbr2ppmd8zja6n,1142.25,Guckien,8htzhjs2md8zja6l,1266.25
+2025-26,regular,19,Jackson,mjm1574cmd8zja6n,1080.5,Conway,sha0v3f8md8zja6k,1041.75
+2025-26,regular,19,Rooney,qxb6cn3omd8zja6h,1023.75,T-How,7kj0njiwmd8zja6g,1024.25
+2025-26,regular,20,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1078.5,Riley McElwembanyama,mm10q3fvmd8zja6j,1181.5
+2025-26,regular,20,Blackjacks,q86f43pcmd8zja6k,1047.25,HaliBuser,nmlbr2ppmd8zja6n,1001.0
+2025-26,regular,20,Salty’s Aspirations,nmbx4rkzmd8zja6m,1401.0,Jackson,mjm1574cmd8zja6n,1032.75
+2025-26,regular,20,Guckien,8htzhjs2md8zja6l,1104.25,Rooney,qxb6cn3omd8zja6h,1139.25
+2025-26,regular,20,Conway,sha0v3f8md8zja6k,1017.5,T-How,7kj0njiwmd8zja6g,954.25
+2025-26,regular,21,HaliBuser,nmlbr2ppmd8zja6n,1307.0,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,953.5
+2025-26,regular,21,Jackson,mjm1574cmd8zja6n,1219.25,Riley McElwembanyama,mm10q3fvmd8zja6j,1431.5
+2025-26,regular,21,Rooney,qxb6cn3omd8zja6h,1064.5,Blackjacks,q86f43pcmd8zja6k,1231.25
+2025-26,regular,21,T-How,7kj0njiwmd8zja6g,1053.5,Salty’s Aspirations,nmbx4rkzmd8zja6m,1334.75
+2025-26,regular,21,Conway,sha0v3f8md8zja6k,1009.25,Guckien,8htzhjs2md8zja6l,1116.75
+2025-26,regular,22,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1084.5,Jackson,mjm1574cmd8zja6n,1191.0
+2025-26,regular,22,HaliBuser,nmlbr2ppmd8zja6n,1174.0,Rooney,qxb6cn3omd8zja6h,1065.75
+2025-26,regular,22,Riley McElwembanyama,mm10q3fvmd8zja6j,1182.75,T-How,7kj0njiwmd8zja6g,822.25
+2025-26,regular,22,Blackjacks,q86f43pcmd8zja6k,1187.75,Conway,sha0v3f8md8zja6k,1116.5
+2025-26,regular,22,Salty’s Aspirations,nmbx4rkzmd8zja6m,1257.5,Guckien,8htzhjs2md8zja6l,1057.5
+2025-26,regular,23,Rooney,qxb6cn3omd8zja6h,1005.0,Pierson’s AutoDrafters,mp3txfdsmd8zja6i,1175.75
+2025-26,regular,23,T-How,7kj0njiwmd8zja6g,718.0,Jackson,mjm1574cmd8zja6n,1262.0
+2025-26,regular,23,Conway,sha0v3f8md8zja6k,1220.75,HaliBuser,nmlbr2ppmd8zja6n,1039.25
+2025-26,regular,23,Guckien,8htzhjs2md8zja6l,1051.75,Riley McElwembanyama,mm10q3fvmd8zja6j,1166.0
+2025-26,regular,23,Salty’s Aspirations,nmbx4rkzmd8zja6m,1140.0,Blackjacks,q86f43pcmd8zja6k,979.0
+2025-26,playoff,2,Guckien,8htzhjs2md8zja6l,894.75,Riley McElwembanyama,mm10q3fvmd8zja6j,750.0
+2025-26,playoff,1,Jackson,mjm1574cmd8zja6n,1179.75,Riley McElwembanyama,mm10q3fvmd8zja6j,1242.25
+2025-26,playoff,1,Salty’s Aspirations,nmbx4rkzmd8zja6m,1100.0,Guckien,8htzhjs2md8zja6l,1128.75
+2026-27,regular,1,Jackson,oca9h5l7msc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,1,Salty,u3bnomv3msc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,1,Riley McElwembanyama,64eyswtomsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,1,Conway,dee3tx9omsc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,1,T-How,yr8isikimsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,2,Blackjacks,e7ctu5b1msc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,2,Jackson,oca9h5l7msc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,2,Rooney,zdbv2x8ymsc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,2,HaliBuser,7j0egupgmsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,2,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,3,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,3,Conway,dee3tx9omsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,3,T-How,yr8isikimsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,3,Guckien,zbsh2iq2msc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,3,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,4,Blackjacks,e7ctu5b1msc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,4,Riley McElwembanyama,64eyswtomsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,4,Salty,u3bnomv3msc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,4,Jackson,oca9h5l7msc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,4,Rooney,zdbv2x8ymsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,5,T-How,yr8isikimsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,5,Guckien,zbsh2iq2msc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,5,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,5,HaliBuser,7j0egupgmsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,5,Rooney,zdbv2x8ymsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,6,Blackjacks,e7ctu5b1msc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,6,T-How,yr8isikimsc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,6,Conway,dee3tx9omsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,6,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,6,Salty,u3bnomv3msc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,7,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,7,HaliBuser,7j0egupgmsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,7,Rooney,zdbv2x8ymsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,7,Jackson,oca9h5l7msc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,7,Salty,u3bnomv3msc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,8,Blackjacks,e7ctu5b1msc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,8,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,8,Guckien,zbsh2iq2msc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,8,T-How,yr8isikimsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,8,Conway,dee3tx9omsc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,9,Rooney,zdbv2x8ymsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,9,Jackson,oca9h5l7msc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,9,Salty,u3bnomv3msc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,9,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,9,Conway,dee3tx9omsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,10,Blackjacks,e7ctu5b1msc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,10,Rooney,zdbv2x8ymsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,10,HaliBuser,7j0egupgmsc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,10,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,10,Guckien,zbsh2iq2msc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,11,Salty,u3bnomv3msc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,11,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,11,Conway,dee3tx9omsc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,11,T-How,yr8isikimsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,11,Guckien,zbsh2iq2msc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,12,Blackjacks,e7ctu5b1msc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,12,Salty,u3bnomv3msc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,12,Jackson,oca9h5l7msc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,12,Rooney,zdbv2x8ymsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,12,HaliBuser,7j0egupgmsc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,13,Conway,dee3tx9omsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,13,T-How,yr8isikimsc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,13,Guckien,zbsh2iq2msc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,13,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,13,HaliBuser,7j0egupgmsc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,14,Blackjacks,e7ctu5b1msc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,14,Conway,dee3tx9omsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,14,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,14,Salty,u3bnomv3msc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,14,Jackson,oca9h5l7msc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,15,Guckien,zbsh2iq2msc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,15,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,15,HaliBuser,7j0egupgmsc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,15,Rooney,zdbv2x8ymsc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,15,Jackson,oca9h5l7msc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,16,Blackjacks,e7ctu5b1msc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,16,Guckien,zbsh2iq2msc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,16,T-How,yr8isikimsc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,16,Conway,dee3tx9omsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,16,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,17,HaliBuser,7j0egupgmsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,17,Rooney,zdbv2x8ymsc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,17,Jackson,oca9h5l7msc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,17,Salty,u3bnomv3msc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,17,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,18,Blackjacks,e7ctu5b1msc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,18,HaliBuser,7j0egupgmsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,18,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,18,Guckien,zbsh2iq2msc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,18,T-How,yr8isikimsc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,19,Jackson,oca9h5l7msc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,19,Salty,u3bnomv3msc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,19,Riley McElwembanyama,64eyswtomsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,19,Conway,dee3tx9omsc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,19,T-How,yr8isikimsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,20,Blackjacks,e7ctu5b1msc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,20,Jackson,oca9h5l7msc25eb8,0.0,Riley McElwembanyama,64eyswtomsc25eb8,0.0
+2026-27,regular,20,Rooney,zdbv2x8ymsc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,20,HaliBuser,7j0egupgmsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,20,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,21,Riley McElwembanyama,64eyswtomsc25eb8,0.0,Blackjacks,e7ctu5b1msc25eb8,0.0
+2026-27,regular,21,Conway,dee3tx9omsc25eb8,0.0,Salty,u3bnomv3msc25eb8,0.0
+2026-27,regular,21,T-How,yr8isikimsc25eb8,0.0,Jackson,oca9h5l7msc25eb8,0.0
+2026-27,regular,21,Guckien,zbsh2iq2msc25eb8,0.0,Rooney,zdbv2x8ymsc25eb8,0.0
+2026-27,regular,21,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,regular,22,Blackjacks,e7ctu5b1msc25eb8,0.0,Conway,dee3tx9omsc25eb8,0.0
+2026-27,regular,22,Riley McElwembanyama,64eyswtomsc25eb8,0.0,T-How,yr8isikimsc25eb8,0.0
+2026-27,regular,22,Salty,u3bnomv3msc25eb8,0.0,Guckien,zbsh2iq2msc25eb8,0.0
+2026-27,regular,22,Jackson,oca9h5l7msc25eb8,0.0,Pierson’s AutoDrafters,wazrfqctmsc25eb8,0.0
+2026-27,regular,22,Rooney,zdbv2x8ymsc25eb8,0.0,HaliBuser,7j0egupgmsc25eb8,0.0
+2026-27,playoff,1,Seed 4,S#4,0.0,Seed 1,S#1,0.0
+2026-27,playoff,1,Seed 3,S#3,0.0,Seed 2,S#2,0.0

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Baller Brand Fantasy Basketball</title>
+<meta name="description" content="Big Baller Brand league history: all-time standings, seasons, owner profiles, records, and rivalries.">
+<meta name="theme-color" content="#0c0f18">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0f18'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23f97316'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+.tab-nav { position: sticky; top: 0; z-index: 100; background: #0c0f18; border-bottom: 1px solid #1e293b; padding: 0 24px; display: flex; align-items: center; gap: 20px; height: 48px; overflow-x: auto; }
+.tab-nav-title { font-size: 13px; font-weight: 700; color: #f97316; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+.tab-buttons { display: flex; gap: 2px; }
+.tab-btn { background: none; border: none; color: #64748b; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-family: inherit; }
+.tab-btn:hover { color: #94a3b8; background: #1e293b; }
+.tab-btn.active { color: #e2e8f0; background: #1e293b; font-weight: 600; }
+.tab-panel { display: none; padding: 32px 24px 80px; max-width: 1200px; margin: 0 auto; }
+.tab-panel.active { display: block; }
+h1 { font-size: 20px; font-weight: 600; color: #f8fafc; margin-bottom: 4px; }
+.subtitle { font-size: 12px; color: #64748b; margin-bottom: 28px; }
+.section { margin-bottom: 40px; }
+.section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1a2030; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; padding: 6px 10px; border-bottom: 1px solid #1e293b; cursor: pointer; white-space: nowrap; user-select: none; }
+th:hover { color: #94a3b8; }
+th.sorted { color: #e2e8f0; }
+td { padding: 7px 10px; border-bottom: 1px solid #141a28; color: #cbd5e1; font-size: 12px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr:hover td { background: #111827; }
+tr.link { cursor: pointer; }
+.logo { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; vertical-align: middle; margin-right: 8px; background: #1e293b; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
+.name { font-weight: 600; color: #f1f5f9; }
+.champ { color: #fbbf24; font-weight: 700; }
+.pos { color: #4ade80; } .neg { color: #f87171; } .mute { color: #64748b; }
+.pill { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; background: #1e293b; color: #94a3b8; white-space: nowrap; }
+.pill.Champion { background: #78350f; color: #fbbf24; }
+.pill.Runner-up { background: #1e3a5f; color: #7dd3fc; }
+.pill.Semifinal { background: #1e293b; color: #cbd5e1; }
+.pill.Missed { color: #475569; }
+select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-family: inherit; margin-right: 8px; }
+.controls { margin-bottom: 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.card { background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; }
+.card .v { font-size: 22px; font-weight: 700; color: #f8fafc; }
+.card .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-top: 4px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 800px) { .two { grid-template-columns: 1fr; } .tab-panel { padding: 24px 16px 60px; } }
+.chart-box { position: relative; height: 280px; }
+.heat td { text-align: center; font-variant-numeric: tabular-nums; }
+.note { font-size: 11px; color: #64748b; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="tab-nav">
+  <div class="tab-nav-title">Big Baller Brand</div>
+  <div class="tab-buttons" id="tabs"></div>
+</div>
+<div id="panels"></div>
+<script>
+const D = __DATA__;
+const PAL = ['#f97316','#38bdf8','#4ade80','#f472b6','#a78bfa','#facc15','#2dd4bf','#fb7185','#94a3b8','#818cf8','#a3e635','#fb923c'];
+const col = o => PAL[D.owners.indexOf(o) % PAL.length];
+const f0 = n => Math.round(n).toLocaleString();
+const f1 = n => (Math.round(n * 10) / 10).toLocaleString(undefined, {minimumFractionDigits: 1});
+const pct = (w, l, t) => { const g = w + l + t; return g ? ((w + t / 2) / g * 100).toFixed(1) + '%' : '-'; };
+const rec = (w, l, t) => w + '-' + l + (t ? '-' + t : '');
+const ph = g => (g.ph === 'playoff' ? 'Playoffs' : 'Wk ' + g.p);
+const slug = o => o.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const logo = o => `<img class="logo" src="logos/${slug(o)}.webp" alt="" onerror="this.style.display='none'">`;
+const ownerCell = o => `${logo(o)}<span class="name">${o}</span>`;
+const ownerLink = o => `<a href="#owner/${encodeURIComponent(o)}" style="color:inherit;text-decoration:none">${ownerCell(o)}</a>`;
+
+/* sortable table helper */
+function drawT(id) {
+  const t = window['_t_' + id], el = document.getElementById(id);
+  let rows = t.rows.slice();
+  if (t.sort !== null) { const c = t.cols[t.sort]; rows.sort((a, b) => { const x = c.v(a), y = c.v(b); return (x < y ? -1 : x > y ? 1 : 0) * t.dir; }); }
+  el.innerHTML = '<thead><tr>' + t.cols.map((c, i) => `<th class="${c.num ? 'num' : ''} ${t.sort === i ? 'sorted' : ''}" onclick="sortT('${id}',${i})">${c.h}${t.sort === i ? (t.dir < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') + '</tr></thead><tbody>' +
+    rows.map(r => '<tr>' + t.cols.map(c => `<td class="${c.num ? 'num' : ''}">${c.k(r)}</td>`).join('') + '</tr>').join('') + '</tbody>';
+}
+function sortT(id, i) { const t = window['_t_' + id]; if (t.sort === i) t.dir *= -1; else { t.sort = i; t.dir = t.cols[i].num ? -1 : 1; } drawT(id); }
+let tid = 0;
+function T(cols, rows) { const id = 'tb' + (tid++); window['_t_' + id] = {cols, rows, sort: null, dir: -1}; setTimeout(() => drawT(id), 0); return `<table id="${id}"></table>`; }
+
+const charts = [];
+function chart(canvas, cfg) { const c = new Chart(canvas, cfg); charts.push(c); return c; }
+Chart.defaults.color = '#94a3b8'; Chart.defaults.borderColor = '#1e293b';
+
+/* ---------- panels ---------- */
+const TABS = [['alltime', 'All-Time'], ['seasons', 'Seasons'], ['owner', 'Owners'], ['records', 'Records'], ['rivalry', 'Rivalry']];
+const lastSeason = D.seasons[D.seasons.length - 1];
+
+function viewAlltime() {
+  const A = D.alltime;
+  return `<h1>All-Time</h1><div class="subtitle">${D.seasons[0]} to ${lastSeason} · ${D.seasons.length} seasons · points league (regular season record, playoffs for titles)</div>
+  <div class="section"><div class="section-title">Standings</div>` +
+  T([
+    {h: 'Owner', k: a => ownerLink(a.o), v: a => a.o},
+    {h: 'Titles', k: a => a.titles ? `<span class="champ">${a.titles}</span>` : '0', v: a => a.titles, num: 1},
+    {h: 'Finals', k: a => a.finals, v: a => a.finals, num: 1},
+    {h: 'Playoffs', k: a => a.playoffs, v: a => a.playoffs, num: 1},
+    {h: 'Record', k: a => rec(a.w, a.l, a.t), v: a => a.w, num: 1},
+    {h: 'Win %', k: a => pct(a.w, a.l, a.t), v: a => a.w / (a.w + a.l + a.t), num: 1},
+    {h: 'PF', k: a => f0(a.pf), v: a => a.pf, num: 1},
+    {h: 'PA', k: a => f0(a.pa), v: a => a.pa, num: 1},
+    {h: 'PF/Season', k: a => f0(a.pf / a.seasons), v: a => a.pf / a.seasons, num: 1},
+    {h: 'Avg Rank', k: a => a.avg_rk.toFixed(1), v: a => a.avg_rk, num: 1},
+    {h: 'Playoff W-L', k: a => a.pw + '-' + a.pl, v: a => a.pw, num: 1},
+    {h: 'Seasons', k: a => a.seasons, v: a => a.seasons, num: 1},
+  ], A) + `</div>
+  <div class="section"><div class="section-title">Regular-season finish by year</div><div class="chart-box" style="height:340px"><canvas id="c_rank"></canvas></div></div>`;
+}
+function afterAlltime() {
+  chart(document.getElementById('c_rank'), {type: 'line', data: {labels: D.seasons, datasets: D.owners.map(o => ({label: o, borderColor: col(o), backgroundColor: col(o), tension: .2, pointRadius: 3,
+    data: D.seasons.map(s => (D.rows.find(r => r.s === s && r.o === o) || {}).rk ?? null)}))},
+    options: {maintainAspectRatio: false, scales: {y: {reverse: true, min: 1, max: 10, title: {display: true, text: 'Rank'}, ticks: {stepSize: 1}}}, plugins: {legend: {position: 'bottom', labels: {boxWidth: 10}}}}});
+}
+
+function viewSeasons(sel) {
+  sel = sel || lastSeason;
+  const rows = D.rows.filter(r => r.s === sel).sort((a, b) => a.rk - b.rk);
+  const po = D.games.filter(g => g.s === sel && g.ph === 'playoff');
+  const rounds = [...new Set(po.map(g => g.p))].sort((a, b) => a - b);
+  const weeks = D.games.filter(g => g.s === sel && g.ph === 'regular');
+  const hi = weeks.length ? weeks.reduce((m, g) => Math.max(m, g.ap, g.hp), 0) : 0;
+  return `<h1>Seasons</h1><div class="subtitle">Final standings and playoff bracket</div>
+  <div class="controls"><select onchange="location.hash='seasons/'+this.value">${D.seasons.map(s => `<option ${s === sel ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+  <div class="two"><div class="section"><div class="section-title">${sel} regular season</div>` +
+  T([
+    {h: '#', k: r => r.rk, v: r => r.rk, num: 1},
+    {h: 'Owner', k: r => ownerLink(r.o) + (r.team !== r.o ? ` <span class="mute">${r.team}</span>` : ''), v: r => r.o},
+    {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
+    {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
+    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
+    {h: 'Finish', k: r => `<span class="pill ${r.fin}">${r.fin}</span>`, v: r => r.rk},
+  ], rows) + `</div>
+  <div class="section"><div class="section-title">${sel} playoffs</div>` +
+  (po.length ? rounds.map((rd, i) => `<div class="mute" style="font-size:11px;margin:8px 0 4px">${i === rounds.length - 1 ? 'Final' : 'Round ' + (i + 1)}</div><table>` +
+    po.filter(g => g.p === rd).map(g => `<tr><td>${ownerLink(g.a)}</td><td class="num ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}</td></tr>`).join('') + '</table>').join('') : '<div class="mute">No playoff data.</div>') +
+  `</div></div>
+  <div class="section"><div class="section-title">Points for by owner</div><div class="chart-box"><canvas id="c_pf"></canvas></div></div>`;
+}
+function afterSeasons(sel) {
+  sel = sel || lastSeason;
+  const rows = D.rows.filter(r => r.s === sel).sort((a, b) => b.pf - a.pf);
+  chart(document.getElementById('c_pf'), {type: 'bar', data: {labels: rows.map(r => r.o), datasets: [{label: 'PF', data: rows.map(r => r.pf), backgroundColor: rows.map(r => col(r.o))}, {label: 'PA', data: rows.map(r => r.pa), backgroundColor: '#33415588'}]},
+    options: {maintainAspectRatio: false, plugins: {legend: {position: 'bottom', labels: {boxWidth: 10}}}}});
+}
+
+function viewOwner(sel) {
+  sel = sel ? decodeURIComponent(sel) : D.owners[0];
+  const a = D.alltime.find(x => x.o === sel) || D.alltime[0]; sel = a.o;
+  const rows = D.rows.filter(r => r.o === sel).sort((x, y) => x.s < y.s ? -1 : 1);
+  const h = D.h2h[sel];
+  return `<h1>Owner History</h1><div class="subtitle">Season-by-season record and head-to-head</div>
+  <div class="controls"><select onchange="location.hash='owner/'+encodeURIComponent(this.value)">${D.owners.map(o => `<option ${o === sel ? 'selected' : ''}>${o}</option>`).join('')}</select></div>
+  <div class="grid">
+    <div class="card"><div class="v champ">${a.titles}</div><div class="k">Titles</div></div>
+    <div class="card"><div class="v">${a.finals}</div><div class="k">Finals</div></div>
+    <div class="card"><div class="v">${rec(a.w, a.l, a.t)}</div><div class="k">All-time record</div></div>
+    <div class="card"><div class="v">${pct(a.w, a.l, a.t)}</div><div class="k">Win %</div></div>
+    <div class="card"><div class="v">${a.pw}-${a.pl}</div><div class="k">Playoff record</div></div>
+    <div class="card"><div class="v">${a.avg_rk.toFixed(1)}</div><div class="k">Avg finish</div></div>
+  </div>
+  <div class="section"><div class="section-title">Seasons</div>` +
+  T([
+    {h: 'Season', k: r => r.s, v: r => r.s},
+    {h: 'Team Name', k: r => r.team, v: r => r.team},
+    {h: 'Rank', k: r => r.rk, v: r => r.rk, num: 1},
+    {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
+    {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
+    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
+    {h: 'Finish', k: r => `<span class="pill ${r.fin}">${r.fin}</span>`, v: r => r.rk},
+  ], rows) + `</div>
+  <div class="section"><div class="section-title">Head-to-head (all games)</div>` +
+  T([
+    {h: 'Opponent', k: o => ownerLink(o), v: o => o},
+    {h: 'W-L', k: o => rec(h[o][0], h[o][1], h[o][2]), v: o => h[o][0] - h[o][1], num: 1},
+    {h: 'Win %', k: o => pct(h[o][0], h[o][1], h[o][2]), v: o => h[o][0] / Math.max(1, h[o][0] + h[o][1] + h[o][2]), num: 1},
+    {h: 'PF', k: o => f0(h[o][3]), v: o => h[o][3], num: 1},
+    {h: 'PA', k: o => f0(h[o][4]), v: o => h[o][4], num: 1},
+    {h: 'Pt Diff / Game', k: o => { const n = h[o][0] + h[o][1] + h[o][2]; const d = n ? (h[o][3] - h[o][4]) / n : 0; return `<span class="${d >= 0 ? 'pos' : 'neg'}">${d >= 0 ? '+' : ''}${d.toFixed(1)}</span>`; }, v: o => { const n = h[o][0] + h[o][1] + h[o][2]; return n ? (h[o][3] - h[o][4]) / n : 0; }, num: 1},
+    {h: 'Rivalry', k: o => `<a href="#rivalry/${encodeURIComponent(sel)}/${encodeURIComponent(o)}" class="mute">view</a>`, v: o => o},
+  ], D.owners.filter(o => o !== sel)) + `</div>`;
+}
+
+function viewRecords() {
+  const R = D.records;
+  const gameT = L => T([
+    {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
+    {h: 'Pts', k: x => f1(x.pts), v: x => x.pts, num: 1},
+    {h: 'Opp', k: x => ownerLink(x.opp), v: x => x.opp},
+    {h: 'Opp Pts', k: x => f1(x.oppts), v: x => x.oppts, num: 1},
+    {h: 'When', k: x => x.s + ' ' + ph(x), v: x => x.s + x.p},
+  ], L);
+  const mar = L => T([
+    {h: 'Winner', k: x => ownerLink(x.o), v: x => x.o},
+    {h: 'Score', k: x => f1(x.pts) + ' - ' + f1(x.oppts), v: x => x.pts, num: 1},
+    {h: 'Margin', k: x => f1(x.pts - x.oppts), v: x => x.pts - x.oppts, num: 1},
+    {h: 'Loser', k: x => ownerLink(x.opp), v: x => x.opp},
+    {h: 'When', k: x => x.s + ' ' + ph(x), v: x => x.s + x.p},
+  ], L);
+  return `<h1>Records</h1><div class="subtitle">Single-game and single-season extremes (completed games only)</div>
+  <div class="two"><div class="section"><div class="section-title">Highest single-week scores</div>${gameT(R.high)}</div>
+  <div class="section"><div class="section-title">Lowest single-week scores</div>${gameT(R.low)}</div>
+  <div class="section"><div class="section-title">Biggest blowouts</div>${mar(R.blow)}</div>
+  <div class="section"><div class="section-title">Closest wins</div>${mar(R.close)}</div>
+  <div class="section"><div class="section-title">Most points in a regular season</div>` + T([
+    {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o}, {h: 'Season', k: x => x.s, v: x => x.s},
+    {h: 'PF', k: x => f0(x.pf), v: x => x.pf, num: 1}, {h: 'Record', k: x => rec(x.w, x.l, x.t), v: x => x.w, num: 1}], R.seasPF) + `</div>
+  <div class="section"><div class="section-title">Best regular-season records</div>` + T([
+    {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o}, {h: 'Season', k: x => x.s, v: x => x.s},
+    {h: 'Record', k: x => rec(x.w, x.l, x.t), v: x => x.w, num: 1}, {h: 'Finish', k: x => `<span class="pill ${x.fin}">${x.fin}</span>`, v: x => x.rk}], R.seasRec) + `</div>
+  <div class="section"><div class="section-title">Longest win streaks (includes playoffs, across seasons)</div>` + T([
+    {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o}, {h: 'Games', k: x => x.n, v: x => x.n, num: 1},
+    {h: 'Ended', k: x => x.to ? x.to[0] + ' Wk ' + x.to[1] : '-', v: x => x.to ? x.to.join() : ''}], R.streaks) + `</div></div>`;
+}
+
+function viewRivalry(a, b) {
+  a = a ? decodeURIComponent(a) : D.owners[0]; b = b ? decodeURIComponent(b) : D.owners[1];
+  const sel = (id, v) => `<select onchange="goR()" id="${id}">${D.owners.map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+  const gs = D.games.filter(g => (g.a === a && g.h === b) || (g.a === b && g.h === a));
+  const mine = g => g.a === a ? [g.ap, g.hp] : [g.hp, g.ap];
+  const wa = gs.filter(g => mine(g)[0] > mine(g)[1]).length, wb = gs.filter(g => mine(g)[0] < mine(g)[1]).length;
+  const dA = gs.reduce((s, g) => s + mine(g)[0] - mine(g)[1], 0);
+  const matrix = `<table class="heat"><tr><th></th>${D.owners.map(o => `<th style="text-align:center">${o}</th>`).join('')}</tr>` +
+    D.owners.map(r => `<tr><td>${ownerLink(r)}</td>` + D.owners.map(c => {
+      if (r === c) return '<td style="background:#0c0f18"></td>';
+      const x = D.h2h[r][c], n = x[0] + x[1] + x[2], p = n ? (x[0] + x[2] / 2) / n : .5;
+      const bg = p >= .5 ? `rgba(74,222,128,${(p - .5) * 1.2})` : `rgba(248,113,113,${(.5 - p) * 1.2})`;
+      return `<td style="background:${bg};cursor:pointer" onclick="location.hash='rivalry/${encodeURIComponent(r)}/${encodeURIComponent(c)}'">${x[0]}-${x[1]}${x[2] ? '-' + x[2] : ''}</td>`;
+    }).join('') + '</tr>').join('') + '</table>';
+  return `<h1>Rivalry</h1><div class="subtitle">Head-to-head history, regular season and playoffs</div>
+  <div class="controls">${sel('ra', a)} vs ${sel('rb', b)}</div>
+  <div class="grid"><div class="card"><div class="v">${wa}-${wb}</div><div class="k">${a} vs ${b}</div></div>
+  <div class="card"><div class="v ${dA >= 0 ? 'pos' : 'neg'}">${dA >= 0 ? '+' : ''}${f0(dA)}</div><div class="k">${a} total point diff</div></div>
+  <div class="card"><div class="v">${gs.length}</div><div class="k">Games</div></div></div>
+  <div class="section"><div class="section-title">Games</div>` + (gs.length ? T([
+    {h: 'When', k: g => g.s + ' ' + ph(g), v: g => g.s + String(g.p).padStart(2, '0')},
+    {h: a, k: g => f1(mine(g)[0]), v: g => mine(g)[0], num: 1},
+    {h: b, k: g => f1(mine(g)[1]), v: g => mine(g)[1], num: 1},
+    {h: 'Winner', k: g => ownerCell(mine(g)[0] > mine(g)[1] ? a : mine(g)[0] < mine(g)[1] ? b : a) + (mine(g)[0] === mine(g)[1] ? ' (tie)' : ''), v: g => mine(g)[0] - mine(g)[1]},
+    {h: 'Margin', k: g => f1(Math.abs(mine(g)[0] - mine(g)[1])), v: g => Math.abs(mine(g)[0] - mine(g)[1]), num: 1},
+  ], gs) : '<div class="mute">No games played between these two.</div>') + `</div>
+  <div class="section"><div class="section-title">All matchups (row owner's record vs column; click a cell)</div>${matrix}</div>`;
+}
+function goR() { location.hash = 'rivalry/' + encodeURIComponent(document.getElementById('ra').value) + '/' + encodeURIComponent(document.getElementById('rb').value); }
+
+/* ---------- router ---------- */
+function render() {
+  const [tab, x, y] = (location.hash.slice(1) || 'alltime').split('/');
+  const t = TABS.find(v => v[0] === tab) ? tab : 'alltime';
+  charts.splice(0).forEach(c => c.destroy());
+  tid = 0;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+  const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y)}[t]();
+  document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
+  if (t === 'alltime') afterAlltime(); if (t === 'seasons') afterSeasons(x);
+  window.scrollTo(0, 0);
+}
+document.getElementById('tabs').innerHTML = TABS.map(([k, l]) => `<button class="tab-btn" data-t="${k}" onclick="location.hash='${k}'">${l}</button>`).join('');
+window.addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>
