@@ -105,7 +105,13 @@ def tracker_and_recap(standings, own, played):
         if o:
             pw.append([r["season"], int(r["period"]), o, r["player_id"], float(r["fpts"])])
             players.setdefault(r["player_id"], names.get(r["player_id"], ["#" + r["player_id"], ""]))
-    return {"players": players, "stints": {k: stints[k] for k in pids if k in stints},
+    hs = json.load(open(D / "headshots.json")) if (D / "headshots.json").exists() else {}
+    heads = {}
+    for pid in players:
+        m = re.search(r"_96_(\d+)\.png", hs.get(pid, ""))
+        if m:
+            heads[pid] = m.group(1)
+    return {"players": players, "heads": heads, "stints": {k: stints[k] for k in pids if k in stints},
             "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw,
             "seasonsAll": sorted({r["season"] for r in standings})}
 

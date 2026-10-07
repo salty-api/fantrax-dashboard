@@ -282,7 +282,7 @@ function goR() { location.hash = 'rivalry/' + encodeURIComponent(document.getEle
 /* ---------- Weekly Recap ---------- */
 const pname = pid => (D.players[pid] || ['#' + pid, ''])[0];
 const ppos = pid => (D.players[pid] || ['', ''])[1];
-const face = (pid, lg) => `<img class="face${lg ? ' lg' : ''}" src="https://fantraximg.com/si/headshots/NBA/hs${pid}_96_9.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`;
+const face = (pid, lg) => D.heads[pid] ? `<img class="face${lg ? ' lg' : ''}" src="https://fantraximg.com/si/headshots/NBA/hs${pid}_96_${D.heads[pid]}.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">` : '';
 const plink = pid => `${face(pid)}<a class="pl" href="#whohas/${pid}">${pname(pid)}</a>`;
 const pwSeasons = [...new Set(D.pw.map(x => x[0]))].sort();
 function wkLabel(season, wk) {
