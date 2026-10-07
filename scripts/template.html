@@ -121,10 +121,12 @@ function viewAlltime() {
     {h: 'PF', k: a => f0(a.pf), v: a => a.pf, num: 1},
     {h: 'PA', k: a => f0(a.pa), v: a => a.pa, num: 1},
     {h: 'PF/Season', k: a => f0(a.pf / a.seasons), v: a => a.pf / a.seasons, num: 1},
+    {h: 'Pts/Game', k: a => f1(a.pf / (a.w + a.l + a.t)), v: a => a.pf / (a.w + a.l + a.t), num: 1},
+    {h: 'PA/Game', k: a => f1(a.pa / (a.w + a.l + a.t)), v: a => a.pa / (a.w + a.l + a.t), num: 1},
     {h: 'Avg Rank', k: a => a.avg_rk.toFixed(1), v: a => a.avg_rk, num: 1},
     {h: 'Playoff W-L', k: a => a.pw + '-' + a.pl, v: a => a.pw, num: 1},
     {h: 'Seasons', k: a => a.seasons, v: a => a.seasons, num: 1},
-  ], A) + `</div>
+  ], A) + `<div class="note">Pts/Game = points scored per weekly matchup (regular season). PF/Season = points per season.</div></div>
   <div class="section"><div class="section-title">Final finish by year</div>${finishGrid()}
   <div class="note">Playoff teams show their postseason finish (🏆 champion, 🥈 runner-up, T3 = lost in the semifinals); teams that missed the playoffs show their regular-season rank. Hover for the regular-season rank. Avg counts T3 as 3.5.</div></div>`;
 }
