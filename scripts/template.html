@@ -52,6 +52,13 @@ select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-
 .chart-box { position: relative; height: 280px; }
 .heat td { text-align: center; font-variant-numeric: tabular-nums; }
 .heat td:first-child, .heat th:first-child { text-align: left; }
+input.search { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 8px 12px; font-size: 14px; font-family: inherit; width: 340px; max-width: 100%; }
+a.pl { color: #f1f5f9; text-decoration: none; font-weight: 600; } a.pl:hover { color: #f97316; }
+.big { font-size: 15px; font-weight: 700; color: #f8fafc; margin-top: 2px; }
+.card .sub { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+.card.hl { border-color: #f97316; }
+.stint { display: inline-flex; align-items: center; background: #111827; border: 1px solid #1e293b; border-radius: 6px; padding: 4px 8px; margin: 3px 6px 3px 0; font-size: 12px; }
+.up { color: #4ade80; } .down { color: #f87171; }
 .note { font-size: 11px; color: #64748b; margin-top: 10px; }
 </style>
 </head>
@@ -92,7 +99,7 @@ function chart(canvas, cfg) { const c = new Chart(canvas, cfg); charts.push(c); 
 Chart.defaults.color = '#94a3b8'; Chart.defaults.borderColor = '#1e293b';
 
 /* ---------- panels ---------- */
-const TABS = [['alltime', 'All-Time'], ['seasons', 'Seasons'], ['owner', 'Owners'], ['records', 'Records'], ['rivalry', 'Rivalry']];
+const TABS = [['alltime', 'All-Time'], ['seasons', 'Seasons'], ['owner', 'Owners'], ['records', 'Records'], ['rivalry', 'Rivalry'], ['recap', 'Weekly Recap'], ['whohas', 'Who Has Him']];
 const lastSeason = D.seasons[D.seasons.length - 1];
 
 function viewAlltime() {
@@ -266,6 +273,127 @@ function viewRivalry(a, b) {
 }
 function goR() { location.hash = 'rivalry/' + encodeURIComponent(document.getElementById('ra').value) + '/' + encodeURIComponent(document.getElementById('rb').value); }
 
+
+/* ---------- Weekly Recap ---------- */
+const pname = pid => (D.players[pid] || ['#' + pid, ''])[0];
+const ppos = pid => (D.players[pid] || ['', ''])[1];
+const plink = pid => `<a class="pl" href="#whohas/${pid}">${pname(pid)}</a>`;
+const pwSeasons = [...new Set(D.pw.map(x => x[0]))].sort();
+function wkLabel(season, wk) {
+  const reg = Math.max(...D.games.filter(g => g.s === season && g.ph === 'regular').map(g => g.wk));
+  return wk <= reg ? 'Week ' + wk : 'Playoffs: ' + (wk === Math.max(...D.games.filter(g => g.s === season).map(g => g.wk)) ? 'Final' : 'Round ' + (wk - reg));
+}
+function viewRecap(season, wkArg) {
+  season = pwSeasons.includes(season) ? season : pwSeasons[pwSeasons.length - 1];
+  const wks = [...new Set(D.pw.filter(x => x[0] === season).map(x => x[1]))].sort((a, b) => a - b);
+  const wk = wks.includes(+wkArg) ? +wkArg : wks[wks.length - 1];
+  const games = D.games.filter(g => g.s === season && g.wk === wk);
+  const sc = [];
+  games.forEach(g => { sc.push({o: g.a, pts: g.ap, opp: g.h, oppts: g.hp}); sc.push({o: g.h, pts: g.hp, opp: g.a, oppts: g.ap}); });
+  const week = D.pw.filter(x => x[0] === season && x[1] === wk).sort((a, b) => b[4] - a[4]);
+  const top = week.slice(0, 10);
+  const best = {}; week.forEach(x => { if (!best[x[2]] || x[4] > best[x[2]][4]) best[x[2]] = x; });
+  const hiTeam = sc.slice().sort((a, b) => b.pts - a.pts)[0];
+  const wins = sc.filter(x => x.pts > x.oppts);
+  const blow = wins.slice().sort((a, b) => (b.pts - b.oppts) - (a.pts - a.oppts))[0];
+  const close = wins.slice().sort((a, b) => (a.pts - a.oppts) - (b.pts - b.oppts))[0];
+  const isPO = games.length && games[0].ph === 'playoff';
+  // standings through this week (regular season only)
+  const stand = wkk => {
+    const m = {}; D.owners.forEach(o => m[o] = {o, w: 0, l: 0, t: 0, pf: 0});
+    D.games.filter(g => g.s === season && g.ph === 'regular' && g.wk <= wkk).forEach(g => {
+      [[g.a, g.ap, g.hp], [g.h, g.hp, g.ap]].forEach(([o, a, b]) => { if (!m[o]) return; m[o].pf += a; a > b ? m[o].w++ : a < b ? m[o].l++ : m[o].t++; });
+    });
+    return Object.values(m).filter(x => x.w + x.l + x.t).sort((a, b) => (b.w + b.t / 2) - (a.w + a.t / 2) || b.pf - a.pf);
+  };
+  const regMax = Math.max(...D.games.filter(g => g.s === season && g.ph === 'regular').map(g => g.wk));
+  const cur = stand(Math.min(wk, regMax)), prev = stand(Math.min(wk, regMax) - 1);
+  const prevRk = {}; prev.forEach((x, i) => prevRk[x.o] = i + 1);
+  const curRows = cur.map((x, i) => ({...x, rk: i + 1, mv: prevRk[x.o] ? prevRk[x.o] - (i + 1) : 0}));
+  // season leaders through this week
+  const sum = {}; D.pw.filter(x => x[0] === season && x[1] <= wk).forEach(x => { const k = x[3]; sum[k] = sum[k] || {pid: k, pts: 0, wks: 0, o: x[2]}; sum[k].pts += x[4]; sum[k].wks++; sum[k].o = x[2]; });
+  const leaders = Object.values(sum).sort((a, b) => b.pts - a.pts).slice(0, 10);
+  const card = (k, v, sub, hl) => `<div class="card ${hl ? 'hl' : ''}"><div class="k">${k}</div><div class="big">${v}</div><div class="sub">${sub}</div></div>`;
+  const pot = top[0];
+  return `<h1>Weekly Recap</h1><div class="subtitle">${season} · ${wkLabel(season, wk)} · points from each team's counted lineup</div>
+  <div class="controls"><select onchange="location.hash='recap/'+this.value+'/${wk}'">${pwSeasons.map(x => `<option ${x === season ? 'selected' : ''}>${x}</option>`).join('')}</select>
+  <select onchange="location.hash='recap/${season}/'+this.value">${wks.map(w => `<option value="${w}" ${w === wk ? 'selected' : ''}>${wkLabel(season, w)}</option>`).join('')}</select></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(210px,1fr))">
+    ${pot ? card('Player of the week', plink(pot[3]), `${f1(pot[4])} FPts · ${ownerCell(pot[2])}`, 1) : ''}
+    ${hiTeam ? card('High score', ownerCell(hiTeam.o), f1(hiTeam.pts) + ' pts') : ''}
+    ${blow ? card('Blowout', ownerCell(blow.o), `beat ${blow.opp} by ${f1(blow.pts - blow.oppts)}`) : ''}
+    ${close ? card('Nail-biter', ownerCell(close.o), `edged ${close.opp} by ${f1(close.pts - close.oppts)}`) : ''}
+  </div>
+  <div class="two"><div class="section"><div class="section-title">Scoreboard${isPO ? ' (playoffs)' : ''}</div><table>` +
+  games.map(g => `<tr><td>${ownerLink(g.a)}</td><td class="num ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}</td></tr>`).join('') +
+  `</table></div>
+  <div class="section"><div class="section-title">Standings${wk > regMax ? ' (final regular season)' : ' after ' + wkLabel(season, wk)}</div>` +
+  T([
+    {h: '#', k: r => r.rk, v: r => r.rk, num: 1},
+    {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
+    {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
+    {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
+    {h: '+/-', k: r => r.mv > 0 ? `<span class="up">▲${r.mv}</span>` : r.mv < 0 ? `<span class="down">▼${-r.mv}</span>` : '<span class="mute">-</span>', v: r => r.mv, num: 1},
+  ], curRows) + `</div>
+  <div class="section"><div class="section-title">Top 10 performers of the week</div>` +
+  T([
+    {h: '#', k: x => top.indexOf(x) + 1, v: x => top.indexOf(x), num: 1},
+    {h: 'Player', k: x => plink(x[3]) + ` <span class="mute">${ppos(x[3])}</span>`, v: x => pname(x[3])},
+    {h: 'Owner', k: x => ownerLink(x[2]), v: x => x[2]},
+    {h: 'FPts', k: x => f1(x[4]), v: x => x[4], num: 1},
+  ], top) + `</div>
+  <div class="section"><div class="section-title">Best player on each team</div>` +
+  T([
+    {h: 'Owner', k: x => ownerLink(x[2]), v: x => x[2]},
+    {h: 'Player', k: x => plink(x[3]), v: x => pname(x[3])},
+    {h: 'FPts', k: x => f1(x[4]), v: x => x[4], num: 1},
+  ], Object.values(best).sort((a, b) => b[4] - a[4])) + `</div>
+  <div class="section"><div class="section-title">Season leaders through ${wkLabel(season, wk)} (counted weeks)</div>` +
+  T([
+    {h: 'Player', k: x => plink(x.pid), v: x => pname(x.pid)},
+    {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
+    {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
+    {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
+  ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>`;
+}
+
+/* ---------- Who Has Him ---------- */
+function stintLabel(se, a, b) { return !D.seasons.includes(se) ? 'current roster' : a === 1 && b >= 23 ? 'full season' : `wk ${a}-${b}`; }
+function viewWho(pid) {
+  const list = Object.keys(D.players).sort((a, b) => pname(a).localeCompare(pname(b)));
+  const box = `<div class="controls"><input class="search" list="plist" placeholder="Search a player..." value="${pid && D.players[pid] ? pname(pid) : ''}" onchange="whoGo(this.value)"><datalist id="plist">${list.map(k => `<option value="${pname(k)}">`).join('')}</datalist></div>`;
+  if (!pid || !D.players[pid]) {
+    const rows = Object.keys(D.stints).map(k => ({pid: k, owners: [...new Set(D.stints[k].map(x => x[1]))], n: D.stints[k].length}));
+    const most = rows.sort((a, b) => b.owners.length - a.owners.length || b.n - a.n).slice(0, 15);
+    return `<h1>Who Has Him</h1><div class="subtitle">Draft and ownership history for every player rostered since ${D.seasonsAll[0]}</div>${box}
+    <div class="section"><div class="section-title">Most-traveled players (distinct owners)</div>` + T([
+      {h: 'Player', k: r => plink(r.pid) + ` <span class="mute">${ppos(r.pid)}</span>`, v: r => pname(r.pid)},
+      {h: 'Owners', k: r => r.owners.length, v: r => r.owners.length, num: 1},
+      {h: 'Who', k: r => r.owners.join(', '), v: r => r.owners.join()},
+    ], most) + '</div>';
+  }
+  const st = D.stints[pid] || [], pk = D.picks[pid] || [];
+  const bySeason = {}; st.forEach(x => (bySeason[x[0]] = bySeason[x[0]] || []).push(x));
+  const cnt = {}; Object.values(bySeason).forEach(v => [...new Set(v.map(x => x[1]))].forEach(o => cnt[o] = (cnt[o] || 0) + 1));
+  const nowS = D.seasonsAll[D.seasonsAll.length - 1], now = (bySeason[nowS] || []).slice(-1)[0];
+  return `<h1>${pname(pid)}</h1><div class="subtitle">${ppos(pid) || 'Player'} · ${now ? 'Currently on ' + now[1] + ' (' + nowS + ')' : 'Not rostered in ' + nowS}</div>${box}
+  <div class="grid"><div class="card"><div class="v">${Object.keys(cnt).length}</div><div class="k">Owners</div></div>
+  <div class="card"><div class="v">${Object.keys(bySeason).length}</div><div class="k">Seasons rostered</div></div>
+  <div class="card"><div class="v">${pk.length}</div><div class="k">Times drafted</div></div></div>
+  <div class="two"><div class="section"><div class="section-title">Ownership by season</div>` + T([
+    {h: 'Season', k: x => x[0], v: x => x[0] + String(x[2]).padStart(2, '0')},
+    {h: 'Owner', k: x => ownerLink(x[1]), v: x => x[1]},
+    {h: 'When', k: x => stintLabel(x[0], x[2], x[3]), v: x => x[2], num: 1},
+  ], st) + `</div><div class="section"><div class="section-title">Draft history</div>` + (pk.length ? T([
+    {h: 'Season', k: x => x[0], v: x => x[0]},
+    {h: 'Drafted by', k: x => ownerLink(x[1]), v: x => x[1]},
+    {h: 'Round', k: x => x[2], v: x => x[2], num: 1},
+    {h: 'Pick', k: x => x[3], v: x => x[3], num: 1},
+  ], pk) : '<div class="mute">Never drafted (pickup only).</div>') +
+  `<div class="section-title" style="margin-top:28px">Seasons per owner</div>` + Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([o, n]) => `<span class="stint">${ownerCell(o)}&nbsp;<span class="mute">${n}</span></span>`).join('') + `</div></div>`;
+}
+function whoGo(name) { const k = Object.keys(D.players).find(k => pname(k).toLowerCase() === name.toLowerCase()); if (k) location.hash = 'whohas/' + k; }
+
 /* ---------- router ---------- */
 function render() {
   const [tab, x, y] = (location.hash.slice(1) || 'alltime').split('/');
@@ -273,7 +401,7 @@ function render() {
   charts.splice(0).forEach(c => c.destroy());
   tid = 0;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
-  const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y)}[t]();
+  const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y), recap: () => viewRecap(x, y), whohas: () => viewWho(x)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
   if (t === 'seasons') afterSeasons(x);
   window.scrollTo(0, 0);

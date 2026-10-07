@@ -14,14 +14,14 @@ ROOT = Path(__file__).resolve().parent.parent
 URL = "https://www.fantrax.com/fxpa/req?leagueId={}"
 
 
-def call(league, method, data):
+def call(league, method, data, auth=True):
     body = json.dumps({"msgs": [{"method": method, "data": data}]}).encode()
     hdr = {"Content-Type": "text/plain", "User-Agent": "Mozilla/5.0"}
     ck = os.environ.get("FANTRAX_COOKIE")  # browser Cookie header value, never committed
     cf = Path.home() / ".fantrax_cookie"
-    if not ck and cf.exists():
+    if auth and not ck and cf.exists():
         ck = cf.read_text().strip()
-    if ck:
+    if ck and auth:
         hdr["Cookie"] = ck
     req = urllib.request.Request(URL.format(league), body, hdr)
     with urllib.request.urlopen(req, timeout=30) as r:

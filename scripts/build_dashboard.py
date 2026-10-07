@@ -56,6 +56,60 @@ def load_owners(standings):
     return {(r["season"], r["team"]): r["owner"] for r in rows}
 
 
+def clean_name(n):
+    return " ".join(reversed([x.strip() for x in n.split(",", 1)])) if "," in n else n
+
+
+def tracker_and_recap(standings, own, played):
+    """Player ownership history (weekly rosters + draft) and per-week player scoring."""
+    tid_owner = {(r["season"], r["team_id"]): own[(r["season"], r["team"])] for r in standings}
+    ids = json.load(open(D / "players_ids.json"))
+    extra = json.load(open(D / "players_extra.json")) if (D / "players_extra.json").exists() else {}
+    names = {}
+    for k, v in ids.items():
+        names[k] = [clean_name(v["name"]), v.get("position", "")]
+    for k, v in extra.items():
+        names[k] = [v[0], v[2] or ""]
+
+    # ownership stints: consecutive periods on one team within a season
+    by = defaultdict(list)
+    for r in csv.DictReader(open(D / "rosters.csv")):
+        by[(r["season"], r["team_id"], r["player_id"])].append(int(r["period"]))
+    stints = defaultdict(list)
+    for (se, tid, pid), ps in by.items():
+        o = tid_owner.get((se, tid))
+        if not o:
+            continue
+        ps.sort()
+        a = b = ps[0]
+        for x in ps[1:] + [None]:
+            if x is not None and x == b + 1:
+                b = x
+                continue
+            stints[pid].append([se, o, a, b])
+            if x is not None:
+                a = b = x
+    for v in stints.values():
+        v.sort(key=lambda x: (x[0], x[2]))
+    picks = defaultdict(list)
+    for r in csv.DictReader(open(D / "draft.csv")):
+        o = tid_owner.get((r["season"], r["team_id"]))
+        if o:
+            picks[r["player_id"]].append([r["season"], o, int(r["round"]), int(r["pick"])])
+    pids = sorted(set(stints) | set(picks))
+    players = {pid: names.get(pid, ["#" + pid, ""]) for pid in pids}
+    # weekly counted-lineup scoring (player level)
+    pw = []
+    for r in csv.DictReader(open(D / "player_weeks.csv")):
+        o = tid_owner.get((r["season"], r["team_id"]))
+        if o:
+            pw.append([r["season"], int(r["period"]), o, r["player_id"], float(r["fpts"])])
+            players.setdefault(r["player_id"], names.get(r["player_id"], ["#" + r["player_id"], ""]))
+    return {"players": players, "stints": {k: stints[k] for k in pids if k in stints},
+            "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw,
+            "seasonsAll": sorted({r["season"] for r in standings})}
+
+
 def main():
     standings = list(csv.DictReader(open(D / "standings.csv")))
     matchups = list(csv.DictReader(open(D / "matchups.csv")))
@@ -70,6 +124,12 @@ def main():
         games.append({"s": s, "ph": m["phase"], "p": int(m["period"]),
                       "a": own[(s, m["away"])], "h": own[(s, m["home"])], "ap": ap, "hp": hp})
     games.sort(key=lambda g: (g["s"], g["ph"] != "regular", g["p"]))
+    lastreg = {}
+    for g in games:
+        if g["ph"] == "regular":
+            lastreg[g["s"]] = max(lastreg.get(g["s"], 0), g["p"])
+    for g in games:  # scoring period: playoff round r plays in period lastreg + r
+        g["wk"] = g["p"] if g["ph"] == "regular" else lastreg[g["s"]] + g["p"]
     played = {g["s"] for g in games}
     seasons = sorted(played)
 
@@ -164,6 +224,7 @@ def main():
             "alltime": sorted(at.values(), key=lambda a: (-a["titles"], -a["w"])), "h2h": h2h,
             "records": {"high": high, "low": low, "blow": blow, "close": close,
                         "seasPF": seas_pf, "seasRec": seas_rec, "streaks": streaks}}
+    data.update(tracker_and_recap(standings, own, seasons))
     html = (ROOT / "scripts" / "template.html").read_text().replace("__DATA__", json.dumps(data, separators=(",", ":")))
     out = ROOT / "docs"
     out.mkdir(exist_ok=True)
