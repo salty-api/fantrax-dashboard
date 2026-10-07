@@ -5,20 +5,24 @@
 - docs/p/<pid>/        (600x315 card) stub page per player: own og:title/description/image, then redirects to
                        /#whohas/<pid>. iMessage/Slack never see the # part, so share these URLs.
 - docs/t/<tab>/        stub page per tab with its own title/description (shared site card)
-Run after build_dashboard.py. Existing cards are skipped unless --force.
+Run after build_dashboard.py. Cards are redrawn only when what they show (name, team, owner history) changes, or with --force.
+Works on macOS (sips) and Linux (Chrome + ImageMagick) so a GitHub Action can run it.
 """
-import html, json, re, subprocess, sys, tempfile
+import hashlib, html, json, re, shutil, subprocess, sys, tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 SITE = "https://fantrax.whohashim.com"
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = next((c for c in (shutil.which("google-chrome"), shutil.which("chromium"), shutil.which("chromium-browser"),
+               "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome") if c and Path(c).exists()), None)
+LINUX = sys.platform.startswith("linux")
+MANIFEST = ROOT / "data" / "cards.json"  # card id -> hash of what the card shows (name, team, owners, ...)
 FORCE = "--force" in sys.argv
 
 CSS = """*{box-sizing:border-box;margin:0;padding:0}body{width:1200px;height:630px;overflow:hidden;background:#0f1117;
-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f8fafc;position:relative}
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,'Liberation Sans',sans-serif;color:#f8fafc;position:relative}
 .bar{position:absolute;left:0;top:0;bottom:0;width:14px;background:#f97316}
 .brand{position:absolute;left:70px;top:48px;font-size:26px;font-weight:700;letter-spacing:.14em;color:#f97316;text-transform:uppercase}
 .dom{position:absolute;right:60px;top:50px;font-size:24px;color:#64748b}"""
@@ -83,24 +87,39 @@ def card_player(D, pid):
 <div style='margin-top:30px;display:flex;gap:18px;align-items:flex-end'>{strip}</div></div>"""
 
 
+def to_jpeg(png, out):
+    if shutil.which("sips"):
+        cmd = ["sips", "-s", "format", "jpeg", "-s", "formatOptions", "55", str(png), "--out", str(out)]
+    else:
+        cmd = [shutil.which("magick") or shutil.which("convert"), str(png), "-quality", "55", str(out)]
+    subprocess.run(cmd, capture_output=True, check=True)
+
+
 def shoot(args):
-    name, body, out = args
+    """Render one card. Cards are only redrawn when `key` (what the card shows) changed, or with --force."""
+    name, body, out, key = args
     scale = 0.5 if out.suffix == ".jpg" else 1  # player cards are half size (600x315)
-    if out.exists() and not FORCE:
+    h = hashlib.sha1(key.encode()).hexdigest()[:12]
+    if not FORCE and out.exists() and MANIFEST_DATA.get(name, h) == h:
+        MANIFEST_DATA[name] = h  # unchanged (or adopting an existing card)
         return
     with tempfile.TemporaryDirectory() as t:
         f = Path(t) / "c.html"
         f.write_text(f"<!doctype html><meta charset=utf-8>{body}")
         png = Path(t) / "c.png"
-        subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--force-device-scale-factor={scale}",
-                        "--window-size=1200,630", "--virtual-time-budget=5000", f"--screenshot={png}", f"file://{f}"],
-                       capture_output=True)
+        flags = ["--no-sandbox"] if LINUX else []
+        subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", *flags,
+                        f"--force-device-scale-factor={scale}", "--window-size=1200,630",
+                        "--virtual-time-budget=5000", f"--screenshot={png}", f"file://{f}"], capture_output=True)
         out.parent.mkdir(parents=True, exist_ok=True)
         if out.suffix == ".png":
             png.replace(out)
         else:
-            subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "55", str(png), "--out", str(out)],
-                           capture_output=True)
+            to_jpeg(png, out)
+    MANIFEST_DATA[name] = h
+
+
+MANIFEST_DATA = json.load(open(MANIFEST)) if MANIFEST.exists() else {}
 
 
 STUB = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -132,11 +151,18 @@ def write_stub(path, title, desc, url, img, hash_, w=1200, h=630):
 
 def main():
     D = load()
-    jobs = [("site", card_site(D), DOCS / "og.png")]
+    if not CHROME:
+        sys.exit("ERROR: no Chrome/Chromium found")
+    champs = sorted((r["s"], r["o"]) for r in D["rows"] if r["fin"] == "Champion")
+    jobs = [("site", card_site(D), DOCS / "og.png", json.dumps([champs, len(D["seasons"])]))]
     for pid in D["players"]:
-        jobs.append((pid, card_player(D, pid), DOCS / "p" / pid / "card.jpg"))
+        S = D["stats"].get(pid) or {}
+        owners = sorted({(x[0], x[1]) for x in D["stints"].get(pid, [])})
+        key = json.dumps([D["players"][pid], S.get("tm"), D["heads"].get(pid), owners])  # identity only: weekly stat changes don't redraw
+        jobs.append((pid, card_player(D, pid), DOCS / "p" / pid / "card.jpg", key))
     with ThreadPoolExecutor(4) as ex:
         list(ex.map(shoot, jobs))
+    json.dump(MANIFEST_DATA, open(MANIFEST, "w"), sort_keys=True, indent=0)
     # stubs
     nowS = D["seasonsAll"][-1]
     for pid, (n, pos) in D["players"].items():

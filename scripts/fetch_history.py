@@ -6,6 +6,8 @@ Reads leagues.json (season -> leagueId) and writes, per season:
   data/matchups.csv   season, phase, period, away, away_pts, home, home_pts
   data/playoffs.csv   season, round, ...  (folded into matchups.csv with phase=playoff)
 Add older seasons to leagues.json and re-run.
+Usage: fetch_history.py [--current | --seasons 2025-26 ...]  (default: all seasons)
+Only the targeted seasons are rewritten; every other season is kept as stored.
 """
 import csv, json, os, sys, urllib.request
 from pathlib import Path
@@ -72,10 +74,26 @@ def fallback(lid, season, standings, matchups):
                              nm(h), h.get("id"), None])
 
 
+def read_rows(path):
+    return list(csv.reader(open(path)))[1:] if path.exists() else []
+
+
+def target_seasons(cfg, argv):
+    """--current: only the live season; --seasons A B: those; default: every season."""
+    if "--current" in argv:
+        return [cfg["current"]]
+    if "--seasons" in argv:
+        return argv[argv.index("--seasons") + 1:]
+    return list(cfg["leagues"])
+
+
 def main():
     cfg = json.load(open(ROOT / "leagues.json"))
+    targets = target_seasons(cfg, sys.argv[1:])
     standings, matchups = [], []
     for season, lid in cfg["leagues"].items():
+        if season not in targets:
+            continue
         print(season, lid, file=sys.stderr)
         try:
             d = call(lid, "getStandings", {"view": "REGULAR_SEASON"})
@@ -105,6 +123,11 @@ def main():
                 matchups.append([season, "playoff", n, a, at, ap, h, ht, hp])
     out = ROOT / "data"
     out.mkdir(exist_ok=True)
+    # seasons not being refreshed are kept exactly as stored (never rewritten)
+    keep_s = [r for r in read_rows(out / "standings.csv") if r[0] not in targets]
+    keep_m = [r for r in read_rows(out / "matchups.csv") if r[0] not in targets]
+    standings = sorted(keep_s + standings, key=lambda r: str(r[0]))
+    matchups = sorted(keep_m + matchups, key=lambda r: str(r[0]))
     with open(out / "standings.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["season", "rank", "team", "team_id", "w", "l", "t", "pf", "pa"])

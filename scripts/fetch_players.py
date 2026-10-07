@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fetch each team's counted lineup (player-level weekly FPts) via getLiveScoringStats.
 
-Usage: fetch_players.py [season ...]   (default: 2025-26)
+Usage: fetch_players.py [season ...]   (default: the current season in leagues.json)
 Writes data/player_weeks.csv: season, period, team_id, player_id, fpts
 Each team-week's counted players sum to that team's matchup score (checked below).
 Older seasons need the login cookie (see fetch_history.py).
@@ -13,8 +13,9 @@ from fetch_history import call, ROOT
 
 
 def main():
-    seasons = sys.argv[1:] or ["2025-26"]
-    cfg = json.load(open(ROOT / "leagues.json"))["leagues"]
+    lg = json.load(open(ROOT / "leagues.json"))
+    seasons = sys.argv[1:] or [lg["current"]]
+    cfg = lg["leagues"]
     mu = {}
     for m in csv.DictReader(open(ROOT / "data" / "matchups.csv")):
         for side in ("away", "home"):

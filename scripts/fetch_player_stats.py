@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Fetch each player's most recent completed-season per-game stats (public, no login).
+"""Fetch per-game stats for the live season once it has scores, otherwise the last finished season (public, no login).
 Writes data/player_stats.json: id -> {rk, g, fpts, fpg, pts, reb, ast, st, blk, to, tm, pos}
 plus a "_season" key with the season label.
 """
 import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fetch_history import call, ROOT
+from fetch_history import call, ROOT, read_rows
 
 
 def num(x):
@@ -17,8 +17,10 @@ def num(x):
 
 
 def main():
-    cfg = json.load(open(ROOT / "leagues.json"))["leagues"]
-    season = sorted(cfg)[-2]  # latest season that has finished
+    lg = json.load(open(ROOT / "leagues.json"))
+    cfg = lg["leagues"]
+    scored = any(r[0] == lg["current"] and r[5] not in ("", "0.0") for r in read_rows(ROOT / "data" / "matchups.csv"))
+    season = lg["current"] if scored else sorted(cfg)[sorted(cfg).index(lg["current"]) - 1]  # live season once it has scores
     lid, page, out = cfg[season], 1, {"_season": season}
     while True:
         d = call(lid, "getPlayerStats", {"statusOrTeamFilter": "ALL", "maxResultsPerPage": "500",

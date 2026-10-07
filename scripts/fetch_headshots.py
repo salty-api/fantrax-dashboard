@@ -31,12 +31,13 @@ def main():
     ids = json.load(open(ROOT / "data" / "players_ids.json"))
     ep = ROOT / "data" / "players_extra.json"
     extra = json.load(open(ep)) if ep.exists() else {}
-    heads = {}
+    hp = ROOT / "data" / "headshots.json"
+    heads = json.load(open(hp)) if hp.exists() else {}  # keep what we already have (old private seasons may be unreadable without a cookie)
     for s in sorted(cfg, reverse=True):  # newest first so current headshots win
         for sc in pool(cfg[s]):
             pid = sc["scorerId"]
             if sc.get("headshotUrl"):
-                heads.setdefault(pid, sc["headshotUrl"])
+                heads[pid] = sc["headshotUrl"] if pid not in heads else heads[pid]
             if pid not in ids and pid not in extra:
                 extra[pid] = [sc["name"], sc.get("teamShortName"), sc.get("posShortNames")]
         print(s, len(heads), file=sys.stderr)

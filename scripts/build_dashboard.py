@@ -4,7 +4,7 @@
 data/owners.csv maps (season, team name) -> owner. Missing rows are appended with a
 best-guess owner (confirmed=0); edit the file and re-run to correct. Never overwritten.
 """
-import csv, json, re
+import csv, json, re, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -37,23 +37,54 @@ def f(x):
 
 
 def load_owners(standings):
+    """Map (season, team name) -> owner via data/owners.csv.
+
+    New team names are resolved automatically when possible:
+      1. same Fantrax team_id already mapped this season (a mid-season rename) -> inherit that owner
+      2. name matches the GUESS table -> that owner, flagged confirmed=0 for review
+    Anything else is left as its own name and reported by check_owners(), which fails the build.
+    """
     p = D / "owners.csv"
     rows = list(csv.DictReader(open(p))) if p.exists() else []
+    tid = {(r["season"], r["team"]): r["team_id"] for r in standings}
+    for r in rows:
+        r.setdefault("team_id", ""); r["team_id"] = r["team_id"] or tid.get((r["season"], r["team"]), "")
     have = {(r["season"], r["team"]) for r in rows}
+    by_id = {(r["season"], r["team_id"]): r["owner"] for r in rows if r["team_id"]}
     for r in standings:
-        if (r["season"], r["team"]) not in have:
-            g = GUESS.get(norm(r["team"]))
-            rows.append({"season": r["season"], "team": r["team"], "owner": g or r["team"],
-                         "confirmed": "0"})
-            have.add((r["season"], r["team"]))
+        key = (r["season"], r["team"])
+        if key in have:
+            continue
+        if (r["season"], r["team_id"]) in by_id:  # renamed mid-season
+            o, conf = by_id[(r["season"], r["team_id"])], "1"
+            print(f"  rename detected: {r['season']} {r['team']!r} -> {o}")
+        elif GUESS.get(norm(r["team"])):
+            o, conf = GUESS[norm(r["team"])], "0"
+        else:
+            o, conf = r["team"], "0"
+        rows.append({"season": r["season"], "team": r["team"], "owner": o, "confirmed": conf, "team_id": r["team_id"]})
+        have.add(key)
+        by_id[(r["season"], r["team_id"])] = o
     with open(p, "w", newline="") as fh:
-        w = csv.DictWriter(fh, ["season", "team", "owner", "confirmed"])
+        w = csv.DictWriter(fh, ["season", "team", "owner", "confirmed", "team_id"])
         w.writeheader()
         w.writerows(rows)
-    unk = [(r["season"], r["team"]) for r in rows if r["confirmed"] != "1"]
-    if unk:
-        print("UNCONFIRMED team names (edit data/owners.csv):", unk)
+    known = {r["owner"] for r in rows if r["confirmed"] == "1"}
+    unmapped = [(r["season"], r["team"]) for r in rows if r["owner"] not in known]
+    review = [(r["season"], r["team"], r["owner"]) for r in rows if r["confirmed"] != "1" and r["owner"] in known]
+    if review:
+        print("NOTE auto-mapped, please review data/owners.csv (set confirmed=1):", review)
+    if unmapped:
+        sys.exit("ERROR: unmapped team names - add them to data/owners.csv, then re-run: " + str(unmapped))
     return {(r["season"], r["team"]): r["owner"] for r in rows}
+
+
+def check_history(standings, matchups, current):
+    """Finished seasons must keep their scores; a damaged history must never be published."""
+    for se in sorted({r["season"] for r in standings} - {current}):
+        scored = sum(1 for m in matchups if m["season"] == se and m["away_pts"] not in ("", None) and float(m["away_pts"]) > 0)
+        if scored < 100:
+            sys.exit(f"ERROR: {se} has only {scored} scored matchups (expected 100+). History looks damaged; refusing to build.")
 
 
 def clean_name(n):
@@ -121,6 +152,8 @@ def tracker_and_recap(standings, own, played):
 def main():
     standings = list(csv.DictReader(open(D / "standings.csv")))
     matchups = list(csv.DictReader(open(D / "matchups.csv")))
+    cur = json.load(open(ROOT / "leagues.json"))["current"]
+    check_history(standings, matchups, cur)
     own = load_owners(standings)
 
     games = []

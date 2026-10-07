@@ -1,51 +1,51 @@
-season,team,owner,confirmed
-2022-23,tyhoward,T-How,1
-2022-23,Xrossbone,Jackson,1
-2022-23,Bucky Conway,Conway,1
-2022-23,Salty,Salty,1
-2022-23,Guckien,Guckien,1
-2022-23,Stephenrooney90,Rooney,1
-2022-23,BlackJack,Blackjacks,1
-2022-23,RileyRojo,Riley,1
-2022-23,picurtis,Pierson,1
-2022-23,Ejbuser,Buser,1
-2023-24,Xrossbone,Jackson,1
-2023-24,RileyRojo,Riley,1
-2023-24,Guckien,Guckien,1
-2023-24,Salty,Salty,1
-2023-24,tyhoward,T-How,1
-2023-24,Stephenrooney90,Rooney,1
-2023-24,Ejbuser,Buser,1
-2023-24,picurtis,Pierson,1
-2023-24,Bucky Conway,Conway,1
-2023-24,BlackJack,Blackjacks,1
-2024-25,Salty,Salty,1
-2024-25,T-How,T-How,1
-2024-25,Buser has Wemby,Buser,1
-2024-25,Guckien & Giddey & KCP & Deni Avdija,Guckien,1
-2024-25,Jackson,Jackson,1
-2024-25,Conway,Conway,1
-2024-25,Rooney,Rooney,1
-2024-25,Philadephia Blackjacks,Blackjacks,1
-2024-25,Pierson’s AutoDrafters,Pierson,1
-2024-25,Riley’s Hefty Leftys,Riley,1
-2025-26,Riley McElwembanyama,Riley,1
-2025-26,Guckien,Guckien,1
-2025-26,Salty’s Aspirations,Salty,1
-2025-26,Jackson,Jackson,1
-2025-26,HaliBuser,Buser,1
-2025-26,Blackjacks,Blackjacks,1
-2025-26,Pierson’s AutoDrafters,Pierson,1
-2025-26,Conway,Conway,1
-2025-26,Rooney,Rooney,1
-2025-26,T-How,T-How,1
-2026-27,Riley McElwembanyama,Riley,1
-2026-27,Blackjacks,Blackjacks,1
-2026-27,Salty,Salty,1
-2026-27,HaliBuser,Buser,1
-2026-27,Pierson’s AutoDrafters,Pierson,1
-2026-27,Rooney,Rooney,1
-2026-27,Conway,Conway,1
-2026-27,T-How,T-How,1
-2026-27,Guckien,Guckien,1
-2026-27,Jackson,Jackson,1
+season,team,owner,confirmed,team_id
+2022-23,tyhoward,T-How,1,ibf4yutil93mhju7
+2022-23,Xrossbone,Jackson,1,xa5w57ngl93mbh2g
+2022-23,Bucky Conway,Conway,1,lax5yix5l97irroa
+2022-23,Salty,Salty,1,pqp9fc6yl93j5xul
+2022-23,Guckien,Guckien,1,nygi7tael97irroa
+2022-23,Stephenrooney90,Rooney,1,jk0ke7gol93k5zd7
+2022-23,BlackJack,Blackjacks,1,rt1ug69sl97ijzno
+2022-23,RileyRojo,Riley,1,6bpping1l96ajun5
+2022-23,picurtis,Pierson,1,gl61mmryl93md0at
+2022-23,Ejbuser,Buser,1,tnykxdccl93mdr11
+2023-24,Xrossbone,Jackson,1,eli9ckrglnvxil9y
+2023-24,RileyRojo,Riley,1,n7acn7jolnvxil9y
+2023-24,Guckien,Guckien,1,b3jjri1ilnvxil9y
+2023-24,Salty,Salty,1,qjg0vp84lnvxil9y
+2023-24,tyhoward,T-How,1,9duu1755lnvxil9y
+2023-24,Stephenrooney90,Rooney,1,jixaa8l3lnvxil9y
+2023-24,Ejbuser,Buser,1,ts8qey4flnvxil9y
+2023-24,picurtis,Pierson,1,y09j7i5alnvxil9y
+2023-24,Bucky Conway,Conway,1,dljt8kz1lnvxil9y
+2023-24,BlackJack,Blackjacks,1,po3bonl9lnvxil9y
+2024-25,Salty,Salty,1,7jwjf6hgm1whgxxs
+2024-25,T-How,T-How,1,f9yq112sm1whgxxs
+2024-25,Buser has Wemby,Buser,1,gxxp9rr0m1whgxxs
+2024-25,Guckien & Giddey & KCP & Deni Avdija,Guckien,1,61xrt1smm1whgxxs
+2024-25,Jackson,Jackson,1,c2198rgtm1whgxxs
+2024-25,Conway,Conway,1,yn3jui7nm1whgxxs
+2024-25,Rooney,Rooney,1,ogxmjjovm1whgxxs
+2024-25,Philadephia Blackjacks,Blackjacks,1,rr8dwgn0m1whgxxs
+2024-25,Pierson’s AutoDrafters,Pierson,1,xj5wwgasm1whgxxs
+2024-25,Riley’s Hefty Leftys,Riley,1,kom4opqfm1whgxxs
+2025-26,Riley McElwembanyama,Riley,1,mm10q3fvmd8zja6j
+2025-26,Guckien,Guckien,1,8htzhjs2md8zja6l
+2025-26,Salty’s Aspirations,Salty,1,nmbx4rkzmd8zja6m
+2025-26,Jackson,Jackson,1,mjm1574cmd8zja6n
+2025-26,HaliBuser,Buser,1,nmlbr2ppmd8zja6n
+2025-26,Blackjacks,Blackjacks,1,q86f43pcmd8zja6k
+2025-26,Pierson’s AutoDrafters,Pierson,1,mp3txfdsmd8zja6i
+2025-26,Conway,Conway,1,sha0v3f8md8zja6k
+2025-26,Rooney,Rooney,1,qxb6cn3omd8zja6h
+2025-26,T-How,T-How,1,7kj0njiwmd8zja6g
+2026-27,Riley McElwembanyama,Riley,1,64eyswtomsc25eb8
+2026-27,Blackjacks,Blackjacks,1,e7ctu5b1msc25eb8
+2026-27,Salty,Salty,1,u3bnomv3msc25eb8
+2026-27,HaliBuser,Buser,1,7j0egupgmsc25eb8
+2026-27,Pierson’s AutoDrafters,Pierson,1,wazrfqctmsc25eb8
+2026-27,Rooney,Rooney,1,zdbv2x8ymsc25eb8
+2026-27,Conway,Conway,1,dee3tx9omsc25eb8
+2026-27,T-How,T-How,1,yr8isikimsc25eb8
+2026-27,Guckien,Guckien,1,zbsh2iq2msc25eb8
+2026-27,Jackson,Jackson,1,oca9h5l7msc25eb8
