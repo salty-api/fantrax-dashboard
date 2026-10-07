@@ -6,6 +6,16 @@
 <title>Big Baller Brand Fantasy Basketball</title>
 <meta name="description" content="Big Baller Brand league history: all-time standings, seasons, owner profiles, records, and rivalries.">
 <meta name="theme-color" content="#0c0f18">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Big Baller Brand">
+<meta property="og:title" content="Big Baller Brand Fantasy Basketball">
+<meta property="og:description" content="League history: all-time standings, champions, weekly recaps, records, rivalries, and who-has-him player ownership.">
+<meta property="og:url" content="https://fantrax.whohashim.com/">
+<meta property="og:image" content="https://fantrax.whohashim.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://fantrax.whohashim.com/og.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0f18'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23f97316'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -429,8 +439,7 @@ function viewWho(pid) {
     Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([o, n]) => `<span class="stint">${ownerCell(o)}&nbsp;<span class="mute">${n} season${n > 1 ? 's' : ''}</span></span>`).join('') + `</div>`;
 }
 function shareLink(btn, pid) {
-  const base = location.protocol === 'file:' ? 'https://fantrax.whohashim.com/' : location.origin + location.pathname;
-  const url = base + '#whohas/' + pid, done = ok => { btn.textContent = ok ? 'Link copied!' : url; setTimeout(() => btn.textContent = 'Copy share link', 2500); };
+  const url = 'https://fantrax.whohashim.com/p/' + pid + '/', done = ok => { btn.textContent = ok ? 'Link copied!' : url; setTimeout(() => btn.textContent = 'Copy share link', 2500); };
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(() => done(true), () => done(false));
   else { const t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); done(ok); }
 }
