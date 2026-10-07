@@ -53,6 +53,8 @@ select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-
 .heat td { text-align: center; font-variant-numeric: tabular-nums; }
 .heat td:first-child, .heat th:first-child { text-align: left; }
 input.search { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 8px 12px; font-size: 14px; font-family: inherit; width: 340px; max-width: 100%; }
+button.share { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 8px 14px; font-size: 13px; font-family: inherit; cursor: pointer; margin-left: 4px; }
+button.share:hover { background: #334155; }
 a.pl { color: #f1f5f9; text-decoration: none; font-weight: 600; } a.pl:hover { color: #f97316; }
 .big { font-size: 15px; font-weight: 700; color: #f8fafc; margin-top: 2px; }
 .card .sub { font-size: 11px; color: #94a3b8; margin-top: 3px; }
@@ -361,7 +363,7 @@ function viewRecap(season, wkArg) {
 function stintLabel(se, a, b) { return !D.seasons.includes(se) ? 'current roster' : a === 1 && b >= 23 ? 'full season' : `wk ${a}-${b}`; }
 function viewWho(pid) {
   const list = Object.keys(D.players).sort((a, b) => pname(a).localeCompare(pname(b)));
-  const box = `<div class="controls"><input class="search" list="plist" placeholder="Search a player..." value="${pid && D.players[pid] ? pname(pid) : ''}" onchange="whoGo(this.value)"><datalist id="plist">${list.map(k => `<option value="${pname(k)}">`).join('')}</datalist></div>`;
+  const box = `<div class="controls"><input class="search" list="plist" placeholder="Search a player..." value="${pid && D.players[pid] ? pname(pid) : ''}" onchange="whoGo(this.value)"><datalist id="plist">${list.map(k => `<option value="${pname(k)}">`).join('')}</datalist>${pid && D.players[pid] ? `<button class="share" onclick="shareLink(this,'${pid}')">Copy share link</button>` : ''}</div>`;
   if (!pid || !D.players[pid]) {
     const rows = Object.keys(D.stints).map(k => ({pid: k, owners: [...new Set(D.stints[k].map(x => x[1]))], n: D.stints[k].length}));
     const most = rows.sort((a, b) => b.owners.length - a.owners.length || b.n - a.n).slice(0, 15);
@@ -391,6 +393,12 @@ function viewWho(pid) {
     {h: 'Pick', k: x => x[3], v: x => x[3], num: 1},
   ], pk) : '<div class="mute">Never drafted (pickup only).</div>') +
   `<div class="section-title" style="margin-top:28px">Seasons per owner</div>` + Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([o, n]) => `<span class="stint">${ownerCell(o)}&nbsp;<span class="mute">${n}</span></span>`).join('') + `</div></div>`;
+}
+function shareLink(btn, pid) {
+  const base = location.protocol === 'file:' ? 'https://fantrax.whohashim.com/' : location.origin + location.pathname;
+  const url = base + '#whohas/' + pid, done = ok => { btn.textContent = ok ? 'Link copied!' : url; setTimeout(() => btn.textContent = 'Copy share link', 2500); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(() => done(true), () => done(false));
+  else { const t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); done(ok); }
 }
 function whoGo(name) { const k = Object.keys(D.players).find(k => pname(k).toLowerCase() === name.toLowerCase()); if (k) location.hash = 'whohas/' + k; }
 
