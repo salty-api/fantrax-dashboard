@@ -113,12 +113,14 @@ function viewAlltime() {
     {h: 'Playoff W-L', k: a => a.pw + '-' + a.pl, v: a => a.pw, num: 1},
     {h: 'Seasons', k: a => a.seasons, v: a => a.seasons, num: 1},
   ], A) + `</div>
-  <div class="section"><div class="section-title">Regular-season finish by year</div>${finishGrid()}
-  <div class="note">Cell = regular-season rank (green = top, red = bottom). 🏆 champion, 🥈 runner-up, • made playoffs.</div></div>`;
+  <div class="section"><div class="section-title">Final finish by year</div>${finishGrid()}
+  <div class="note">Playoff teams show their postseason finish (🏆 champion, 🥈 runner-up, T3 = lost in the semifinals); teams that missed the playoffs show their regular-season rank. Hover for the regular-season rank. Avg counts T3 as 3.5.</div></div>`;
 }
 function finishGrid() {
   const by = {}; D.rows.forEach(r => by[r.s + '|' + r.o] = r);
   const n = D.owners.length;
+  // final finish: playoff result if made playoffs (semifinal losers tie for 3rd), else regular-season rank
+  const fv = r => r.fin === 'Champion' ? 1 : r.fin === 'Runner-up' ? 2 : r.fin === 'Semifinal' ? 3.5 : r.rk;
   const order = D.alltime.map(a => a.o);
   return '<table class="heat"><tr><th>Owner</th>' + D.seasons.map(s => `<th style="text-align:center">${s}</th>`).join('') + '<th class="num">Avg</th></tr>' +
     order.map(o => {
@@ -126,11 +128,11 @@ function finishGrid() {
       const done = rs.filter(Boolean);
       return `<tr><td>${ownerLink(o)}</td>` + rs.map(r => {
         if (!r) return '<td class="mute">-</td>';
-        const t = (r.rk - 1) / (n - 1);
+        const v = fv(r), t = (v - 1) / (n - 1);
         const bg = t < .5 ? `rgba(74,222,128,${.45 - t * .7})` : `rgba(248,113,113,${(t - .5) * .8})`;
-        const mark = r.fin === 'Champion' ? ' 🏆' : r.fin === 'Runner-up' ? ' 🥈' : r.fin === 'Semifinal' ? ' •' : '';
-        return `<td style="background:${bg};font-weight:600" title="${r.team}: ${rec(r.w, r.l, r.t)}, ${r.fin}">${r.rk}${mark}</td>`;
-      }).join('') + `<td class="num">${(done.reduce((x, r) => x + r.rk, 0) / done.length).toFixed(1)}</td></tr>`;
+        const txt = r.fin === 'Champion' ? '1 🏆' : r.fin === 'Runner-up' ? '2 🥈' : r.fin === 'Semifinal' ? 'T3' : r.rk;
+        return `<td style="background:${bg};font-weight:600" title="${r.team}: ${rec(r.w, r.l, r.t)}, regular season #${r.rk}, ${r.fin === 'Missed' ? 'missed playoffs' : r.fin}">${txt}</td>`;
+      }).join('') + `<td class="num">${(done.reduce((x, r) => x + fv(r), 0) / done.length).toFixed(1)}</td></tr>`;
     }).join('') + '</table>';
 }
 
