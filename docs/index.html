@@ -51,6 +51,7 @@ select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-
 @media (max-width: 800px) { .two { grid-template-columns: 1fr; } .tab-panel { padding: 24px 16px 60px; } }
 .chart-box { position: relative; height: 280px; }
 .heat td { text-align: center; font-variant-numeric: tabular-nums; }
+.heat td:first-child, .heat th:first-child { text-align: left; }
 .note { font-size: 11px; color: #64748b; margin-top: 10px; }
 </style>
 </head>
@@ -112,12 +113,25 @@ function viewAlltime() {
     {h: 'Playoff W-L', k: a => a.pw + '-' + a.pl, v: a => a.pw, num: 1},
     {h: 'Seasons', k: a => a.seasons, v: a => a.seasons, num: 1},
   ], A) + `</div>
-  <div class="section"><div class="section-title">Regular-season finish by year</div><div class="chart-box" style="height:340px"><canvas id="c_rank"></canvas></div></div>`;
+  <div class="section"><div class="section-title">Regular-season finish by year</div>${finishGrid()}
+  <div class="note">Cell = regular-season rank (green = top, red = bottom). 🏆 champion, 🥈 runner-up, • made playoffs.</div></div>`;
 }
-function afterAlltime() {
-  chart(document.getElementById('c_rank'), {type: 'line', data: {labels: D.seasons, datasets: D.owners.map(o => ({label: o, borderColor: col(o), backgroundColor: col(o), tension: .2, pointRadius: 3,
-    data: D.seasons.map(s => (D.rows.find(r => r.s === s && r.o === o) || {}).rk ?? null)}))},
-    options: {maintainAspectRatio: false, scales: {y: {reverse: true, min: 1, max: 10, title: {display: true, text: 'Rank'}, ticks: {stepSize: 1}}}, plugins: {legend: {position: 'bottom', labels: {boxWidth: 10}}}}});
+function finishGrid() {
+  const by = {}; D.rows.forEach(r => by[r.s + '|' + r.o] = r);
+  const n = D.owners.length;
+  const order = D.alltime.map(a => a.o);
+  return '<table class="heat"><tr><th>Owner</th>' + D.seasons.map(s => `<th style="text-align:center">${s}</th>`).join('') + '<th class="num">Avg</th></tr>' +
+    order.map(o => {
+      const rs = D.seasons.map(s => by[s + '|' + o]);
+      const done = rs.filter(Boolean);
+      return `<tr><td>${ownerLink(o)}</td>` + rs.map(r => {
+        if (!r) return '<td class="mute">-</td>';
+        const t = (r.rk - 1) / (n - 1);
+        const bg = t < .5 ? `rgba(74,222,128,${.45 - t * .7})` : `rgba(248,113,113,${(t - .5) * .8})`;
+        const mark = r.fin === 'Champion' ? ' 🏆' : r.fin === 'Runner-up' ? ' 🥈' : r.fin === 'Semifinal' ? ' •' : '';
+        return `<td style="background:${bg};font-weight:600" title="${r.team}: ${rec(r.w, r.l, r.t)}, ${r.fin}">${r.rk}${mark}</td>`;
+      }).join('') + `<td class="num">${(done.reduce((x, r) => x + r.rk, 0) / done.length).toFixed(1)}</td></tr>`;
+    }).join('') + '</table>';
 }
 
 function viewSeasons(sel) {
@@ -259,7 +273,7 @@ function render() {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
   const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
-  if (t === 'alltime') afterAlltime(); if (t === 'seasons') afterSeasons(x);
+  if (t === 'seasons') afterSeasons(x);
   window.scrollTo(0, 0);
 }
 document.getElementById('tabs').innerHTML = TABS.map(([k, l]) => `<button class="tab-btn" data-t="${k}" onclick="location.hash='${k}'">${l}</button>`).join('');
