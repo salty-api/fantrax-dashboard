@@ -432,11 +432,27 @@ function viewWho(pid) {
     ${sTag('PTS', S.pts.toFixed(1))}${sTag('REB', S.reb.toFixed(1))}${sTag('AST', S.ast.toFixed(1))}${sTag('STL', S.st.toFixed(1))}${sTag('BLK', S.blk.toFixed(1))}${sTag('TO', S.to.toFixed(1))}
   </div></div>` : `<div class="section"><div class="section-title">${D.statsSeason} season</div><div class="mute">No ${D.statsSeason} stats (did not play).</div></div>`}
   <div class="section"><div class="section-title">Ownership timeline</div><div class="timeline">${cards}</div></div>
+  ${pk.length ? `<div class="section"><div class="section-title">Draft position by year</div><div class="chart-box" style="height:260px"><canvas id="c_draft"></canvas></div><div class="note">Overall pick number each year (higher on the chart = earlier pick). Logo = drafting owner.</div></div>` : ''}
   <div class="section"><div class="section-title">Owners all-time</div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">
     <div class="card"><div class="v">${Object.keys(cnt).length}</div><div class="k">Different owners</div></div>
     <div class="card"><div class="v">${Object.keys(bySeason).length}</div><div class="k">Seasons rostered</div></div>
     <div class="card"><div class="v">${pk.length}</div><div class="k">Times drafted</div></div></div>` +
     Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([o, n]) => `<span class="stint">${ownerCell(o)}&nbsp;<span class="mute">${n} season${n > 1 ? 's' : ''}</span></span>`).join('') + `</div>`;
+}
+function afterWho(pid) {
+  const el = document.getElementById('c_draft'); if (!el) return;
+  const pk = D.picks[pid] || [], by = {}; pk.forEach(x => by[x[0]] = x);
+  const pts = D.seasonsAll.map(se => by[se] ? by[se][3] : null);
+  const maxPick = Math.max(...pts.filter(x => x), 10);
+  const labels = {id: 'pickLabels', afterDatasetsDraw(c) {
+    const m = c.getDatasetMeta(0), x = c.ctx; x.save(); x.fillStyle = '#e2e8f0'; x.font = '600 12px sans-serif'; x.textAlign = 'center';
+    m.data.forEach((pt, i) => { if (pts[i]) x.fillText('#' + pts[i], pt.x, pt.y + 30); }); x.restore(); }};
+  const imgs = D.seasonsAll.map(se => { if (!by[se]) return 'circle'; const im = new Image(30, 30); im.src = 'logos/' + slug(by[se][1]) + '.webp'; im.onload = () => c.update('none'); return im; });
+  const c = chart(el, {type: 'line', plugins: [labels], data: {labels: D.seasonsAll, datasets: [{label: 'Draft pick', data: pts, spanGaps: false, borderColor: '#64748b', borderWidth: 2, tension: .15,
+      pointStyle: imgs, pointRadius: 15, pointHoverRadius: 17, pointBackgroundColor: D.seasonsAll.map(se => by[se] ? col(by[se][1]) : '#64748b'), pointBorderColor: '#0f1117', pointBorderWidth: 2}]},
+    options: {maintainAspectRatio: false, layout: {padding: {bottom: 18, top: 10, left: 10, right: 20}},
+      scales: {y: {reverse: true, min: 1, suggestedMax: Math.ceil((maxPick + 12) / 10) * 10, title: {display: true, text: 'Overall pick'}, ticks: {precision: 0}}, x: {title: {display: true, text: 'Season'}}},
+      plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => { const x = by[D.seasonsAll[c.dataIndex]]; return x ? `${x[1]}: round ${x[2]}, pick #${x[3]}` : ''; }}}}}});
 }
 function shareLink(btn, pid) {
   const url = 'https://fantrax.whohashim.com/p/' + pid + '/', done = ok => { btn.textContent = ok ? 'Link copied!' : url; setTimeout(() => btn.textContent = 'Copy share link', 2500); };
@@ -454,7 +470,7 @@ function render() {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
   const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y), recap: () => viewRecap(x, y), whohas: () => viewWho(x)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
-  if (t === 'seasons') afterSeasons(x);
+  if (t === 'seasons') afterSeasons(x); if (t === 'whohas') afterWho(x);
   window.scrollTo(0, 0);
 }
 document.getElementById('tabs').innerHTML = TABS.map(([k, l]) => `<button class="tab-btn" data-t="${k}" onclick="location.hash='${k}'">${l}</button>`).join('');
