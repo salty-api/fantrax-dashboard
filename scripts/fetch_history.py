@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch Big Baller Brand league history from the public Fantrax API.
+"""Fetch Fantrax Platinum league history from the public Fantrax API.
 
 Reads leagues.json (season -> leagueId) and writes, per season:
   data/standings.csv  season, rank, team, team_id, w, l, t, pf, pa

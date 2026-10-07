@@ -48,7 +48,7 @@ def card_site(D):
         f"<b>{o}</b><span style='color:#94a3b8;font-size:26px'>{' · '.join(sorted(ss))}</span>"
         f"<span style='font-size:30px'>{'🏆' * len(ss)}</span></div>"
         for o, ss in sorted(champs.items(), key=lambda x: -len(x[1])))
-    return f"""<style>{CSS}</style><div class=bar></div><div class=brand>Big Baller Brand</div><div class=dom>fantrax.whohashim.com</div>
+    return f"""<style>{CSS}</style><div class=bar></div><div class=brand>Fantrax Platinum</div><div class=dom>fantrax.whohashim.com</div>
 <div style='position:absolute;left:70px;top:140px;right:60px'>
 <div style='font-size:64px;font-weight:700;line-height:1.1'>Fantasy Basketball<br>League History</div>
 <div style='font-size:26px;color:#94a3b8;margin:16px 0 26px'>{len(D['seasons'])} seasons · {len(D['owners'])} owners · all-time standings, records, rivalries and who-has-him</div>
@@ -124,7 +124,7 @@ MANIFEST_DATA = json.load(open(MANIFEST)) if MANIFEST.exists() else {}
 
 STUB = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title><meta name="description" content="{desc}">
-<meta property="og:type" content="website"><meta property="og:site_name" content="Big Baller Brand">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Fantrax Platinum">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:url" content="{url}"><meta property="og:image" content="{img}">
 <meta property="og:image:width" content="{w}"><meta property="og:image:height" content="{h}">
@@ -177,7 +177,7 @@ def main():
         write_stub(DOCS / "p" / pid / "index.html", f"{n} | Who Has Him", " · ".join(b for b in bits if b),
                    f"{SITE}/p/{pid}/", f"{SITE}/p/{pid}/card.jpg", f"#whohas/{pid}", 600, 315)
     for k, (t, d) in TABS.items():
-        write_stub(DOCS / "t" / k / "index.html", f"{t} | Big Baller Brand", d, f"{SITE}/t/{k}/", f"{SITE}/og.png", f"#{k}")
+        write_stub(DOCS / "t" / k / "index.html", f"{t} | Fantrax Platinum", d, f"{SITE}/t/{k}/", f"{SITE}/og.png", f"#{k}")
     print(len(D["players"]), "player stubs,", len(TABS), "tab stubs")
 
 

@@ -1,4 +1,4 @@
-# Big Baller Brand - Fantasy Basketball History
+# Fantrax Platinum - Fantasy Basketball History
 
 League history dashboard for the Fantrax league, served by GitHub Pages from `docs/` at fantrax.whohashim.com.
 
