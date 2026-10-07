@@ -53,6 +53,9 @@ select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-
 .heat td { text-align: center; font-variant-numeric: tabular-nums; }
 .heat td:first-child, .heat th:first-child { text-align: left; }
 input.search { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 8px 12px; font-size: 14px; font-family: inherit; width: 340px; max-width: 100%; }
+img.face { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; object-position: top; vertical-align: middle; margin-right: 8px; background: #1e293b; }
+img.face.lg { width: 72px; height: 72px; margin: 0 16px 0 0; border: 2px solid #1e293b; }
+.hdr { display: flex; align-items: center; margin-bottom: 4px; }
 button.share { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 8px 14px; font-size: 13px; font-family: inherit; cursor: pointer; margin-left: 4px; }
 button.share:hover { background: #334155; }
 a.pl { color: #f1f5f9; text-decoration: none; font-weight: 600; } a.pl:hover { color: #f97316; }
@@ -279,7 +282,8 @@ function goR() { location.hash = 'rivalry/' + encodeURIComponent(document.getEle
 /* ---------- Weekly Recap ---------- */
 const pname = pid => (D.players[pid] || ['#' + pid, ''])[0];
 const ppos = pid => (D.players[pid] || ['', ''])[1];
-const plink = pid => `<a class="pl" href="#whohas/${pid}">${pname(pid)}</a>`;
+const face = (pid, lg) => `<img class="face${lg ? ' lg' : ''}" src="https://fantraximg.com/si/headshots/NBA/hs${pid}_96_9.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`;
+const plink = pid => `${face(pid)}<a class="pl" href="#whohas/${pid}">${pname(pid)}</a>`;
 const pwSeasons = [...new Set(D.pw.map(x => x[0]))].sort();
 function wkLabel(season, wk) {
   const reg = Math.max(...D.games.filter(g => g.s === season && g.ph === 'regular').map(g => g.wk));
@@ -378,7 +382,7 @@ function viewWho(pid) {
   const bySeason = {}; st.forEach(x => (bySeason[x[0]] = bySeason[x[0]] || []).push(x));
   const cnt = {}; Object.values(bySeason).forEach(v => [...new Set(v.map(x => x[1]))].forEach(o => cnt[o] = (cnt[o] || 0) + 1));
   const nowS = D.seasonsAll[D.seasonsAll.length - 1], now = (bySeason[nowS] || []).slice(-1)[0];
-  return `<h1>${pname(pid)}</h1><div class="subtitle">${ppos(pid) || 'Player'} · ${now ? 'Currently on ' + now[1] + ' (' + nowS + ')' : 'Not rostered in ' + nowS}</div>${box}
+  return `<div class="hdr">${face(pid, 1)}<div><h1>${pname(pid)}</h1><div class="subtitle" style="margin-bottom:0">${ppos(pid) || 'Player'} · ${now ? 'Currently on ' + now[1] + ' (' + nowS + ')' : 'Not rostered in ' + nowS}</div></div></div><div style="height:20px"></div>${box}
   <div class="grid"><div class="card"><div class="v">${Object.keys(cnt).length}</div><div class="k">Owners</div></div>
   <div class="card"><div class="v">${Object.keys(bySeason).length}</div><div class="k">Seasons rostered</div></div>
   <div class="card"><div class="v">${pk.length}</div><div class="k">Times drafted</div></div></div>
