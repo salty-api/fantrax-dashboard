@@ -351,6 +351,19 @@ function viewRecap(season, wkArg) {
   const leaders = Object.values(sum).sort((a, b) => b.pts - a.pts).slice(0, 10);
   const card = (k, v, sub, hl) => `<div class="card ${hl ? 'hl' : ''}"><div class="k">${k}</div><div class="big">${v}</div><div class="sub">${sub}</div></div>`;
   const pot = top[0];
+  // luck: all-play record (each week vs every other team) vs actual record, regular season through this week
+  const lk = {};
+  for (let w = 1; w <= Math.min(wk, regMax); w++) {
+    const wg = D.games.filter(g => g.s === season && g.ph === 'regular' && g.wk === w), sc2 = [];
+    wg.forEach(g => { sc2.push([g.a, g.ap]); sc2.push([g.h, g.hp]); });
+    sc2.forEach(([o, p]) => {
+      const x = lk[o] = lk[o] || {o, aw: 0, ag: 0, w: 0, g: 0};
+      sc2.forEach(([o2, p2]) => { if (o2 !== o) { x.ag++; x.aw += p > p2 ? 1 : p === p2 ? .5 : 0; } });
+    });
+    wg.forEach(g => [[g.a, g.ap, g.hp], [g.h, g.hp, g.ap]].forEach(([o, a, b]) => { lk[o].g++; lk[o].w += a > b ? 1 : a === b ? .5 : 0; }));
+  }
+  const luck = Object.values(lk).map(x => ({...x, ap: x.aw / x.ag, wp: x.w / x.g, d: x.w / x.g - x.aw / x.ag, ew: x.aw / x.ag * x.g})).sort((a, b) => b.d - a.d);
+  window._luck = luck;
   return `<h1>Weekly Recap</h1><div class="subtitle">${season} · ${wkLabel(season, wk)} · points from each team's counted lineup</div>
   <div class="controls"><select onchange="location.hash='recap/'+this.value+'/${wk}'">${pwSeasons.map(x => `<option ${x === season ? 'selected' : ''}>${x}</option>`).join('')}</select>
   <select onchange="location.hash='recap/${season}/'+this.value">${wks.map(w => `<option value="${w}" ${w === wk ? 'selected' : ''}>${wkLabel(season, w)}</option>`).join('')}</select></div>
@@ -390,7 +403,24 @@ function viewRecap(season, wkArg) {
     {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
-  ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>`;
+  ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>
+  <div class="section"><div class="section-title">Luck: actual win % vs all-play win % (regular season through ${wkLabel(season, Math.min(wk, regMax))})</div>
+  <div class="chart-box" style="height:${60 + luck.length * 38}px"><canvas id="c_luck"></canvas></div>` +
+  T([
+    {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
+    {h: 'Actual', k: r => rec(r.w, r.g - r.w, 0).replace(/-0$/, '') + ' (' + (r.wp * 100).toFixed(0) + '%)', v: r => r.wp, num: 1},
+    {h: 'All-play', k: r => f0(r.aw) + '-' + f0(r.ag - r.aw) + ' (' + (r.ap * 100).toFixed(0) + '%)', v: r => r.ap, num: 1},
+    {h: 'Luck (W)', k: r => `<span class="${r.d > 0.005 ? 'pos' : r.d < -0.005 ? 'neg' : 'mute'}">${r.w - r.ew > 0 ? '+' : ''}${(r.w - r.ew).toFixed(1)}</span>`, v: r => r.w - r.ew, num: 1},
+    {h: 'Luck (%)', k: r => `<span class="${r.d > 0.005 ? 'pos' : r.d < -0.005 ? 'neg' : 'mute'}">${r.d > 0 ? '+' : ''}${(r.d * 100).toFixed(0)}</span>`, v: r => r.d, num: 1},
+  ], luck) + `<div class="note">All-play = each team's record if it had played every other team each week (${D.owners.length - 1} games a week instead of 1). Luck = actual wins minus all-play expected wins (positive = lucky). Playoffs excluded.</div></div>`;
+}
+function afterRecap() {
+  const L = window._luck || [], el = document.getElementById('c_luck');
+  if (!el || !L.length) return;
+  chart(el, {type: 'bar', data: {labels: L.map(r => r.o), datasets: [
+    {label: 'Actual win %', data: L.map(r => +(r.wp * 100).toFixed(1)), backgroundColor: L.map(r => col(r.o))},
+    {label: 'All-play win %', data: L.map(r => +(r.ap * 100).toFixed(1)), backgroundColor: '#64748b99'}]},
+    options: {indexAxis: 'y', maintainAspectRatio: false, scales: {x: {min: 0, max: 100, ticks: {callback: v => v + '%'}}}, plugins: {legend: {position: 'bottom', labels: {boxWidth: 10}}, tooltip: {callbacks: {afterBody: i => { const r = L[i[0].dataIndex]; return 'Luck: ' + (r.d > 0 ? '+' : '') + (r.d * 100).toFixed(0) + ' pts'; }}}}}});
 }
 
 /* ---------- Who Has Him ---------- */
@@ -470,7 +500,7 @@ function render() {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
   const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y), recap: () => viewRecap(x, y), whohas: () => viewWho(x)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
-  if (t === 'seasons') afterSeasons(x); if (t === 'whohas') afterWho(x);
+  if (t === 'seasons') afterSeasons(x); if (t === 'whohas') afterWho(x); if (t === 'recap') afterRecap();
   window.scrollTo(0, 0);
 }
 document.getElementById('tabs').innerHTML = TABS.map(([k, l]) => `<button class="tab-btn" data-t="${k}" onclick="location.hash='${k}'">${l}</button>`).join('');
