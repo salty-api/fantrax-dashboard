@@ -404,8 +404,8 @@ function viewRecap(season, wkArg) {
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
   ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>
-  <div class="section"><div class="section-title">Luck: actual win % vs all-play win % (regular season through ${wkLabel(season, Math.min(wk, regMax))})</div>
-  <div class="chart-box" style="height:${60 + luck.length * 38}px"><canvas id="c_luck"></canvas></div>` +
+  <div class="section"><div class="section-title">Luck: actual vs all-play win % (regular season through ${wkLabel(season, Math.min(wk, regMax))})</div>
+  <div class="chart-box" style="height:520px"><canvas id="c_luck"></canvas></div>` +
   T([
     {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
     {h: 'Actual', k: r => rec(r.w, r.g - r.w, 0).replace(/-0$/, '') + ' (' + (r.wp * 100).toFixed(0) + '%)', v: r => r.wp, num: 1},
@@ -417,10 +417,28 @@ function viewRecap(season, wkArg) {
 function afterRecap() {
   const L = window._luck || [], el = document.getElementById('c_luck');
   if (!el || !L.length) return;
-  chart(el, {type: 'bar', data: {labels: L.map(r => r.o), datasets: [
-    {label: 'Actual win %', data: L.map(r => +(r.wp * 100).toFixed(1)), backgroundColor: L.map(r => col(r.o))},
-    {label: 'All-play win %', data: L.map(r => +(r.ap * 100).toFixed(1)), backgroundColor: '#64748b99'}]},
-    options: {indexAxis: 'y', maintainAspectRatio: false, scales: {x: {min: 0, max: 100, ticks: {callback: v => v + '%'}}}, plugins: {legend: {position: 'bottom', labels: {boxWidth: 10}}, tooltip: {callbacks: {afterBody: i => { const r = L[i[0].dataIndex]; return 'Luck: ' + (r.d > 0 ? '+' : '') + (r.d * 100).toFixed(0) + ' pts'; }}}}}});
+  const lo = Math.floor(Math.min(...L.map(r => Math.min(r.ap, r.wp))) * 10) * 10 - 5, hi = Math.ceil(Math.max(...L.map(r => Math.max(r.ap, r.wp))) * 10) * 10 + 5;
+  const mn = Math.max(0, lo), mx = Math.min(100, hi);
+  const diag = {id: 'diag', afterDatasetsDraw(c) {
+    const {ctx, scales: {x, y}} = c;
+    ctx.save(); ctx.setLineDash([5, 4]); ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x.getPixelForValue(mn), y.getPixelForValue(mn)); ctx.lineTo(x.getPixelForValue(mx), y.getPixelForValue(mx)); ctx.stroke();
+    ctx.setLineDash([]); ctx.font = '600 11px sans-serif';
+    ctx.fillStyle = '#4ade80aa'; ctx.textAlign = 'left'; ctx.fillText('LUCKY (above the line)', x.left + 8, y.top + 14);
+    ctx.fillStyle = '#f87171aa'; ctx.textAlign = 'right'; ctx.fillText('UNLUCKY (below the line)', x.right - 8, y.bottom - 8);
+    ctx.fillStyle = '#e2e8f0'; ctx.textAlign = 'left'; ctx.font = '600 11px sans-serif';
+    c.getDatasetMeta(0).data.forEach((pt, i) => ctx.fillText(L[i].o, pt.x + 10, pt.y + 4));
+    ctx.restore();
+  }};
+  chart(el, {type: 'scatter', plugins: [diag], data: {datasets: [{
+    data: L.map(r => ({x: +(r.ap * 100).toFixed(1), y: +(r.wp * 100).toFixed(1)})),
+    backgroundColor: L.map(r => col(r.o)), pointRadius: 8, pointHoverRadius: 10}]},
+    options: {maintainAspectRatio: false, layout: {padding: {right: 70}},
+      scales: {x: {min: mn, max: mx, title: {display: true, text: 'All-play win % (record vs every team each week)'}, ticks: {callback: v => v + '%'}},
+               y: {min: mn, max: mx, title: {display: true, text: 'Actual win %'}, ticks: {callback: v => v + '%'}}},
+      plugins: {legend: {display: false}, tooltip: {callbacks: {
+        title: i => L[i[0].dataIndex].o,
+        label: i => { const r = L[i.dataIndex]; return [`Actual: ${(r.wp * 100).toFixed(0)}%`, `All-play: ${(r.ap * 100).toFixed(0)}%`, `Luck: ${r.d > 0 ? '+' : ''}${(r.d * 100).toFixed(0)} pts`]; }}}}}});
 }
 
 /* ---------- Who Has Him ---------- */
