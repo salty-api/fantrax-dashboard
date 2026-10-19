@@ -405,7 +405,7 @@ function viewRecap(season, wkArg) {
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
   ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>
   <div class="section"><div class="section-title">Luck: actual vs all-play win % (regular season through ${wkLabel(season, Math.min(wk, regMax))})</div>
-  <div class="chart-box" style="height:520px"><canvas id="c_luck"></canvas></div>` +
+  <div class="mute" style="font-size:12px;margin:-6px 0 10px">Expected record of each team if they played all opponents every week</div><div class="chart-box" style="height:520px"><canvas id="c_luck"></canvas></div>` +
   T([
     {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
     {h: 'Actual', k: r => rec(r.w, r.g - r.w, 0).replace(/-0$/, '') + ' (' + (r.wp * 100).toFixed(0) + '%)', v: r => r.wp, num: 1},
