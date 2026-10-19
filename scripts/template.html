@@ -58,6 +58,7 @@ select { background: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-
 .card .v { font-size: 22px; font-weight: 700; color: #f8fafc; }
 .card .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-top: 4px; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.two > * { min-width: 0; }
 @media (max-width: 800px) { .two { grid-template-columns: 1fr; } .tab-panel { padding: 24px 16px 60px; } }
 .chart-box { position: relative; height: 280px; }
 .heat td { text-align: center; font-variant-numeric: tabular-nums; }
