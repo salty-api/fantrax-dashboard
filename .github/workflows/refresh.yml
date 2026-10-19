@@ -3,6 +3,8 @@ name: Refresh league data
 on:
   schedule:
     - cron: "0 14 * * 1"   # Mondays 14:00 UTC (7am PT / 10am ET), after the Sunday scoring period closes
+    - cron: "30 6 * * *"   # nightly 06:30 UTC (11:30pm PDT / 10:30pm PST), most games done
+    - cron: "0 12 * * *"   # nightly 12:00 UTC (5am PDT / 4am PST), West Coast games final
   workflow_dispatch:        # run it by hand from the Actions tab
 
 permissions:
@@ -47,7 +49,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
-          git commit -m "Weekly refresh $(date -u +%Y-%m-%d)"
+          git commit -m "Refresh $(date -u +%Y-%m-%d\ %H:%M)Z"
           git push
           # pushes made with GITHUB_TOKEN don't trigger the Pages build on their own
           gh api -X POST "repos/${{ github.repository }}/pages/builds"
