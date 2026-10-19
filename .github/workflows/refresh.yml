@@ -3,8 +3,9 @@ name: Refresh league data
 on:
   schedule:
     - cron: "0 14 * * 1"   # Mondays 14:00 UTC (7am PT / 10am ET), after the Sunday scoring period closes
-    - cron: "30 6 * * *"   # nightly 06:30 UTC (11:30pm PDT / 10:30pm PST), most games done
-    - cron: "0 12 * * *"   # nightly 12:00 UTC (5am PDT / 4am PST), West Coast games final
+    # Nightly at 7pm and 11pm PT. Each slot is scheduled at both its PDT and PST UTC hour; the gate step keeps only the one that lands on the right PT hour.
+    - cron: "0 2,3 * * *"   # 7pm PT
+    - cron: "0 6,7 * * *"   # 11pm PT
   workflow_dispatch:        # run it by hand from the Actions tab
 
 permissions:
@@ -19,17 +20,31 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
+      - name: Gate (nightly runs only at 7pm and 11pm PT)
+        id: gate
+        run: |
+          H=$(TZ=America/Los_Angeles date +%H)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" != "0 14 * * 1" ] && [ "$H" != "19" ] && [ "$H" != "23" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Skipping, PT hour is $H"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
         with:
           python-version: "3.11"
 
       - name: Tools for share cards (Chrome is preinstalled)
+        if: steps.gate.outputs.run == 'true'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq imagemagick fonts-liberation fonts-noto-color-emoji
 
       # Only the current season (leagues.json "current") is re-fetched. Older seasons are never rewritten.
       - name: Fetch current season
+        if: steps.gate.outputs.run == 'true'
         run: |
           python -I scripts/fetch_history.py --current
           python -I scripts/fetch_players.py
@@ -39,11 +54,13 @@ jobs:
 
       # Fails (and emails you) if a team name can't be mapped to an owner or a finished season lost its scores.
       - name: Build dashboard and share cards
+        if: steps.gate.outputs.run == 'true'
         run: |
           python -I scripts/build_dashboard.py
           python -I scripts/build_share.py
 
       - name: Commit and publish
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
