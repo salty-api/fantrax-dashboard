@@ -93,6 +93,25 @@ a.pl { color: #f1f5f9; text-decoration: none; font-weight: 600; } a.pl:hover { c
 .stint { display: inline-flex; align-items: center; background: #111827; border: 1px solid #1e293b; border-radius: 6px; padding: 4px 8px; margin: 3px 6px 3px 0; font-size: 12px; }
 .up { color: #4ade80; } .down { color: #f87171; }
 .note { font-size: 11px; color: #64748b; margin-top: 10px; }
+.tscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+html { -webkit-text-size-adjust: 100%; }
+@media (max-width: 600px) {
+  .tab-nav { padding: 0 10px; gap: 10px; height: 44px; }
+  .tab-nav-title { display: none; }
+  .tab-btn { padding: 6px 9px; font-size: 12px; }
+  .tab-panel { padding: 18px 12px 60px; }
+  td, th { padding: 6px 6px; }
+  td { font-size: 12px; }
+  .two { gap: 8px; }
+  .section { margin-bottom: 28px; }
+  .controls select, input.search { font-size: 16px; margin-bottom: 8px; }
+  .grid { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+  .card { padding: 10px; }
+  .chart-box { height: 240px; }
+  .chart-box.tall { height: 400px !important; }
+  img.face { width: 22px; height: 22px; margin-right: 6px; }
+  .logo { width: 20px; height: 20px; margin-right: 6px; }
+}
 </style>
 </head>
 <body>
@@ -405,7 +424,7 @@ function viewRecap(season, wkArg) {
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
   ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>
   <div class="section"><div class="section-title">Luck: actual vs all-play win % (regular season through ${wkLabel(season, Math.min(wk, regMax))})</div>
-  <div class="mute" style="font-size:12px;margin:-6px 0 10px">Expected record of each team if they played all opponents every week</div><div class="chart-box" style="height:520px"><canvas id="c_luck"></canvas></div>` +
+  <div class="mute" style="font-size:12px;margin:-6px 0 10px">Expected record of each team if they played all opponents every week</div><div class="chart-box tall" style="height:520px"><canvas id="c_luck"></canvas></div>` +
   T([
     {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
     {h: 'Actual', k: r => rec(r.w, r.g - r.w, 0).replace(/-0$/, '') + ' (' + (r.wp * 100).toFixed(0) + '%)', v: r => r.wp, num: 1},
@@ -433,7 +452,7 @@ function afterRecap() {
   chart(el, {type: 'scatter', plugins: [diag], data: {datasets: [{
     data: L.map(r => ({x: +(r.ap * 100).toFixed(1), y: +(r.wp * 100).toFixed(1)})),
     backgroundColor: L.map(r => col(r.o)), pointRadius: 8, pointHoverRadius: 10}]},
-    options: {maintainAspectRatio: false, layout: {padding: {right: 70}},
+    options: {maintainAspectRatio: false, layout: {padding: {right: window.innerWidth < 600 ? 45 : 70}},
       scales: {x: {min: mn, max: mx, title: {display: true, text: 'All-play win % (record vs every team each week)'}, ticks: {callback: v => v + '%'}},
                y: {min: mn, max: mx, title: {display: true, text: 'Actual win %'}, ticks: {callback: v => v + '%'}}},
       plugins: {legend: {display: false}, tooltip: {callbacks: {
@@ -518,6 +537,7 @@ function render() {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
   const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y), recap: () => viewRecap(x, y), whohas: () => viewWho(x)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
+  document.querySelectorAll('#panels table').forEach(t => { const w = document.createElement('div'); w.className = 'tscroll'; t.parentNode.insertBefore(w, t); w.appendChild(t); });
   if (t === 'seasons') afterSeasons(x); if (t === 'whohas') afterWho(x); if (t === 'recap') afterRecap();
   window.scrollTo(0, 0);
 }
