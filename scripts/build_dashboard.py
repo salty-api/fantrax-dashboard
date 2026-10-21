@@ -292,6 +292,10 @@ def main():
             "records": {"high": high, "low": low, "blow": blow, "close": close,
                         "seasPF": seas_pf, "seasRec": seas_rec, "streaks": streaks}}
     data["pj"] = pj
+    # unplayed regular-season matchups (current season) for strength-of-schedule
+    data["sched"] = [[int(m["period"]), own[(cur, m["away"])], own[(cur, m["home"])]] for m in matchups
+                     if m["season"] == cur and m["phase"] == "regular" and (f(m["away_pts"]) or 0) + (f(m["home_pts"]) or 0) == 0
+                     and (cur, m["away"]) in own and (cur, m["home"]) in own]
     data.update(tracker_and_recap(standings, own, seasons))
     html = (ROOT / "scripts" / "template.html").read_text().replace("__DATA__", json.dumps(data, separators=(",", ":")))
     out = ROOT / "docs"
