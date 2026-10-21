@@ -51,6 +51,7 @@ jobs:
           python -I scripts/fetch_rosters.py --current
           python -I scripts/fetch_player_stats.py
           python -I scripts/fetch_headshots.py
+          python -I scripts/fetch_projections.py
 
       # Fails (and emails you) if a team name can't be mapped to an owner or a finished season lost its scores.
       - name: Build dashboard and share cards

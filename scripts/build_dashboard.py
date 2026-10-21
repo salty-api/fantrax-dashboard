@@ -156,6 +156,11 @@ def main():
     check_history(standings, matchups, cur)
     own = load_owners(standings)
 
+    tproj = {(r["season"], int(r["period"]), r["team_id"]): float(r["proj"]) for r in csv.DictReader(open(D / "proj_teams.csv"))} if (D / "proj_teams.csv").exists() else {}
+    pj = {}
+    if (D / "proj_players.csv").exists():
+        for r in csv.DictReader(open(D / "proj_players.csv")):
+            pj.setdefault(f'{r["season"]}|{r["period"]}', {})[r["player_id"]] = float(r["proj"])
     games = []
     for m in matchups:
         ap, hp = f(m["away_pts"]), f(m["home_pts"])
@@ -164,6 +169,9 @@ def main():
         s = m["season"]
         games.append({"s": s, "ph": m["phase"], "p": int(m["period"]),
                       "a": own[(s, m["away"])], "h": own[(s, m["home"])], "ap": ap, "hp": hp})
+        if m["phase"] == "regular" and (s, int(m["period"]), m["away_id"]) in tproj:
+            games[-1]["apx"] = tproj[(s, int(m["period"]), m["away_id"])]
+            games[-1]["hpx"] = tproj.get((s, int(m["period"]), m["home_id"]))
     games.sort(key=lambda g: (g["s"], g["ph"] != "regular", g["p"]))
     lastreg = {}
     for g in games:
@@ -265,6 +273,7 @@ def main():
             "alltime": sorted(at.values(), key=lambda a: (-a["titles"], -a["w"])), "h2h": h2h,
             "records": {"high": high, "low": low, "blow": blow, "close": close,
                         "seasPF": seas_pf, "seasRec": seas_rec, "streaks": streaks}}
+    data["pj"] = pj
     data.update(tracker_and_recap(standings, own, seasons))
     html = (ROOT / "scripts" / "template.html").read_text().replace("__DATA__", json.dumps(data, separators=(",", ":")))
     out = ROOT / "docs"

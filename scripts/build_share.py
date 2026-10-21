@@ -55,6 +55,10 @@ def card_site(D):
 <div style='font-size:20px;letter-spacing:.12em;color:#64748b;text-transform:uppercase;margin-bottom:6px'>Champions</div>{rows}</div>"""
 
 
+def fmt(v):
+    return '-' if v is None else format(v, '.1f')
+
+
 def card_player(D, pid):
     n, pos = D["players"][pid]
     S = D["stats"].get(pid)
@@ -69,7 +73,7 @@ def card_player(D, pid):
     if S and S.get("g"):
         cell = lambda k, v: f"<div style='text-align:center;min-width:120px'><div style='font-size:46px;font-weight:700'>{v}</div><div style='font-size:17px;color:#64748b;letter-spacing:.1em'>{k}</div></div>"
         stats = (f"<div style='display:flex;gap:34px;margin-top:34px'>{cell('FP RANK', '#' + str(S['rk']))}{cell('FP/G', format(S['fpg'], '.1f'))}"
-                 f"{cell('PTS', format(S['pts'], '.1f'))}{cell('REB', format(S['reb'], '.1f'))}{cell('AST', format(S['ast'], '.1f'))}</div>"
+                 f"{cell('PTS', fmt(S['pts']))}{cell('REB', fmt(S['reb']))}{cell('AST', fmt(S['ast']))}</div>"
                  f"<div style='font-size:17px;color:#64748b;margin-top:10px'>{D['statsSeason']} per game</div>")
     seasons = {}
     for x in st:
@@ -171,7 +175,7 @@ def main():
         cur = st[-1][1] if st else None
         bits = [f"{pos}" if pos else "", f"Currently on {cur} ({nowS})" if cur else ""]
         if S and S.get("g"):
-            bits.append(f"{D['statsSeason']}: {S['pts']:.1f} PTS, {S['reb']:.1f} REB, {S['ast']:.1f} AST, #{S['rk']} in fantasy points")
+            bits.append(f"{D['statsSeason']}: {fmt(S['pts'])} PTS, {fmt(S['reb'])} REB, {fmt(S['ast'])} AST, #{S['rk']} in fantasy points")
         owners = len({x[1] for x in st})
         bits.append(f"{owners} owner{'s' if owners != 1 else ''} since {D['seasonsAll'][0]}")
         write_stub(DOCS / "p" / pid / "index.html", f"{n} | Who Has Him", " · ".join(b for b in bits if b),

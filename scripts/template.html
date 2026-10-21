@@ -113,13 +113,15 @@ html { -webkit-text-size-adjust: 100%; }
   img.face { width: 22px; height: 22px; margin-right: 6px; }
   .logo { width: 20px; height: 20px; margin-right: 6px; }
 }
+.px { display: block; color: #475569; font-size: 11px; font-weight: 400; line-height: 1.2; margin-top: 1px; } .mrow .pts { text-align: right; }
+.sc { font-size: 17px; font-weight: 700; }
 .clk { cursor: pointer; } tr.clk:hover td { background: #131a2b; }
 #mm { position: fixed; inset: 0; background: rgba(2,6,15,.78); z-index: 50; display: none; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 12px; }
 #mm.on { display: flex; }
 .mbox { background: #0c0f18; border: 1px solid #1e293b; border-radius: 12px; width: 100%; max-width: 760px; padding: 20px; position: relative; }
 .mx { position: absolute; top: 10px; right: 14px; background: none; border: 0; color: #94a3b8; font-size: 26px; cursor: pointer; }
 .mhead { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; text-align: center; margin-bottom: 14px; }
-.mhead .tot { font-size: 34px; font-weight: 700; } .mhead .tot.w { color: #4ade80; } .mhead .tot.l { color: #94a3b8; }
+.mhead .tot { font-size: 38px; font-weight: 800; } .mhead .tot.w { color: #4ade80; } .mhead .tot.l { color: #94a3b8; }
 .mhead .nm { font-size: 15px; font-weight: 600; } .mhead .vs { color: #64748b; }
 .msub { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 14px; }
 .mcols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -164,23 +166,25 @@ let tid = 0;
 function T(cols, rows, onrow) { const id = 'tb' + (tid++); window['_t_' + id] = {cols, rows, sort: null, dir: -1, onrow}; setTimeout(() => drawT(id), 0); return `<table id="${id}"></table>`; }
 
 /* ---------- matchup breakdown modal ---------- */
+const pxs = v => v == null ? '' : `<span class="px">${f0(v)}</span>`;
 const mqs = (s, ph, p, a, h) => `openMatch('${s}','${ph}',${p},'${a.replace(/'/g, "\\'")}','${h.replace(/'/g, "\\'")}')`;
 function openMatch(s, phs, p, a, h) {
   const g = D.games.find(g => g.s === s && g.ph === phs && g.p === p && ((g.a === a && g.h === h) || (g.a === h && g.h === a)));
   if (!g) return;
-  const side = (o, pts, win) => {
+  const PJ = D.pj[g.s + '|' + g.wk] || {};
+  const side = (o, pts, win, px) => {
     const ps = D.pw.filter(x => x[0] === g.s && x[1] === g.wk && x[2] === o).sort((x, y) => y[4] - x[4]);
     const mx = ps.length ? ps[0][4] : 1;
-    const row = x => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span>${face(x[3])}${pname(x[3])}${x[3] === (ps[0] || [])[3] ? ' ⭐' : ''} <span class="mute">${ppos(x[3])}</span></span><span class="pts">${f1(x[4])}</span></div>`;
+    const row = x => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span>${face(x[3])}${pname(x[3])}${x[3] === (ps[0] || [])[3] ? ' ⭐' : ''} <span class="mute">${ppos(x[3])}</span></span><span class="pts">${f1(x[4])}${PJ[x[3]] != null ? `<span class="px">${f0(PJ[x[3]])}</span>` : ''}</span></div>`;
     const grp = {G: [], F: [], C: []}, flex = [];
     const slot = {PG: 'G', SG: 'G', G: 'G', SF: 'F', PF: 'F', F: 'F', C: 'C'}, cap = {G: 3, F: 3, C: 2};
     ps.forEach(x => { const k = slot[ppos(x[3])]; (k && grp[k].length < cap[k] ? grp[k] : flex).push(x); });
     const sec = (t, a) => a.length ? `<div class="msec">${t}</div>` + a.map(row).join('') : '';
-    return {o, pts, win, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
+    return {o, pts, win, px, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
   };
-  const A = side(g.a, g.ap, g.ap > g.hp), H = side(g.h, g.hp, g.hp > g.ap);
+  const A = side(g.a, g.ap, g.ap > g.hp, g.apx), H = side(g.h, g.hp, g.hp > g.ap, g.hpx);
   const mv = [...A.ps, ...H.ps].sort((x, y) => y[4] - x[4])[0];
-  const hd = X => `<div><div class="nm">${ownerCell(X.o)}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div></div>`;
+  const hd = X => `<div><div class="nm">${ownerCell(X.o)}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`;
   document.getElementById('mb').innerHTML = `<button class="mx" onclick="closeMatch()">×</button>
     <div class="mhead">${hd(A)}<div class="vs">vs</div>${hd(H)}</div>
     <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} · ${g.ap === g.hp ? 'Tie' : `${ownerLink(g.ap > g.hp ? g.a : g.h)} won by ${f1(Math.abs(g.ap - g.hp))}`}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
@@ -437,7 +441,7 @@ function viewRecap(season, wkArg) {
     ${close ? card('Nail-biter', ownerCell(close.o), `edged ${close.opp} by ${f1(close.pts - close.oppts)}`) : ''}
   </div>
   <div class="two"><div class="section"><div class="section-title">Scoreboard${isPO ? ' (playoffs)' : ''}</div><table>` +
-  games.map(g => `<tr class="clk" onclick="${mqs(g.s, g.ph, g.p, g.a, g.h)}"><td>${ownerLink(g.a)}</td><td class="num ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}</td></tr>`).join('') +
+  games.map(g => `<tr class="clk" onclick="${mqs(g.s, g.ph, g.p, g.a, g.h)}"><td>${ownerLink(g.a)}</td><td class="num sc ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}${pxs(g.apx)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num sc ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}${pxs(g.hpx)}</td></tr>`).join('') +
   `</table></div>
   <div class="section"><div class="section-title">Standings${wk > regMax ? ' (final regular season)' : ' after ' + wkLabel(season, wk)}</div>` +
   T([
