@@ -183,15 +183,16 @@ function openMatch(s, phs, p, a, h) {
     const sec = (t, a) => a.length ? `<div class="msec">${t}</div>` + a.map(row).join('') : '';
     return {o, pts, win, px, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
   };
-  const gi = D.games.indexOf(g), hist = D.games.filter((x, i) => i <= gi && ((x.a === g.a && x.h === g.h) || (x.a === g.h && x.h === g.a)));
+  const live = g.s === lastSeason && g.wk === Math.max(...D.games.filter(x => x.s === g.s).map(x => x.wk));  // latest scored week is still in progress
+  const gi = D.games.indexOf(g), hist = D.games.filter((x, i) => (live ? i < gi : i <= gi) && ((x.a === g.a && x.h === g.h) || (x.a === g.h && x.h === g.a)));
   const wA = hist.filter(x => (x.a === g.a ? x.ap > x.hp : x.hp > x.ap)).length, wH = hist.filter(x => (x.a === g.h ? x.ap > x.hp : x.hp > x.ap)).length, tt = hist.length - wA - wH;
-  const series = hist.length < 2 ? 'First meeting' : wA === wH ? `Series tied ${wA}-${wH}${tt ? '-' + tt : ''}` : `${wA > wH ? g.a : g.h} leads the series ${Math.max(wA, wH)}-${Math.min(wA, wH)}${tt ? '-' + tt : ''}`;
+  const series = hist.length < (live ? 1 : 2) ? 'First meeting' : wA === wH ? `Series tied ${wA}-${wH}${tt ? '-' + tt : ''}` : `${wA > wH ? g.a : g.h} leads the series ${Math.max(wA, wH)}-${Math.min(wA, wH)}${tt ? '-' + tt : ''}`;
   const A = side(g.a, g.ap, g.ap > g.hp, g.apx), H = side(g.h, g.hp, g.hp > g.ap, g.hpx);
   const mv = [...A.ps, ...H.ps].sort((x, y) => y[4] - x[4])[0];
   const hd = X => `<div><div class="nm">${ownerCell(X.o)}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`;
   document.getElementById('mb').innerHTML = `<button class="mx" onclick="closeMatch()">×</button>
     <div class="mhead">${hd(A)}<div class="vs">vs</div>${hd(H)}</div>
-    <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} · ${g.ap === g.hp ? 'Tie' : `${ownerLink(g.ap > g.hp ? g.a : g.h)} won by ${f1(Math.abs(g.ap - g.hp))}`}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
+    <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} ${live ? '' : ' · ' + (g.ap === g.hp ? 'Tie' : `${ownerLink(g.ap > g.hp ? g.a : g.h)} won by ${f1(Math.abs(g.ap - g.hp))}`)}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
     <div class="msub" style="margin-top:-8px"><a href="#rivalry/${encodeURIComponent(g.a)}/${encodeURIComponent(g.h)}" onclick="closeMatch()" style="color:#94a3b8">${series}${hist.length > 1 ? ` (${hist.length} meetings, incl. playoffs)` : ''}</a></div>
     <div class="mcols"><div>${A.html}</div><div>${H.html}</div></div>`;
   document.getElementById('mm').classList.add('on');
@@ -409,9 +410,9 @@ function viewRecap(season, wkArg) {
   const isPO = games.length && games[0].ph === 'playoff';
   // standings through this week (regular season only)
   const stand = wkk => {
-    const m = {}; D.owners.forEach(o => m[o] = {o, w: 0, l: 0, t: 0, pf: 0});
+    const m = {}; D.owners.forEach(o => m[o] = {o, w: 0, l: 0, t: 0, pf: 0, pa: 0});
     D.games.filter(g => g.s === season && g.ph === 'regular' && g.wk <= wkk).forEach(g => {
-      [[g.a, g.ap, g.hp], [g.h, g.hp, g.ap]].forEach(([o, a, b]) => { if (!m[o]) return; m[o].pf += a; a > b ? m[o].w++ : a < b ? m[o].l++ : m[o].t++; });
+      [[g.a, g.ap, g.hp], [g.h, g.hp, g.ap]].forEach(([o, a, b]) => { if (!m[o]) return; m[o].pf += a; m[o].pa += b; a > b ? m[o].w++ : a < b ? m[o].l++ : m[o].t++; });
     });
     return Object.values(m).filter(x => x.w + x.l + x.t).sort((a, b) => (b.w + b.t / 2) - (a.w + a.t / 2) || b.pf - a.pf);
   };
@@ -455,6 +456,9 @@ function viewRecap(season, wkArg) {
     {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
     {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
     {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
+    {h: 'PF/G', k: r => f1(r.pf / (r.w + r.l + r.t)), v: r => r.pf / (r.w + r.l + r.t), num: 1},
+    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
+    {h: 'PA/G', k: r => f1(r.pa / (r.w + r.l + r.t)), v: r => r.pa / (r.w + r.l + r.t), num: 1},
     {h: '+/-', k: r => r.mv > 0 ? `<span class="up">▲${r.mv}</span>` : r.mv < 0 ? `<span class="down">▼${-r.mv}</span>` : '<span class="mute">-</span>', v: r => r.mv, num: 1},
   ], curRows) + `</div>
   <div class="section"><div class="section-title">Top 10 performers of the week</div>` +
