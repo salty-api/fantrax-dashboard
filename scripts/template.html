@@ -22,7 +22,8 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
 .tab-nav { position: sticky; top: 0; z-index: 100; background: #0c0f18; border-bottom: 1px solid #1e293b; padding: 0 24px; display: flex; align-items: center; gap: 20px; height: 48px; overflow-x: auto; }
-.tab-nav-title { font-size: 13px; font-weight: 700; color: #f97316; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+.tab-nav-title { display: flex; align-items: center; gap: 6px; } .tab-nav-title svg { width: 22px; height: 22px; flex-shrink: 0; } .tab-nav-title .lg-dia { margin-left: 2px; }
+.tab-nav-title { font-size: 13px; font-weight: 700; color: #3b82f6; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
 .tab-buttons { display: flex; gap: 2px; }
 .tab-btn { background: none; border: none; color: #64748b; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-family: inherit; }
 .tab-btn:hover { color: #94a3b8; background: #1e293b; }
@@ -98,7 +99,7 @@ a.pl { color: #f1f5f9; text-decoration: none; font-weight: 600; } a.pl:hover { c
 html { -webkit-text-size-adjust: 100%; }
 @media (max-width: 600px) {
   .tab-nav { padding: 0 10px; gap: 10px; height: 44px; }
-  .tab-nav-title { display: none; }
+  .tab-nav-title .lg-txt { display: none; }
   .tab-btn { padding: 6px 9px; font-size: 12px; }
   .tab-panel { padding: 18px 12px 60px; }
   td, th { padding: 6px 6px; }
@@ -134,7 +135,7 @@ html { -webkit-text-size-adjust: 100%; }
 </head>
 <body>
 <div class="tab-nav">
-  <div class="tab-nav-title">Fantrax Platinum</div>
+  <div class="tab-nav-title"><svg class="lg-ball" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#2563eb"/><g fill="none" stroke="#0c1a4d" stroke-width="1.6"><circle cx="16" cy="16" r="14"/><path d="M16 2v28M2 16h28M5.5 5.5c6 6 6 15 0 21M26.5 5.5c-6 6-6 15 0 21"/></g></svg><span class="lg-txt">Fantrax Platinum</span><svg class="lg-dia" viewBox="0 0 32 32" aria-hidden="true"><path d="M9 4h14l7 8-14 17L2 12z" fill="#a5f3fc"/><path d="M2 12h28M9 4l-3 8 10 17M23 4l3 8-10 17M12 12l4-8 4 8" fill="none" stroke="#0e7490" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
   <div class="tab-buttons" id="tabs"></div>
 </div>
 <div id="panels"></div>
@@ -182,12 +183,16 @@ function openMatch(s, phs, p, a, h) {
     const sec = (t, a) => a.length ? `<div class="msec">${t}</div>` + a.map(row).join('') : '';
     return {o, pts, win, px, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
   };
+  const gi = D.games.indexOf(g), hist = D.games.filter((x, i) => i <= gi && ((x.a === g.a && x.h === g.h) || (x.a === g.h && x.h === g.a)));
+  const wA = hist.filter(x => (x.a === g.a ? x.ap > x.hp : x.hp > x.ap)).length, wH = hist.filter(x => (x.a === g.h ? x.ap > x.hp : x.hp > x.ap)).length, tt = hist.length - wA - wH;
+  const series = hist.length < 2 ? 'First meeting' : wA === wH ? `Series tied ${wA}-${wH}${tt ? '-' + tt : ''}` : `${wA > wH ? g.a : g.h} leads the series ${Math.max(wA, wH)}-${Math.min(wA, wH)}${tt ? '-' + tt : ''}`;
   const A = side(g.a, g.ap, g.ap > g.hp, g.apx), H = side(g.h, g.hp, g.hp > g.ap, g.hpx);
   const mv = [...A.ps, ...H.ps].sort((x, y) => y[4] - x[4])[0];
   const hd = X => `<div><div class="nm">${ownerCell(X.o)}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`;
   document.getElementById('mb').innerHTML = `<button class="mx" onclick="closeMatch()">×</button>
     <div class="mhead">${hd(A)}<div class="vs">vs</div>${hd(H)}</div>
     <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} · ${g.ap === g.hp ? 'Tie' : `${ownerLink(g.ap > g.hp ? g.a : g.h)} won by ${f1(Math.abs(g.ap - g.hp))}`}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
+    <div class="msub" style="margin-top:-8px"><a href="#rivalry/${encodeURIComponent(g.a)}/${encodeURIComponent(g.h)}" onclick="closeMatch()" style="color:#94a3b8">${series}${hist.length > 1 ? ` (${hist.length} meetings, incl. playoffs)` : ''}</a></div>
     <div class="mcols"><div>${A.html}</div><div>${H.html}</div></div>`;
   document.getElementById('mm').classList.add('on');
 }
@@ -390,6 +395,7 @@ function viewRecap(season, wkArg) {
   season = pwSeasons.includes(season) ? season : pwSeasons[pwSeasons.length - 1];
   const wks = [...new Set(D.pw.filter(x => x[0] === season).map(x => x[1]))].sort((a, b) => a - b);
   const wk = wks.includes(+wkArg) ? +wkArg : wks[wks.length - 1];
+  window._rs = [season, wk];
   const games = D.games.filter(g => g.s === season && g.wk === wk);
   const sc = [];
   games.forEach(g => { sc.push({o: g.a, pts: g.ap, opp: g.h, oppts: g.hp}); sc.push({o: g.h, pts: g.hp, opp: g.a, oppts: g.ap}); });
@@ -586,6 +592,7 @@ function render() {
   const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y), recap: () => viewRecap(x, y), whohas: () => viewWho(x)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
   document.querySelectorAll('#panels table').forEach(t => { const w = document.createElement('div'); w.className = 'tscroll'; t.parentNode.insertBefore(w, t); w.appendChild(t); });
+  if (t === 'recap' && window._rs) { const u = '#recap/' + window._rs.join('/'); if (location.hash !== u) history.replaceState(null, '', u); }
   if (t === 'seasons') afterSeasons(x); if (t === 'whohas') afterWho(x); if (t === 'recap') afterRecap();
   window.scrollTo(0, 0);
 }
