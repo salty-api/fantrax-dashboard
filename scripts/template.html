@@ -126,12 +126,12 @@ html { -webkit-text-size-adjust: 100%; }
 .mside { display: flex; align-items: center; justify-content: center; gap: 14px; } .mtxt { text-align: center; } .mlogo { width: 88px; height: 88px; border-radius: 16px; object-fit: cover; background: #1e293b; border: 2px solid #1e293b; flex-shrink: 0; }
 .mhead .nm { font-size: 15px; font-weight: 600; } .mhead .vs { color: #64748b; }
 .msub { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 14px; }
-.mcols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mcols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 16px; } .mcols .msec { grid-column: 1 / -1; } .mcell { min-width: 0; }
 .mrow { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; overflow: hidden; font-size: 13px; }
 .msec { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #64748b; margin: 10px 0 4px; } .msec:first-child { margin-top: 0; }
 .mrow .bar { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(249,115,22,.18); }
-.mrow > span { position: relative; z-index: 1; } .mrow .pts { font-variant-numeric: tabular-nums; font-weight: 600; }
-@media (max-width: 600px) { .mlogo { width: 52px; height: 52px; border-radius: 10px; } .mside { gap: 8px; } .mhead { gap: 6px; } .mcols { grid-template-columns: 1fr; } .mbox { padding: 16px 12px; } .mhead .tot { font-size: 26px; } }
+.mrow > span { position: relative; z-index: 1; } .mrow .mn { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .mrow .pts { font-variant-numeric: tabular-nums; font-weight: 600; }
+@media (max-width: 600px) { .mlogo { width: 52px; height: 52px; border-radius: 10px; } .mside { gap: 8px; } .mhead { gap: 6px; } .mcols { column-gap: 8px; } .mrow { padding: 5px 5px; font-size: 12px; gap: 4px; } .mrow .mn .mute { display: none; } .mrow img.face { width: 18px; height: 18px; margin-right: 5px; } .mrow .pts { font-size: 12px; } .msec { font-size: 10px; } .mbox { padding: 16px 8px; } .mhead .tot { font-size: 26px; } }
 </style>
 </head>
 <body>
@@ -178,12 +178,11 @@ function openMatch(s, phs, p, a, h) {
   const side = (o, pts, win, px) => {
     const ps = D.pw.filter(x => x[0] === g.s && x[1] === g.wk && x[2] === o).sort((x, y) => y[4] - x[4]);
     const mx = MXALL;  // one scale for both teams
-    const row = x => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span>${face(x[3])}${pname(x[3])}${x[3] === (ps[0] || [])[3] ? ' ⭐' : ''} <span class="mute">${ppos(x[3])}</span></span><span class="pts">${f1(x[4])}${PJ[x[3]] != null ? `<span class="px">${f0(PJ[x[3]])}</span>` : ''}</span></div>`;
+    const row = x => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span class="mn">${face(x[3])}${pname(x[3])}${x[3] === (ps[0] || [])[3] ? ' ⭐' : ''} <span class="mute">${ppos(x[3])}</span></span><span class="pts">${f1(x[4])}${PJ[x[3]] != null ? `<span class="px">${f0(PJ[x[3]])}</span>` : ''}</span></div>`;
     const grp = {G: [], F: [], C: []}, flex = [];
     const slot = {PG: 'G', SG: 'G', G: 'G', SF: 'F', PF: 'F', F: 'F', C: 'C'}, cap = {G: 3, F: 3, C: 2};
     ps.forEach(x => { const k = slot[ppos(x[3])]; (k && grp[k].length < cap[k] ? grp[k] : flex).push(x); });
-    const sec = (t, a) => a.length ? `<div class="msec">${t}</div>` + a.map(row).join('') : '';
-    return {o, pts, win, px, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
+    return {o, pts, win, px, ps, mx, g: {Guards: grp.G.map(row), Forwards: grp.F.map(row), Centers: grp.C.map(row), 'Flex (G/F)': flex.map(row)}};
   };
   const live = !!g.live;  // week still in progress
   const gi = live ? FG.length : FG.indexOf(g), hist = FG.filter((x, i) => i <= gi && ((x.a === g.a && x.h === g.h) || (x.a === g.h && x.h === g.a)));
@@ -195,8 +194,11 @@ function openMatch(s, phs, p, a, h) {
   document.getElementById('mb').innerHTML = `<button class="mx" onclick="closeMatch()">×</button>
     <div class="mhead">${hd(A, 0)}<div class="vs">vs</div>${hd(H, 1)}</div>
     <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} ${live ? '' : ' · ' + (g.ap === g.hp ? 'Tie' : `${ownerLink(g.ap > g.hp ? g.a : g.h)} won by ${f1(Math.abs(g.ap - g.hp))}`)}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
-    <div class="msub" style="margin-top:-8px"><a href="#rivalry/${encodeURIComponent(g.a)}/${encodeURIComponent(g.h)}" onclick="closeMatch()" style="color:#94a3b8">${series}${hist.length > 1 ? ` (${hist.length} meetings, incl. playoffs)` : ''}</a></div>
-    <div class="mcols"><div>${A.html}</div><div>${H.html}</div></div>`;
+    <div class="msub" style="margin-top:-8px"><a href="#rivalry/${encodeURIComponent(g.a)}/${encodeURIComponent(g.h)}" onclick="closeMatch()" style="color:#94a3b8">${series}</a></div>
+    <div class="mcols">${A.ps.length || H.ps.length ? ['Guards', 'Forwards', 'Centers', 'Flex (G/F)'].map(t => {
+      const n = Math.max(A.g[t].length, H.g[t].length); if (!n) return '';
+      return `<div class="msec">${t}</div>` + Array.from({length: n}, (_, i) => `<div class="mcell">${A.g[t][i] || ''}</div><div class="mcell">${H.g[t][i] || ''}</div>`).join('');
+    }).join('') : '<div class="mute" style="grid-column:1/-1">No player-level data for this week.</div>'}</div>`;
   document.getElementById('mm').classList.add('on');
 }
 function closeMatch() { document.getElementById('mm').classList.remove('on'); }
