@@ -124,6 +124,7 @@ html { -webkit-text-size-adjust: 100%; }
 .msub { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 14px; }
 .mcols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .mrow { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; overflow: hidden; font-size: 13px; }
+.msec { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #64748b; margin: 10px 0 4px; } .msec:first-child { margin-top: 0; }
 .mrow .bar { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(249,115,22,.18); }
 .mrow > span { position: relative; z-index: 1; } .mrow .pts { font-variant-numeric: tabular-nums; font-weight: 600; }
 @media (max-width: 600px) { .mcols { grid-template-columns: 1fr; } .mbox { padding: 16px 12px; } .mhead .tot { font-size: 26px; } }
@@ -170,7 +171,12 @@ function openMatch(s, phs, p, a, h) {
   const side = (o, pts, win) => {
     const ps = D.pw.filter(x => x[0] === g.s && x[1] === g.wk && x[2] === o).sort((x, y) => y[4] - x[4]);
     const mx = ps.length ? ps[0][4] : 1;
-    return {o, pts, win, ps, mx, html: ps.length ? ps.map((x, i) => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span>${face(x[3])}${pname(x[3])}${i === 0 ? ' ⭐' : ''}</span><span class="pts">${f1(x[4])}</span></div>`).join('') : '<div class="mute">No player-level data for this week.</div>'};
+    const row = x => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span>${face(x[3])}${pname(x[3])}${x[3] === (ps[0] || [])[3] ? ' ⭐' : ''} <span class="mute">${ppos(x[3])}</span></span><span class="pts">${f1(x[4])}</span></div>`;
+    const grp = {G: [], F: [], C: []}, flex = [];
+    const slot = {PG: 'G', SG: 'G', G: 'G', SF: 'F', PF: 'F', F: 'F', C: 'C'}, cap = {G: 3, F: 3, C: 2};
+    ps.forEach(x => { const k = slot[ppos(x[3])]; (k && grp[k].length < cap[k] ? grp[k] : flex).push(x); });
+    const sec = (t, a) => a.length ? `<div class="msec">${t}</div>` + a.map(row).join('') : '';
+    return {o, pts, win, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
   };
   const A = side(g.a, g.ap, g.ap > g.hp), H = side(g.h, g.hp, g.hp > g.ap);
   const mv = [...A.ps, ...H.ps].sort((x, y) => y[4] - x[4])[0];
