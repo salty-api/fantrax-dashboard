@@ -12,7 +12,7 @@ Fantrax only serves projections for the current/upcoming period, so each run kee
   - the last scored period is fetched only if it has no snapshot yet;
   - every other period is left untouched.
 """
-import csv, json, urllib.request
+import csv, datetime, json, re, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -44,6 +44,30 @@ def lineup(ps):
     return tot + sum(v for _, v in flex)
 
 
+def save_period_ends(lid, season):
+    """data/periods.json: {season: {period: 'YYYY-MM-DD' last day}} so the dashboard knows when a week is over."""
+    try:
+        periods = call(lid, "getStandings", {"view": "SCHEDULE", "period": "1"})["displayedLists"]["periods"]
+    except Exception as e:
+        print(f"period dates skipped ({e})")
+        return
+    y0 = int(season[:4])
+    out = {}
+    for x in periods:
+        m = re.match(r"(\d+) \((\w+) (\d+) - (\w+) (\d+)\)", x["object2"])
+        if not m:
+            continue
+        em = datetime.datetime.strptime(m.group(4), "%b").month
+        sm = datetime.datetime.strptime(m.group(2), "%b").month
+        sy = y0 if sm >= 8 else y0 + 1
+        ey = sy + (1 if em < sm else 0)
+        out[m.group(1)] = f"{ey}-{em:02d}-{int(m.group(5)):02d}"
+    path = D / "periods.json"
+    allp = json.load(open(path)) if path.exists() else {}
+    allp[season] = out
+    json.dump(allp, open(path, "w"), indent=0)
+
+
 def read(path):
     return list(csv.DictReader(open(path))) if path.exists() else []
 
@@ -58,6 +82,7 @@ def main():
             scored[int(m["period"])] = scored.get(int(m["period"]), 0) + float(m["away_pts"] or 0) + float(m["home_pts"] or 0)
     unscored = sorted(p for p, v in scored.items() if v == 0)
     done = sorted(p for p, v in scored.items() if v > 0)
+    save_period_ends(lid, season)
     teams, players = read(D / "proj_teams.csv"), read(D / "proj_players.csv")
     have = {(r["season"], int(r["period"])) for r in teams}
     todo = []

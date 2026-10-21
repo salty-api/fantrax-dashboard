@@ -4,7 +4,7 @@
 data/owners.csv maps (season, team name) -> owner. Missing rows are appended with a
 best-guess owner (confirmed=0); edit the file and re-run to correct. Never overwritten.
 """
-import csv, json, re, sys
+import csv, datetime, json, re, sys, zoneinfo
 from collections import defaultdict
 from pathlib import Path
 
@@ -179,6 +179,14 @@ def main():
             lastreg[g["s"]] = max(lastreg.get(g["s"], 0), g["p"])
     for g in games:  # scoring period: playoff round r plays in period lastreg + r
         g["wk"] = g["p"] if g["ph"] == "regular" else lastreg[g["s"]] + g["p"]
+    # weeks still in progress (current season, period not over in PT) stay out of standings, records and series
+    ends = json.load(open(D / "periods.json")) if (D / "periods.json").exists() else {}
+    today = datetime.datetime.now(zoneinfo.ZoneInfo("America/Los_Angeles")).date().isoformat()
+    curmax = max((g["wk"] for g in games if g["s"] == cur), default=0)
+    for g in games:
+        end = ends.get(g["s"], {}).get(str(g["wk"]))
+        g["live"] = bool(g["s"] == cur and ((end is not None and end >= today) or (end is None and g["wk"] == curmax)))
+    final = [g for g in games if not g["live"]]
     played = {g["s"] for g in games}
     seasons = sorted(played)
 
@@ -188,7 +196,7 @@ def main():
         if r["season"] not in played:
             continue
         o = own[(r["season"], r["team"])]
-        reg = [g for g in games if g["s"] == r["season"] and g["ph"] == "regular" and o in (g["a"], g["h"])]
+        reg = [g for g in final if g["s"] == r["season"] and g["ph"] == "regular" and o in (g["a"], g["h"])]
         pf = sum(g["ap"] if g["a"] == o else g["hp"] for g in reg)
         pa = sum(g["hp"] if g["a"] == o else g["ap"] for g in reg)
         rows.append({"s": r["season"], "o": o, "team": r["team"], "rk": int(r["rank"]),
@@ -198,7 +206,7 @@ def main():
 
     # playoff finish
     for s in seasons:
-        po = [g for g in games if g["s"] == s and g["ph"] == "playoff"]
+        po = [g for g in final if g["s"] == s and g["ph"] == "playoff"]
         if not po:
             continue
         last = max(g["p"] for g in po)
@@ -224,7 +232,7 @@ def main():
         if r["fin"] != "Missed": a["playoffs"] += 1
         if r["fin"] == "Champion": a["titles"] += 1
         if r["fin"] in ("Champion", "Runner-up"): a["finals"] += 1
-    for g in games:
+    for g in final:
         for me, op, mp, op_p in ((g["a"], g["h"], g["ap"], g["hp"]), (g["h"], g["a"], g["hp"], g["ap"])):
             x = h2h[me][op]
             x[0 if mp > op_p else 1 if mp < op_p else 2] += 1
@@ -243,7 +251,7 @@ def main():
     def gl(g, side):
         return {"s": g["s"], "ph": g["ph"], "p": g["p"], "o": g[side], "opp": g["h" if side == "a" else "a"],
                 "pts": g["ap" if side == "a" else "hp"], "oppts": g["hp" if side == "a" else "ap"]}
-    sides = [gl(g, "a") for g in games] + [gl(g, "h") for g in games]
+    sides = [gl(g, "a") for g in final] + [gl(g, "h") for g in final]
     top = lambda lst, n=10: lst[:n]
     high = top(sorted(sides, key=lambda x: -x["pts"]))
     low = top(sorted(sides, key=lambda x: x["pts"]))
@@ -256,7 +264,7 @@ def main():
     streaks = []
     for o in owners:
         cur = best = 0; best_end = None; cur_start = None; best_start = None
-        for g in games:
+        for g in final:
             if o not in (g["a"], g["h"]):
                 continue
             mp, op = (g["ap"], g["hp"]) if g["a"] == o else (g["hp"], g["ap"])

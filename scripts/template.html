@@ -174,9 +174,10 @@ function openMatch(s, phs, p, a, h) {
   const g = D.games.find(g => g.s === s && g.ph === phs && g.p === p && ((g.a === a && g.h === h) || (g.a === h && g.h === a)));
   if (!g) return;
   const PJ = D.pj[g.s + '|' + g.wk] || {};
+  const MXALL = Math.max(1, ...D.pw.filter(x => x[0] === g.s && x[1] === g.wk && (x[2] === g.a || x[2] === g.h)).map(x => x[4]));
   const side = (o, pts, win, px) => {
     const ps = D.pw.filter(x => x[0] === g.s && x[1] === g.wk && x[2] === o).sort((x, y) => y[4] - x[4]);
-    const mx = ps.length ? ps[0][4] : 1;
+    const mx = MXALL;  // one scale for both teams
     const row = x => `<div class="mrow"><div class="bar" style="width:${Math.max(0, x[4] / mx * 100)}%"></div><span>${face(x[3])}${pname(x[3])}${x[3] === (ps[0] || [])[3] ? ' ⭐' : ''} <span class="mute">${ppos(x[3])}</span></span><span class="pts">${f1(x[4])}${PJ[x[3]] != null ? `<span class="px">${f0(PJ[x[3]])}</span>` : ''}</span></div>`;
     const grp = {G: [], F: [], C: []}, flex = [];
     const slot = {PG: 'G', SG: 'G', G: 'G', SF: 'F', PF: 'F', F: 'F', C: 'C'}, cap = {G: 3, F: 3, C: 2};
@@ -184,8 +185,8 @@ function openMatch(s, phs, p, a, h) {
     const sec = (t, a) => a.length ? `<div class="msec">${t}</div>` + a.map(row).join('') : '';
     return {o, pts, win, px, ps, mx, html: ps.length ? sec('Guards', grp.G) + sec('Forwards', grp.F) + sec('Centers', grp.C) + sec('Flex (G/F)', flex) : '<div class="mute">No player-level data for this week.</div>'};
   };
-  const live = g.s === lastSeason && g.wk === Math.max(...D.games.filter(x => x.s === g.s).map(x => x.wk));  // latest scored week is still in progress
-  const gi = D.games.indexOf(g), hist = D.games.filter((x, i) => (live ? i < gi : i <= gi) && ((x.a === g.a && x.h === g.h) || (x.a === g.h && x.h === g.a)));
+  const live = !!g.live;  // week still in progress
+  const gi = live ? FG.length : FG.indexOf(g), hist = FG.filter((x, i) => i <= gi && ((x.a === g.a && x.h === g.h) || (x.a === g.h && x.h === g.a)));
   const wA = hist.filter(x => (x.a === g.a ? x.ap > x.hp : x.hp > x.ap)).length, wH = hist.filter(x => (x.a === g.h ? x.ap > x.hp : x.hp > x.ap)).length, tt = hist.length - wA - wH;
   const series = hist.length < (live ? 1 : 2) ? 'First meeting' : wA === wH ? `Series tied ${wA}-${wH}${tt ? '-' + tt : ''}` : `${wA > wH ? g.a : g.h} leads the series ${Math.max(wA, wH)}-${Math.min(wA, wH)}${tt ? '-' + tt : ''}`;
   const A = side(g.a, g.ap, g.ap > g.hp, g.apx), H = side(g.h, g.hp, g.hp > g.ap, g.hpx);
@@ -207,6 +208,7 @@ Chart.defaults.color = '#94a3b8'; Chart.defaults.borderColor = '#1e293b';
 
 /* ---------- panels ---------- */
 const TABS = [['alltime', 'All-Time'], ['seasons', 'Seasons'], ['owner', 'Owners'], ['records', 'Records'], ['rivalry', 'Rivalry'], ['recap', 'Weekly Recap'], ['whohas', 'Who Has Him']];
+const FG = D.games.filter(g => !g.live);  // finished weeks only (feeds standings, series, rivalry)
 const lastSeason = D.seasons[D.seasons.length - 1];
 
 function viewAlltime() {
@@ -255,9 +257,9 @@ function finishGrid() {
 function viewSeasons(sel) {
   sel = sel || lastSeason;
   const rows = D.rows.filter(r => r.s === sel).sort((a, b) => a.rk - b.rk);
-  const po = D.games.filter(g => g.s === sel && g.ph === 'playoff');
+  const po = FG.filter(g => g.s === sel && g.ph === 'playoff');
   const rounds = [...new Set(po.map(g => g.p))].sort((a, b) => a - b);
-  const weeks = D.games.filter(g => g.s === sel && g.ph === 'regular');
+  const weeks = FG.filter(g => g.s === sel && g.ph === 'regular');
   const hi = weeks.length ? weeks.reduce((m, g) => Math.max(m, g.ap, g.hp), 0) : 0;
   return `<h1>Seasons</h1><div class="subtitle">Final standings and playoff bracket</div>
   <div class="controls"><select onchange="location.hash='seasons/'+this.value">${D.seasons.map(s => `<option ${s === sel ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
@@ -355,7 +357,7 @@ function viewRecords() {
 function viewRivalry(a, b) {
   a = a ? decodeURIComponent(a) : D.owners[0]; b = b ? decodeURIComponent(b) : D.owners[1];
   const sel = (id, v) => `<select onchange="goR()" id="${id}">${D.owners.map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
-  const gs = D.games.filter(g => (g.a === a && g.h === b) || (g.a === b && g.h === a));
+  const gs = FG.filter(g => (g.a === a && g.h === b) || (g.a === b && g.h === a));
   const mine = g => g.a === a ? [g.ap, g.hp] : [g.hp, g.ap];
   const wa = gs.filter(g => mine(g)[0] > mine(g)[1]).length, wb = gs.filter(g => mine(g)[0] < mine(g)[1]).length;
   const dA = gs.reduce((s, g) => s + mine(g)[0] - mine(g)[1], 0);
@@ -412,13 +414,14 @@ function viewRecap(season, wkArg) {
   // standings through this week (regular season only)
   const stand = wkk => {
     const m = {}; D.owners.forEach(o => m[o] = {o, w: 0, l: 0, t: 0, pf: 0, pa: 0});
-    D.games.filter(g => g.s === season && g.ph === 'regular' && g.wk <= wkk).forEach(g => {
+    FG.filter(g => g.s === season && g.ph === 'regular' && g.wk <= wkk).forEach(g => {
       [[g.a, g.ap, g.hp], [g.h, g.hp, g.ap]].forEach(([o, a, b]) => { if (!m[o]) return; m[o].pf += a; m[o].pa += b; a > b ? m[o].w++ : a < b ? m[o].l++ : m[o].t++; });
     });
     return Object.values(m).filter(x => x.w + x.l + x.t).sort((a, b) => (b.w + b.t / 2) - (a.w + a.t / 2) || b.pf - a.pf);
   };
   const regMax = Math.max(...D.games.filter(g => g.s === season && g.ph === 'regular').map(g => g.wk));
-  const cur = stand(Math.min(wk, regMax)), prev = stand(Math.min(wk, regMax) - 1);
+  const done = Math.max(0, ...FG.filter(g => g.s === season && g.ph === 'regular' && g.wk <= Math.min(wk, regMax)).map(g => g.wk));  // last finished week
+  const cur = stand(done), prev = stand(done - 1);
   const prevRk = {}; prev.forEach((x, i) => prevRk[x.o] = i + 1);
   const curRows = cur.map((x, i) => ({...x, rk: i + 1, mv: prevRk[x.o] ? prevRk[x.o] - (i + 1) : 0}));
   // season leaders through this week
@@ -428,8 +431,8 @@ function viewRecap(season, wkArg) {
   const pot = top[0];
   // luck: all-play record (each week vs every other team) vs actual record, regular season through this week
   const lk = {};
-  for (let w = 1; w <= Math.min(wk, regMax); w++) {
-    const wg = D.games.filter(g => g.s === season && g.ph === 'regular' && g.wk === w), sc2 = [];
+  for (let w = 1; w <= done; w++) {
+    const wg = FG.filter(g => g.s === season && g.ph === 'regular' && g.wk === w), sc2 = [];
     wg.forEach(g => { sc2.push([g.a, g.ap]); sc2.push([g.h, g.hp]); });
     sc2.forEach(([o, p]) => {
       const x = lk[o] = lk[o] || {o, aw: 0, ag: 0, w: 0, g: 0};
@@ -451,8 +454,8 @@ function viewRecap(season, wkArg) {
   <div class="two"><div class="section"><div class="section-title">Scoreboard${isPO ? ' (playoffs)' : ''}</div><table>` +
   games.map(g => `<tr class="clk" onclick="${mqs(g.s, g.ph, g.p, g.a, g.h)}"><td>${ownerLink(g.a)}</td><td class="num sc ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}${pxs(g.apx)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num sc ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}${pxs(g.hpx)}</td></tr>`).join('') +
   `</table></div>
-  <div class="section"><div class="section-title">Standings${wk > regMax ? ' (final regular season)' : ' after ' + wkLabel(season, wk)}</div>` +
-  T([
+  <div class="section"><div class="section-title">Standings${wk > regMax ? ' (final regular season)' : done ? ' after ' + wkLabel(season, done) : ''}${done < Math.min(wk, regMax) ? ' <span class="mute" style="text-transform:none;letter-spacing:0">(updates when the week ends)</span>' : ''}</div>` +
+  (curRows.length ? T([
     {h: '#', k: r => r.rk, v: r => r.rk, num: 1},
     {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
     {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
@@ -461,7 +464,7 @@ function viewRecap(season, wkArg) {
     {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
     {h: 'PA/G', k: r => f1(r.pa / (r.w + r.l + r.t)), v: r => r.pa / (r.w + r.l + r.t), num: 1},
     {h: '+/-', k: r => r.mv > 0 ? `<span class="up">▲${r.mv}</span>` : r.mv < 0 ? `<span class="down">▼${-r.mv}</span>` : '<span class="mute">-</span>', v: r => r.mv, num: 1},
-  ], curRows) + `</div>
+  ], curRows) : `<div class="mute" style="padding:14px 4px">Standings post when ${wkLabel(season, wk)} ends.</div>`) + `</div>
   <div class="section"><div class="section-title">Top 10 performers of the week</div>` +
   T([
     {h: '#', k: x => top.indexOf(x) + 1, v: x => top.indexOf(x), num: 1},
@@ -482,7 +485,7 @@ function viewRecap(season, wkArg) {
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
   ], leaders) + `<div class="note">Only players in a team's counted lineup for the week score here.</div></div></div>
-  <div class="section"><div class="section-title">Luck: actual vs all-play win % (regular season through ${wkLabel(season, Math.min(wk, regMax))})</div>
+  <div class="section"><div class="section-title">Luck: actual vs all-play win % (regular season through ${done ? wkLabel(season, done) : 'none yet'})</div>
   <div class="mute" style="font-size:12px;margin:-6px 0 10px">Expected record of each team if they played all opponents every week</div><div class="chart-box tall" style="height:520px"><canvas id="c_luck"></canvas></div>` +
   T([
     {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
