@@ -123,6 +123,7 @@ html { -webkit-text-size-adjust: 100%; }
 .mx { position: absolute; top: 10px; right: 14px; background: none; border: 0; color: #94a3b8; font-size: 26px; cursor: pointer; }
 .mhead { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; text-align: center; margin-bottom: 14px; }
 .mhead .tot { font-size: 38px; font-weight: 800; } .mhead .tot.w { color: #4ade80; } .mhead .tot.l { color: #94a3b8; }
+.mside { display: flex; align-items: center; justify-content: center; gap: 14px; } .mtxt { text-align: center; } .mlogo { width: 88px; height: 88px; border-radius: 16px; object-fit: cover; background: #1e293b; border: 2px solid #1e293b; flex-shrink: 0; }
 .mhead .nm { font-size: 15px; font-weight: 600; } .mhead .vs { color: #64748b; }
 .msub { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 14px; }
 .mcols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -130,7 +131,7 @@ html { -webkit-text-size-adjust: 100%; }
 .msec { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #64748b; margin: 10px 0 4px; } .msec:first-child { margin-top: 0; }
 .mrow .bar { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(249,115,22,.18); }
 .mrow > span { position: relative; z-index: 1; } .mrow .pts { font-variant-numeric: tabular-nums; font-weight: 600; }
-@media (max-width: 600px) { .mcols { grid-template-columns: 1fr; } .mbox { padding: 16px 12px; } .mhead .tot { font-size: 26px; } }
+@media (max-width: 600px) { .mlogo { width: 52px; height: 52px; border-radius: 10px; } .mside { gap: 8px; } .mhead { gap: 6px; } .mcols { grid-template-columns: 1fr; } .mbox { padding: 16px 12px; } .mhead .tot { font-size: 26px; } }
 </style>
 </head>
 <body>
@@ -189,9 +190,9 @@ function openMatch(s, phs, p, a, h) {
   const series = hist.length < (live ? 1 : 2) ? 'First meeting' : wA === wH ? `Series tied ${wA}-${wH}${tt ? '-' + tt : ''}` : `${wA > wH ? g.a : g.h} leads the series ${Math.max(wA, wH)}-${Math.min(wA, wH)}${tt ? '-' + tt : ''}`;
   const A = side(g.a, g.ap, g.ap > g.hp, g.apx), H = side(g.h, g.hp, g.hp > g.ap, g.hpx);
   const mv = [...A.ps, ...H.ps].sort((x, y) => y[4] - x[4])[0];
-  const hd = X => `<div><div class="nm">${ownerCell(X.o)}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`;
+  const hd = (X, right) => { const big = `<img class="mlogo" src="logos/${slug(X.o)}.webp" alt="" onerror="this.style.display='none'">`, txt = `<div class="mtxt"><div class="nm">${X.o}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`; return `<div class="mside${right ? ' r' : ''}">${right ? txt + big : big + txt}</div>`; };
   document.getElementById('mb').innerHTML = `<button class="mx" onclick="closeMatch()">×</button>
-    <div class="mhead">${hd(A)}<div class="vs">vs</div>${hd(H)}</div>
+    <div class="mhead">${hd(A, 0)}<div class="vs">vs</div>${hd(H, 1)}</div>
     <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} ${live ? '' : ' · ' + (g.ap === g.hp ? 'Tie' : `${ownerLink(g.ap > g.hp ? g.a : g.h)} won by ${f1(Math.abs(g.ap - g.hp))}`)}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
     <div class="msub" style="margin-top:-8px"><a href="#rivalry/${encodeURIComponent(g.a)}/${encodeURIComponent(g.h)}" onclick="closeMatch()" style="color:#94a3b8">${series}${hist.length > 1 ? ` (${hist.length} meetings, incl. playoffs)` : ''}</a></div>
     <div class="mcols"><div>${A.html}</div><div>${H.html}</div></div>`;
