@@ -574,8 +574,8 @@ function whoGo(name) { const k = Object.keys(D.players).find(k => pname(k).toLow
 
 /* ---------- router ---------- */
 function render() {
-  const [tab, x, y] = (location.hash.slice(1) || 'alltime').split('/');
-  const t = TABS.find(v => v[0] === tab) ? tab : 'alltime';
+  const [tab, x, y] = (location.hash.slice(1) || 'recap').split('/');
+  const t = TABS.find(v => v[0] === tab) ? tab : 'recap';
   charts.splice(0).forEach(c => c.destroy());
   tid = 0;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
