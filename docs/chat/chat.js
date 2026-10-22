@@ -23,7 +23,10 @@
   panel.setAttribute("role", "dialog");
   panel.setAttribute("aria-label", BOT_NAME);
   var head = el("div", "lb-head");
-  head.appendChild(el("span", "lb-title", BOT_NAME));
+  var title = el("span", "lb-title");
+  title.appendChild(el("span", "lb-brand", "Fantrax "));  // hidden on phones so the title reads "Platinum Support"
+  title.appendChild(document.createTextNode(BOT_NAME.replace(/^Fantrax /, "")));
+  head.appendChild(title);
   var close = el("button", "lb-close", "×");
   close.setAttribute("aria-label", "Close chat");
   head.appendChild(close);

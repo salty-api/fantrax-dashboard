@@ -49,6 +49,7 @@ html.lb-lock, html.lb-lock body { overflow: hidden; }
     border-radius: 0; border: none; font-size: 15px;
   }
   .lb-head { padding: 6px 6px 6px 14px; min-height: 48px; }
+  .lb-brand { display: none; }
   .lb-close { width: 44px; height: 44px; font-size: 28px; }
   .lb-msg { max-width: 92%; font-size: 15px; }
   .lb-chips { padding: 0 14px 12px; }
