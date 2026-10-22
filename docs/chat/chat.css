@@ -38,6 +38,24 @@
 .lb-input:focus { outline: none; border-color: #f97316; }
 .lb-send { background: #f97316; color: #0f1117; border: none; border-radius: 8px; padding: 0 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
 
-@media (max-width: 480px) {
-  .lb-panel { right: 0; bottom: 0; width: 100vw; height: 100dvh; max-height: none; border-radius: 0; border: none; }
+html.lb-lock, html.lb-lock body { overflow: hidden; }
+.lb-log { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+/* Phones (and short landscape screens): full-screen sheet, 16px input so iOS does not zoom, 44px tap targets */
+@media (max-width: 600px), (max-height: 500px) {
+  .lb-launch { right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .lb-panel {
+    right: 0; left: 0; top: 0; bottom: auto; width: 100%; height: var(--lb-h, 100dvh); max-height: none;
+    border-radius: 0; border: none; font-size: 15px;
+  }
+  .lb-head { padding: 6px 6px 6px 14px; min-height: 48px; }
+  .lb-close { width: 44px; height: 44px; font-size: 28px; }
+  .lb-msg { max-width: 92%; font-size: 15px; }
+  .lb-chips { padding: 0 14px 12px; }
+  .lb-chip { padding: 9px 13px; font-size: 14px; }
+  .lb-form { padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .lb-input { font-size: 16px; min-height: 44px; padding: 10px 12px; }
+  .lb-send { min-width: 64px; min-height: 44px; font-size: 15px; }
 }
+
+@media (max-height: 500px) { .lb-chips { display: none; } }

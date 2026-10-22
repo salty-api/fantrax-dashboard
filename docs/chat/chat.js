@@ -86,13 +86,30 @@
       .then(function () {
         busy = false;
         log.scrollTop = log.scrollHeight;
-        input.focus();
+        if (!phone.matches) input.focus();
       });
   }
 
   form.onsubmit = function (e) { e.preventDefault(); ask(input.value); };
-  btn.onclick = function () { panel.classList.add("lb-open"); btn.classList.add("lb-hide"); input.focus(); };
-  close.onclick = function () { panel.classList.remove("lb-open"); btn.classList.remove("lb-hide"); };
+  var phone = window.matchMedia("(max-width: 600px), (max-height: 500px)");
+  var vv = window.visualViewport;
+  // On phones the sheet tracks the visible area so the on-screen keyboard never covers the input
+  function fit() {
+    if (!phone.matches || !panel.classList.contains("lb-open") || !vv) { panel.style.removeProperty("--lb-h"); panel.style.top = ""; return; }
+    panel.style.setProperty("--lb-h", vv.height + "px");
+    panel.style.top = vv.offsetTop + "px";
+    log.scrollTop = log.scrollHeight;
+  }
+  if (vv) { vv.addEventListener("resize", fit); vv.addEventListener("scroll", fit); }
+  btn.onclick = function () {
+    panel.classList.add("lb-open"); btn.classList.add("lb-hide");
+    if (phone.matches) document.documentElement.classList.add("lb-lock"); else input.focus();  // no auto-focus on phones: it would pop the keyboard over the greeting
+    fit();
+  };
+  close.onclick = function () {
+    panel.classList.remove("lb-open"); btn.classList.remove("lb-hide");
+    document.documentElement.classList.remove("lb-lock"); fit();
+  };
 
   document.body.appendChild(btn);
   document.body.appendChild(panel);
