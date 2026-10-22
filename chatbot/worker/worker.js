@@ -9,7 +9,7 @@
 
 const SITE = "https://fantrax.whohashim.com";
 const DATA_URL = SITE + "/data.json";
-const ALLOWED_ORIGINS = [SITE, "http://localhost:8000"]; // localhost is for local testing; remove once live
+const ALLOWED_ORIGINS = [SITE];
 const MODEL = "claude-haiku-5-5";
 const MAX_QUESTION_CHARS = 500;
 const MAX_HISTORY_TURNS = 6;
