@@ -503,8 +503,9 @@ function viewRecap(season, wkArg) {
   const sos = {}; curRows.forEach(r => { const opps = sched.filter(x => x[1] === r.o || x[2] === r.o).map(x => x[1] === r.o ? x[2] : x[1]); sos[r.o] = opps.length ? {v: opps.reduce((s, o) => s + (apPct[o] || .5), 0) / opps.length, n: opps.length} : null; });
   const showSos = sched.length > 0;
   // season leaders through this week
-  const sum = {}; D.pw.filter(x => x[0] === season && x[1] <= wk).forEach(x => { const k = x[3]; sum[k] = sum[k] || {pid: k, pts: 0, wks: 0, o: x[2]}; sum[k].pts += x[4]; sum[k].wks++; sum[k].o = x[2]; });
-  const leaders = Object.values(sum).sort((a, b) => b.pts - a.pts).slice(0, 10);
+  const sum = {}; D.pw.filter(x => x[0] === season && x[1] <= wk).forEach(x => { const k = x[3]; sum[k] = sum[k] || {pid: k, pts: 0, wks: 0, gp: 0, o: x[2]}; sum[k].pts += x[4]; sum[k].wks++; sum[k].gp += x[5] || 0; sum[k].o = x[2]; });
+  const hasGp = Object.values(sum).every(x => x.gp > 0);
+  const leaders = Object.values(sum).sort(hasGp ? (a, b) => b.pts / b.gp - a.pts / a.gp : (a, b) => b.pts - a.pts).slice(0, 10);
   const card = (k, v, sub, hl) => `<div class="card ${hl ? 'hl' : ''}"><div class="k">${k}</div><div class="big">${v}</div><div class="sub">${sub}${live ? ' (so far)' : ''}</div></div>`;
   const pot = top[0];
   // recap blurb (whole numbers, plain text for a group chat)
@@ -571,10 +572,11 @@ function viewRecap(season, wkArg) {
   T([
     {h: 'Player', k: x => plink(x.pid), v: x => pname(x.pid)},
     {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
+    ...(hasGp ? [{h: 'FPts/G', k: x => f1(x.pts / x.gp), v: x => x.pts / x.gp, num: 1}, {h: 'Games', k: x => x.gp, v: x => x.gp, num: 1}] : []),
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
     {h: 'FPts/wk', k: x => f1(x.pts / x.wks), v: x => x.pts / x.wks, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
-  ], leaders) + `<div class="note">Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
+  ], leaders) + `<div class="note">Ranked by FPts per game to adjust for schedule differences. Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
   </div>
   <div class="section"><div class="section-title">Power rankings${done ? ' after ' + wkLabel(season, done) : ''}</div>` +
   (pwr.length ? `<div class="mute" style="font-size:12px;margin:-6px 0 10px">Average of each team's rank in last-3-week scoring and season all-play win %</div>` + T([

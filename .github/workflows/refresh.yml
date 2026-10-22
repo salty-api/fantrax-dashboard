@@ -38,6 +38,7 @@ jobs:
           python -I scripts/fetch_headshots.py
           python -I scripts/fetch_projections.py
           python -I scripts/fetch_bench.py
+          python -I scripts/fetch_games.py
 
       # Fails (and emails you) if a team name can't be mapped to an owner or a finished season lost its scores.
       - name: Build dashboard and share cards

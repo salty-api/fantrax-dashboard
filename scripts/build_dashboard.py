@@ -131,10 +131,14 @@ def tracker_and_recap(standings, own, played):
     players = {pid: names.get(pid, ["#" + pid, ""]) for pid in pids}
     # weekly counted-lineup scoring (player level)
     pw = []
+    gp = {}
+    if (D / "player_games.csv").exists():
+        for r in csv.DictReader(open(D / "player_games.csv")):
+            gp[(r["season"], int(r["period"]), r["player_id"])] = int(r["g"])
     for r in csv.DictReader(open(D / "player_weeks.csv")):
         o = tid_owner.get((r["season"], r["team_id"]))
         if o:
-            pw.append([r["season"], int(r["period"]), o, r["player_id"], float(r["fpts"])])
+            pw.append([r["season"], int(r["period"]), o, r["player_id"], float(r["fpts"]), gp.get((r["season"], int(r["period"]), r["player_id"]))])
             players.setdefault(r["player_id"], names.get(r["player_id"], ["#" + r["player_id"], ""]))
     bn = {}
     if (D / "bench.csv").exists():
