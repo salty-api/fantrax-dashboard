@@ -4,7 +4,7 @@
 data/owners.csv maps (season, team name) -> owner. Missing rows are appended with a
 best-guess owner (confirmed=0); edit the file and re-run to correct. Never overwritten.
 """
-import csv, datetime, json, re, sys, zoneinfo
+import shutil, csv, datetime, json, re, sys, zoneinfo
 from collections import defaultdict
 from pathlib import Path
 
@@ -214,6 +214,8 @@ def export_json(data, cur, path):
                      for r in (csv.DictReader(open(D / "game_log.csv")) if (D / "game_log.csv").exists() else [])],
         "player_season_stats": {pid: {"name": nm(pid)[0], **v} for pid, v in full_stats.items() if pid != "_season"},
         "player_season_stats_season": data["statsSeason"],
+        "past_season_player_stats": {f.stem.replace("player_stats_", ""): "https://fantrax.whohashim.com/stats/" + f.name
+                                     for f in sorted(D.glob("player_stats_20*.json"))},
         "current_rosters": current_rosters(cur, nm),
     }
     path.write_text(json.dumps(out, separators=(",", ":")))
@@ -362,6 +364,9 @@ def main():
     out.mkdir(exist_ok=True)
     (out / "index.html").write_text(html)
     export_json(data, json.load(open(ROOT / "leagues.json"))["current"], out / "data.json")
+    (out / "stats").mkdir(exist_ok=True)  # one-time past-season player stats (scripts/pull_past_stats.py), served as static files
+    for fp in sorted(D.glob("player_stats_20*.json")):
+        shutil.copyfile(fp, out / "stats" / fp.name)
     print(f"{len(games)} games, {len(rows)} season rows, owners={owners}")
 
 
