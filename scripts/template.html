@@ -589,7 +589,6 @@ function viewRecap(season, wkArg) {
     {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
     ...(hasGp ? [{h: 'FPts/G', k: x => f1(ppg(x)), v: x => ppg(x), num: 1}, {h: 'Games', k: x => x.gp, v: x => x.gp, num: 1}] : []),
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
-    {h: 'FPts/wk', k: x => f1(x.pts / x.wks), v: x => x.pts / x.wks, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
   ], leaders) + `<div class="note">Ranked by FPts per game to adjust for schedule differences. Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
   </div>
