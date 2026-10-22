@@ -505,13 +505,6 @@ function viewRecap(season, wkArg) {
   // season leaders through this week
   const sum = {}; D.pw.filter(x => x[0] === season && x[1] <= wk).forEach(x => { const k = x[3]; sum[k] = sum[k] || {pid: k, pts: 0, wks: 0, o: x[2]}; sum[k].pts += x[4]; sum[k].wks++; sum[k].o = x[2]; });
   const leaders = Object.values(sum).sort((a, b) => b.pts - a.pts).slice(0, 10);
-  // lineup efficiency (bench data only exists for weeks captured since 2026-27 wk 1)
-  const BN = (D.bn || {})[season + '|' + wk] || {};
-  const eff = Object.keys(BN).map(o => {
-    const st = week.filter(x => x[2] === o).map(x => x[4]), bn = BN[o].map(x => x[1]), all = st.concat(bn).sort((a, b) => b - a);
-    const act = st.reduce((s, x) => s + x, 0), opt = all.slice(0, st.length).reduce((s, x) => s + x, 0);
-    return {o, act, opt, left: opt - act, bench: bn.reduce((s, x) => s + x, 0), pct: opt ? act / opt : 1};
-  }).filter(x => x.opt > 0).sort((a, b) => b.left - a.left);
   const card = (k, v, sub, hl) => `<div class="card ${hl ? 'hl' : ''}"><div class="k">${k}</div><div class="big">${v}</div><div class="sub">${sub}${live ? ' (so far)' : ''}</div></div>`;
   const pot = top[0];
   // recap blurb (whole numbers, plain text for a group chat)
@@ -532,7 +525,6 @@ function viewRecap(season, wkArg) {
     if (pwr.length && !isPO) L.push(`Power rankings top 3: ${pwr.slice(0, 3).map(x => x.o).join(', ')}.`);
     blurb = L.join('\n');
   }
-  const sub = x => x.beat != null && !isPO ? `<span class="px" style="color:#94a3b8">beat ${f0(x.beat)} of ${nT - 1}${lucky(x) ? ' · <span class="pos">lucky win</span>' : unlucky(x) ? ' · <span class="neg">unlucky loss</span>' : ''}</span>` : '';
   const pi = wks.indexOf(wk), nav = i => wks[i] != null ? `location.hash='recap/${season}/${wks[i]}'` : '';
   return `<h1>Weekly Recap</h1><div class="subtitle">${season} · ${wkLabel(season, wk)} · points from each team's counted lineup</div>
   <div class="controls"><select onchange="location.hash='recap/'+this.value+'/${wk}'">${pwSeasons.map(x => `<option ${x === season ? 'selected' : ''}>${x}</option>`).join('')}</select>
@@ -545,11 +537,10 @@ function viewRecap(season, wkArg) {
     ${hiTeam ? card('High score', ownerCell(hiTeam.o), f1(hiTeam.pts) + ' pts') : ''}
     ${blow ? card('Blowout', ownerCell(blow.o), `beat ${blow.opp} by ${f1(blow.pts - blow.oppts)}`) : ''}
     ${close ? card('Nail-biter', ownerCell(close.o), `edged ${close.opp} by ${f1(close.pts - close.oppts)}`) : ''}
-    ${eff.length ? card('Most left on bench', ownerCell(eff[0].o), `${f1(eff[0].left)} pts vs best lineup`) : ''}
   </div>
   ${blurb ? `<div class="section"><div class="section-title">Recap blurb <button class="share" onclick="copyBlurb(this)">Copy for group chat</button></div><div id="blurb" class="blurb">${esc(blurb)}</div></div>` : ''}
   <div class="two"><div class="section"><div class="section-title">Scoreboard${isPO ? ' (playoffs)' : ''}${live ? ' <span class="livetag">LIVE</span>' : ''}</div><table>` +
-  games.map(g => `<tr class="clk" onclick="${mqs(g.s, g.ph, g.p, g.a, g.h)}"><td>${ownerLink(g.a)}${sub(scOf[g.a])}</td><td class="num sc ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}${pxs(g.apx)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}${sub(scOf[g.h])}</td><td class="num sc ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}${pxs(g.hpx)}</td></tr>`).join('') +
+  games.map(g => `<tr class="clk" onclick="${mqs(g.s, g.ph, g.p, g.a, g.h)}"><td>${ownerLink(g.a)}</td><td class="num sc ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}${pxs(g.apx)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num sc ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}${pxs(g.hpx)}</td></tr>`).join('') +
   `</table></div>
   <div class="section"><div class="section-title">Standings${wk > regMax ? ' (final regular season)' : done ? ' after ' + wkLabel(season, done) : ''}${done < Math.min(wk, regMax) ? ' <span class="mute" style="text-transform:none;letter-spacing:0">(updates when the week ends)</span>' : ''}</div>` +
   (curRows.length ? T([
@@ -584,14 +575,7 @@ function viewRecap(season, wkArg) {
     {h: 'FPts/wk', k: x => f1(x.pts / x.wks), v: x => x.pts / x.wks, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
   ], leaders) + `<div class="note">Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
-  <div class="section"><div class="section-title">Lineup efficiency</div>` +
-  (eff.length ? T([
-    {h: 'Owner', k: r => ownerLink(r.o), v: r => r.o},
-    {h: 'Scored', k: r => f1(r.act), v: r => r.act, num: 1},
-    {h: 'Best lineup', k: r => f1(r.opt), v: r => r.opt, num: 1},
-    {h: 'Left on bench', k: r => `<span class="${r.left > 0.05 ? 'neg' : 'mute'}">${r.left > 0.05 ? '-' : ''}${f1(r.left)}</span>`, v: r => r.left, num: 1},
-    {h: 'Efficiency', k: r => (r.pct * 100).toFixed(1) + '%', v: r => r.pct, num: 1},
-  ], eff) + `<div class="note">Best lineup = the same number of starters, picked as the highest scorers among starters and bench (position limits ignored). Bench scores are only captured from 2026-27 week 1 on.</div>` : `<div class="mute" style="padding:14px 4px">No bench data for this week. Fantrax only exposes current rosters, so bench scores are captured from 2026-27 week 1 onward.</div>`) + `</div></div>
+  </div>
   <div class="section"><div class="section-title">Power rankings${done ? ' after ' + wkLabel(season, done) : ''}</div>` +
   (pwr.length ? `<div class="mute" style="font-size:12px;margin:-6px 0 10px">Average of each team's rank in last-3-week scoring and season all-play win %</div>` + T([
     {h: '#', k: r => r.rk, v: r => r.rk, num: 1},
