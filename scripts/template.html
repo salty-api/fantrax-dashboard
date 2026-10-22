@@ -122,6 +122,7 @@ html { -webkit-text-size-adjust: 100%; }
 .livetag { background: #f97316; color: #0f1117; font-size: 9px; font-weight: 800; letter-spacing: .08em; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 6px; }
 .liveg .card { opacity: .65; }
 tr.cut td { border-bottom: 2px dashed #f97316; }
+.late { display: inline-block; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 9px; margin-left: 4px; background: rgba(251,191,36,.2); color: #fbbf24; text-transform: uppercase; letter-spacing: .04em; }
 .clinch { display: inline-block; font-size: 9px; font-weight: 800; width: 15px; height: 15px; line-height: 15px; text-align: center; border-radius: 3px; margin-left: 4px; vertical-align: middle; } .clinch.y { background: rgba(74,222,128,.2); color: #4ade80; } .clinch.e { background: rgba(248,113,113,.2); color: #f87171; }
 .blurb { white-space: pre-wrap; background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 14px 16px; font-size: 13px; line-height: 1.55; color: #cbd5e1; user-select: all; }
 .section-title button.share { margin-left: 10px; padding: 4px 10px; font-size: 11px; text-transform: none; letter-spacing: 0; }
@@ -504,8 +505,16 @@ function viewRecap(season, wkArg) {
   const showSos = sched.length > 0;
   // season leaders through this week
   const sum = {}; D.pw.filter(x => x[0] === season && x[1] <= wk).forEach(x => { const k = x[3]; sum[k] = sum[k] || {pid: k, pts: 0, wks: 0, gp: 0, o: x[2]}; sum[k].pts += x[4]; sum[k].wks++; sum[k].gp += x[5] || 0; sum[k].o = x[2]; });
-  const hasGp = Object.values(sum).every(x => x.gp > 0);
-  const leaders = Object.values(sum).sort(hasGp ? (a, b) => b.pts / b.gp - a.pts / a.gp : (a, b) => b.pts - a.pts).slice(0, 10);
+  const hasGp = Object.values(sum).some(x => x.gp > 0), ppg = x => x.gp ? x.pts / x.gp : 0;
+  const leaders = Object.values(sum).sort(hasGp ? (a, b) => ppg(b) - ppg(a) : (a, b) => b.pts - a.pts).slice(0, 10);
+  // Better than Wemby: latest game night's scores that beat Wemby's most recent game; show the 5 drafted latest
+  const gl = D.gl.filter(x => x[0] === season), wembyId = Object.keys(D.players).find(k => /wembanyama/i.test(D.players[k][0]));
+  const wGames = gl.filter(x => x[3] === wembyId).sort((a, b) => a[2] < b[2] ? 1 : -1), wLast = wGames[0];
+  const nightD = gl.reduce((m, x) => x[2] > m ? x[2] : m, ''), glPer = gl.length ? gl.find(x => x[2] === nightD)[1] : 0;
+  const draftOf = pid => { const p = (D.picks[pid] || []).find(x => x[0] === season); return p ? {rd: p[2], pk: p[3], o: p[1]} : null; };
+  const beat = wLast && glPer === wk ? gl.filter(x => x[2] === nightD && x[4] > wLast[4] && x[3] !== wembyId).map(x => ({pid: x[3], pts: x[4], dr: draftOf(x[3])}))
+    .sort((a, b) => (b.dr ? b.dr.pk : 1e9) - (a.dr ? a.dr.pk : 1e9) || b.pts - a.pts) : null;
+  const fmtD = d => new Date(d + 'T12:00:00').toLocaleDateString(undefined, {weekday: 'short', month: 'short', day: 'numeric'});
   const card = (k, v, sub, hl) => `<div class="card ${hl ? 'hl' : ''}"><div class="k">${k}</div><div class="big">${v}</div><div class="sub">${sub}${live ? ' (so far)' : ''}</div></div>`;
   const pot = top[0];
   // recap blurb (whole numbers, plain text for a group chat)
@@ -562,6 +571,12 @@ function viewRecap(season, wkArg) {
     {h: 'Owner', k: x => ownerLink(x[2]), v: x => x[2]},
     {h: 'FPts', k: x => dbar(x[4], wkMax), v: x => x[4], num: 1},
   ], top) + `</div>
+  ${beat ? `<div class="section"><div class="section-title">Better than Wemby</div><div class="mute" style="font-size:12px;margin:-6px 0 10px">${beat.length} player${beat.length === 1 ? '' : 's'} scored more on ${fmtD(nightD)} than Victor Wembanyama's last game (${f1(wLast[4])} FPts, ${fmtD(wLast[2])}). Showing the ${Math.min(5, beat.length)} drafted latest.</div>` + (beat.length ? T([
+    {h: 'Player', k: x => plink(x.pid) + ` <span class="mute">${ppos(x.pid)}</span>`, v: x => pname(x.pid)},
+    {h: 'FPts', k: x => f1(x.pts), v: x => x.pts, num: 1},
+    {h: 'vs Wemby', k: x => `<span class="up">+${f1(x.pts - wLast[4])}</span>`, v: x => x.pts - wLast[4], num: 1},
+    {h: 'Drafted', k: x => x.dr ? `Rd ${x.dr.rd}, pick ${x.dr.pk}${x.dr.rd >= 11 ? ' <span class="late" title="Drafted in round 11 or later">late pick</span>' : ''} <span class="mute">${x.dr.o}</span>` : '<span class="late">undrafted</span>', v: x => x.dr ? x.dr.pk : 1e9, num: 1},
+  ], beat.slice(0, 5)) : '<div class="mute" style="padding:14px 4px">Nobody beat him yet.</div>') + `</div>` : ''}
   <div class="section"><div class="section-title">Best player on each team</div>` +
   T([
     {h: 'Owner', k: x => ownerLink(x[2]), v: x => x[2]},
@@ -572,7 +587,7 @@ function viewRecap(season, wkArg) {
   T([
     {h: 'Player', k: x => plink(x.pid), v: x => pname(x.pid)},
     {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
-    ...(hasGp ? [{h: 'FPts/G', k: x => f1(x.pts / x.gp), v: x => x.pts / x.gp, num: 1}, {h: 'Games', k: x => x.gp, v: x => x.gp, num: 1}] : []),
+    ...(hasGp ? [{h: 'FPts/G', k: x => f1(ppg(x)), v: x => ppg(x), num: 1}, {h: 'Games', k: x => x.gp, v: x => x.gp, num: 1}] : []),
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
     {h: 'FPts/wk', k: x => f1(x.pts / x.wks), v: x => x.pts / x.wks, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},

@@ -150,6 +150,11 @@ def tracker_and_recap(standings, own, played):
         for v in bn.values():
             for lst in v.values():
                 lst.sort(key=lambda x: -x[1])
+    gl = []
+    if (D / "game_log.csv").exists():
+        for r in csv.DictReader(open(D / "game_log.csv")):
+            gl.append([r["season"], int(r["period"]), r["game_date"], r["player_id"], float(r["fpts"])])
+            players.setdefault(r["player_id"], names.get(r["player_id"], ["#" + r["player_id"], ""]))
     hs = json.load(open(D / "headshots.json")) if (D / "headshots.json").exists() else {}
     heads = {}
     for pid in players:
@@ -159,7 +164,7 @@ def tracker_and_recap(standings, own, played):
     ps = json.load(open(D / "player_stats.json")) if (D / "player_stats.json").exists() else {}
     stats = {k: v for k, v in ps.items() if k in players and k != "_season"}
     return {"players": players, "heads": heads, "stats": stats, "statsSeason": ps.get("_season", ""), "stints": {k: stints[k] for k in pids if k in stints},
-            "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw, "bn": bn,
+            "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw, "bn": bn, "gl": gl,
             "seasonsAll": sorted({r["season"] for r in standings})}
 
 

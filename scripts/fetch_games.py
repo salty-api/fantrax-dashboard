@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """Snapshot each player's games played and FP/G per scoring period for the current season (public, no login).
 
-  data/player_games.csv  season, period, player_id, g, fpg
+  data/player_games.csv  season, period, player_id, g, fpg, fpts
+  data/game_log.csv      season, period, player_id, game_date, fpts
 
-g = FPts / FP/G from getPlayerStats BY_PERIOD (all rostered players). Used to turn counted FPts into FPts per game,
+g = FPts / FP/G from getPlayerStats BY_PERIOD (all players with games). Used to turn counted FPts into FPts per game,
 which adjusts for scheduling differences. A period is refreshed while it is live and for two days after it ends.
+
+Fantrax has no per-game stats, so game_log.csv is built by snapshots: when a player's game count is exactly one more
+than the games already logged, the new game's score is period FPts minus the logged scores. Gaps of 2+ games are skipped.
+game_date is the Pacific game night of the snapshot (the first run falls back to the date in the player's news icon).
 """
-import csv, datetime, json, sys, zoneinfo
+import csv, datetime, json, re, sys, zoneinfo
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fetch_history import call, ROOT
@@ -26,12 +31,16 @@ def main():
     season = cfg["current"]
     lid = cfg["leagues"][season]
     ends = json.load(open(D / "periods.json")).get(season, {}) if (D / "periods.json").exists() else {}
-    today = datetime.datetime.now(zoneinfo.ZoneInfo("America/Los_Angeles")).date()
+    now = datetime.datetime.now(zoneinfo.ZoneInfo("America/Los_Angeles"))
+    today, night = now.date(), (now - datetime.timedelta(hours=9)).date()  # games end by ~1am PT, so 9am PT starts a new day
+    lpath = D / "game_log.csv"
+    fresh_log = not lpath.exists()
+    log = list(csv.DictReader(open(lpath))) if lpath.exists() else []
     periods = sorted({int(r["period"]) for r in csv.DictReader(open(D / "player_weeks.csv")) if r["season"] == season})
     path = D / "player_games.csv"
     old = list(csv.DictReader(open(path))) if path.exists() else []
     have = {int(r["period"]) for r in old if r["season"] == season}
-    new = []
+    new, newlog = [], []
     for p in periods:
         end = ends.get(str(p))
         recent = end is not None and datetime.date.fromisoformat(end) + datetime.timedelta(days=2) >= today
@@ -40,7 +49,7 @@ def main():
         try:
             page, rows = 1, []
             while True:
-                d = call(lid, "getPlayerStats", {"statusOrTeamFilter": "ALL_TAKEN", "timeframeTypeCode": "BY_PERIOD", "period": str(p),
+                d = call(lid, "getPlayerStats", {"statusOrTeamFilter": "ALL", "timeframeTypeCode": "BY_PERIOD", "period": str(p),
                          "maxResultsPerPage": "500", "pageNumber": str(page)}, auth=False)
                 rows += d["statsTable"]
                 if page >= d["paginatedResultSet"]["totalNumPages"]:
@@ -49,19 +58,47 @@ def main():
         except Exception as e:  # nice-to-have; never break the refresh
             print(f"period {p}: skipped ({e})")
             continue
+        keys = [h.get("key") for h in d["tableHeader"]["cells"]]
+        ifp, ifg = keys.index("fpts"), keys.index("fptsPerGame")
         got = []
         for r in rows:
             c = r["cells"]
-            fpts, fpg = num(c[3]["content"]), num(c[4]["content"])
-            got.append({"season": season, "period": p, "player_id": r["scorer"]["scorerId"],
-                        "g": round(fpts / fpg) if fpg else 0, "fpg": fpg})
+            fpts, fpg = num(c[ifp]["content"]), num(c[ifg]["content"])
+            g = round(fpts / fpg) if fpg else 0
+            if not g:
+                continue
+            pid = r["scorer"]["scorerId"]
+            got.append({"season": season, "period": p, "player_id": pid, "g": g, "fpg": fpg, "fpts": fpts})
+            mine = [x for x in log if x["season"] == season and int(x["period"]) == p and x["player_id"] == pid]
+            if g - len(mine) == 1:
+                gd = night
+                if fresh_log:
+                    if 9 <= now.hour < 17:  # daytime: no games are being played, so anything seen was last night's
+                        gd = night - datetime.timedelta(days=1)  # first run: use the date in the player's latest game news if there is one
+                    for ic in r["scorer"].get("icons", []):
+                        m = re.match(r"(\w{3}) (\d{1,2}), .*(?:point|ended|finished)", ic.get("tooltip", ""))
+                        if m:
+                            try:
+                                hd = datetime.datetime.strptime(f"{m[1]} {m[2]} {today.year}", "%b %d %Y").date()
+                            except ValueError:
+                                continue
+                            if night - datetime.timedelta(days=3) <= hd <= night:
+                                gd = hd
+                                break
+                newlog.append({"season": season, "period": p, "player_id": pid, "game_date": gd.isoformat(),
+                               "fpts": round(fpts - sum(float(x["fpts"]) for x in mine), 2)})
         old = [r for r in old if not (r["season"] == season and int(r["period"]) == p)]
         new += got
         print(f"{season} period {p}: {len(got)} players")
     with open(path, "w", newline="") as f:
-        w = csv.DictWriter(f, ["season", "period", "player_id", "g", "fpg"])
+        w = csv.DictWriter(f, ["season", "period", "player_id", "g", "fpg", "fpts"])
         w.writeheader()
         w.writerows(old + new)
+    with open(lpath, "w", newline="") as f:
+        w = csv.DictWriter(f, ["season", "period", "player_id", "game_date", "fpts"])
+        w.writeheader()
+        w.writerows(log + newlog)
+    print(f"{len(newlog)} new games logged")
 
 
 if __name__ == "__main__":
