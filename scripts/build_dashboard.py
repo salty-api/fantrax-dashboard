@@ -168,6 +168,35 @@ def tracker_and_recap(standings, own, played):
             "seasonsAll": sorted({r["season"] for r in standings})}
 
 
+def export_json(data, cur, path):
+    """Readable, self-describing copy of the data for other tools (served at /data.json)."""
+    nm = lambda pid: (data["players"].get(pid) or ["#" + pid, ""])
+    pl = lambda pid: {"id": pid, "name": nm(pid)[0], "pos": nm(pid)[1]}
+    out = {
+        "about": "Fantrax Platinum league data, rebuilt on every refresh. Scores are Fantrax FPts. Weeks are scoring periods (current season = %s)." % cur,
+        "generated_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "current_season": cur,
+        "owners": data["owners"],
+        "seasons": data["seasons"],
+        "standings": [{"season": r["s"], "owner": r["o"], "team": r["team"], "rank": r["rk"], "w": r["w"], "l": r["l"], "t": r["t"],
+                       "pf": r["pf"], "pa": r["pa"], "finish": r["fin"]} for r in data["rows"]],
+        "matchups": [{"season": g["s"], "phase": g["ph"], "week": g["wk"], "away": g["a"], "home": g["h"],
+                      "away_pts": g["ap"], "home_pts": g["hp"], "in_progress": g["live"]} for g in data["games"]],
+        "players": {pid: {"name": v[0], "pos": v[1]} for pid, v in data["players"].items()},
+        "draft": [{"season": se, "round": rd, "pick": pk, "owner": o, "player": pl(pid)["name"], "player_id": pid}
+                  for pid, lst in data["picks"].items() for se, o, rd, pk in lst],
+        "player_weeks_counted": [{"season": se, "week": wk, "owner": o, "player": nm(pid)[0], "player_id": pid, "fpts": fp, "games": gp}
+                                 for se, wk, o, pid, fp, gp in data["pw"]],
+        "bench_weeks": [{"season": cur, "week": int(k.split("|")[1]), "owner": o, "player": nm(pid)[0], "player_id": pid, "fpts": fp}
+                        for k, v in data["bn"].items() if k.startswith(cur + "|") for o, lst in v.items() for pid, fp in lst],
+        "game_log": [{"season": se, "week": wk, "date": d, "player": nm(pid)[0], "player_id": pid, "fpts": fp}
+                     for se, wk, d, pid, fp in data["gl"]],
+        "player_season_stats": {pid: {"name": nm(pid)[0], **v} for pid, v in data["stats"].items()},
+        "player_season_stats_season": data["statsSeason"],
+    }
+    path.write_text(json.dumps(out, separators=(",", ":")))
+
+
 def main():
     standings = list(csv.DictReader(open(D / "standings.csv")))
     matchups = list(csv.DictReader(open(D / "matchups.csv")))
@@ -310,6 +339,7 @@ def main():
     out = ROOT / "docs"
     out.mkdir(exist_ok=True)
     (out / "index.html").write_text(html)
+    export_json(data, json.load(open(ROOT / "leagues.json"))["current"], out / "data.json")
     print(f"{len(games)} games, {len(rows)} season rows, owners={owners}")
 
 

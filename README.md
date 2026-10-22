@@ -6,6 +6,7 @@ League history dashboard for the Fantrax league, served by GitHub Pages from `do
 - `scripts/fetch_history.py` - pulls standings and matchups into `data/` (older seasons need a Fantrax login cookie in `~/.fantrax_cookie` or `FANTRAX_COOKIE`; never commit it)
 - `data/owners.csv` - maps each season's team name to an owner; new names are added with `confirmed=0`
 - `scripts/build_dashboard.py` + `scripts/template.html` - build `docs/index.html`
+- `docs/data.json` - readable JSON of standings, matchups, drafts, weekly player scores, game log and season stats, rebuilt on every refresh and served at fantrax.whohashim.com/data.json (for chatbots and other tools)
 - `docs/logos/` - owner logos (from the 2025-26 season)
 
 ## Automatic weekly refresh
