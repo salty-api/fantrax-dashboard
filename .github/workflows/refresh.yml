@@ -3,11 +3,8 @@ name: Refresh league data
 on:
   schedule:
     - cron: "0 14 * * 1"   # Mondays 14:00 UTC (7am PT / 10am ET), after the Sunday scoring period closes
-    # Nightly at 5pm, 7pm, 9pm and 11pm PT. Each slot is scheduled at both its PDT and PST UTC hour; the gate step keeps only the one that lands on the right PT hour.
-    - cron: "0 0,1 * * *"   # 5pm PT
-    - cron: "0 2,3 * * *"   # 7pm PT
-    - cron: "0 4,5 * * *"   # 9pm PT
-    - cron: "0 6,7 * * *"   # 11pm PT
+    # Hourly from 5pm to 11pm PT. Scheduled at every UTC hour that can land in that window (00-07, covering both PDT and PST); the gate step keeps only PT hours 17-23.
+    - cron: "0 0-7 * * *"
   workflow_dispatch:        # run it by hand from the Actions tab
 
 permissions:
@@ -22,11 +19,11 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - name: Gate (nightly runs only at 5pm, 7pm, 9pm and 11pm PT)
+      - name: Gate (nightly runs only hourly from 5pm to 11pm PT)
         id: gate
         run: |
           H=$(TZ=America/Los_Angeles date +%H)
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" != "0 14 * * 1" ] && [ "$H" != "17" ] && [ "$H" != "19" ] && [ "$H" != "21" ] && [ "$H" != "23" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" != "0 14 * * 1" ] && [ "$((10#$H))" -lt 17 ]; then
             echo "run=false" >> "$GITHUB_OUTPUT"; echo "Skipping, PT hour is $H"
           else
             echo "run=true" >> "$GITHUB_OUTPUT"
