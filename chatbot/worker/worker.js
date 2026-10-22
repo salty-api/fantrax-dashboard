@@ -79,6 +79,21 @@ const TOOLS = [
     },
   },
   {
+    name: "get_past_season_stats",
+    description: "Full season NBA player stats for past seasons 2024-25 and 2025-26 (the current season is in get_player and get_top_players). Look up one player's season line, or rank all players by a stat. Includes games, fantasy points, per game and total box score stats, double doubles and triple doubles.",
+    input_schema: {
+      type: "object",
+      properties: {
+        season: { type: "string", enum: ["2024-25", "2025-26"] },
+        player: { type: "string", description: "Player name. Omit to rank all players." },
+        sort: { type: "string", enum: ["fpts", "fpg", "pts", "reb", "ast", "st", "blk", "to", "dd", "td"], description: "Default fpts. fpg and per game stats need at least min_games." },
+        min_games: { type: "integer", description: "Minimum games for per game rankings, default 20" },
+        limit: { type: "integer", description: "Max 25" },
+      },
+      required: ["season"],
+    },
+  },
+  {
     name: "get_top_players",
     description: "Top NBA players this season by total fantasy points or points per game. Optionally only players on a given owner's roster, or only unowned free agents.",
     input_schema: {
@@ -112,6 +127,49 @@ async function loadData() {
   if (!res.ok) throw new Error("data.json fetch failed: " + res.status);
   cache = { data: await res.json(), at: Date.now() };
   return cache.data;
+}
+
+// Past full-season player stats are static files linked from data.json (past_season_player_stats)
+const pastCache = {};
+async function loadPast(d, season) {
+  const url = (d.past_season_player_stats || {})[season];
+  if (!url) return null;
+  if (pastCache[season] && Date.now() - pastCache[season].at < DATA_TTL_MS * 12) return pastCache[season].data;
+  const res = await fetch(url, { cf: { cacheTtl: 3600, cacheEverything: true } });
+  if (!res.ok) throw new Error("past stats fetch failed: " + res.status);
+  pastCache[season] = { data: await res.json(), at: Date.now() };
+  return pastCache[season].data;
+}
+
+async function pastSeasonStats(d, input) {
+  const seasons = Object.keys(d.past_season_player_stats || {});
+  const season = input.season;
+  const data = await loadPast(d, season);
+  if (!data) return { error: "No past season stats for that season.", available_seasons: seasons };
+  const keys = ["fpts", "fpg", "pts", "reb", "ast", "st", "blk", "to", "dd", "td"];
+  const sort = keys.includes(input.sort) ? input.sort : "fpts";
+  const limit = Math.min(Math.max(input.limit || 10, 1), 25);
+  const val = (r, k) => (k === "dd" || k === "td" ? r.tot[k] : r[k]) || 0;
+  let rows = Object.entries(data).filter(([id]) => id !== "_season").map(([id, r]) => ({ id, ...r }));
+  if (input.player) {
+    const n = norm(input.player);
+    const exact = rows.filter((r) => norm(r.name) === n);
+    rows = exact.length ? exact : rows.filter((r) => norm(r.name).includes(n)).slice(0, 5);
+    if (!rows.length) return { error: "No player by that name in that season's stats.", season };
+  } else if (["fpg", "pts", "reb", "ast", "st", "blk", "to"].includes(sort)) {
+    rows = rows.filter((r) => r.g >= (input.min_games || 20)); // per game leaders need a minimum games played
+  }
+  rows.sort((a, b) => val(b, sort) - val(a, sort));
+  return {
+    season,
+    note: "Full season NBA player stats. pts/reb/ast/stl/blk/to are per game; totals are season totals. Player may have changed teams.",
+    sorted_by: sort,
+    players: rows.slice(0, limit).map((r) => ({
+      player: r.name, team: r.tm, pos: r.pos, games: r.g, fpts: r.fpts, fpts_per_game: r.fpg, fantasy_rank: r.rk,
+      per_game: { pts: r.pts, reb: r.reb, ast: r.ast, stl: r.st, blk: r.blk, to: r.to },
+      season_totals: r.tot, other_per_game_averages: r.avg,
+    })),
+  };
 }
 
 // ---------- helpers ----------
@@ -325,13 +383,17 @@ async function askClaude(env, messages) {
     }
 
     messages.push({ role: "assistant", content: msg.content });
-    const results = msg.content
-      .filter((c) => c.type === "tool_use")
-      .map((c) => {
-        let out;
-        try { out = runTool(d, c.name, c.input || {}); } catch (e) { out = { error: String(e.message || e) }; }
-        return { type: "tool_result", tool_use_id: c.id, content: JSON.stringify(out) };
-      });
+    const results = await Promise.all(
+      msg.content
+        .filter((c) => c.type === "tool_use")
+        .map(async (c) => {
+          let out;
+          try {
+            out = c.name === "get_past_season_stats" ? await pastSeasonStats(d, c.input || {}) : runTool(d, c.name, c.input || {});
+          } catch (e) { out = { error: String(e.message || e) }; }
+          return { type: "tool_result", tool_use_id: c.id, content: JSON.stringify(out) };
+        })
+    );
     messages.push({ role: "user", content: results });
   }
   return "Sorry, I couldn't work that one out.";
