@@ -13,7 +13,7 @@ const ALLOWED_ORIGINS = [SITE];
 const MODEL = "claude-haiku-5-5";
 const MAX_QUESTION_CHARS = 500;
 const MAX_HISTORY_TURNS = 6;
-const MAX_TOOL_ROUNDS = 4;
+const MAX_TOOL_ROUNDS = 6;
 const DATA_TTL_MS = 5 * 60 * 1000;
 
 const SYSTEM_PROMPT = `You are the league assistant on the Fantrax Platinum fantasy basketball history site (fantrax.whohashim.com).
@@ -26,8 +26,10 @@ About the league:
 
 How to answer:
 * Use the tools to look things up. Never guess numbers, rosters, or results.
-* Keep answers short and conversational, two to five sentences, or a compact list when comparing several teams.
+* Be conversational and keep simple answers to a few sentences. For broader questions (a full roster, comparing teams, a player's box scores, rankings) give a complete answer as a compact list or short table, up to about 15 lines. Do not pad.
 * When you give current season numbers, mention the data time from the tool result (for example "as of 4:27 PM CT").
+* Fantasy points per stat: PTS 1, REB 1.25, AST 1.5, STL 2, BLK 2, TO -1. Nothing else scores, so box score stats explain every FPts total. When asked why a player scored what he did, show the stat line and the math.
+* Box score stats available per game: points, rebounds (offensive and defensive), assists, steals, blocks, turnovers, minutes, FG, FT and 3PT makes and attempts, fouls. Season stats also include double doubles and triple doubles.
 * Matchups flagged in_progress are live and not final; say so.
 * If the data does not contain the answer, say you don't have it rather than inventing it.
 * Only answer questions about this league, its owners, players, and NBA fantasy context. Politely decline anything else.
@@ -61,6 +63,19 @@ const TOOLS = [
     name: "get_player",
     description: "Look up a player by name: current season stats, current fantasy owner, draft history, and recent weekly and game scores in this league.",
     input_schema: { type: "object", properties: { name: { type: "string" } }, required: ["name"] },
+  },
+  {
+    name: "get_games",
+    description: "Individual game box scores logged this season (points, rebounds, assists, steals, blocks, turnovers, minutes, shooting). Filter by date, minimum fantasy points, or player, sorted by fantasy points. Use for best games, who beat a score, or what a player did on a given night.",
+    input_schema: {
+      type: "object",
+      properties: {
+        date: { type: "string", description: "YYYY-MM-DD game night. Omit for all logged games." },
+        min_fpts: { type: "number" },
+        player: { type: "string" },
+        limit: { type: "integer", description: "Max 25" },
+      },
+    },
   },
   {
     name: "get_top_players",
@@ -125,7 +140,18 @@ function asOf(d) {
   return t.toLocaleString("en-US", { timeZone: "America/Chicago", dateStyle: "medium", timeStyle: "short" }) + " CT";
 }
 
-const statLine = (s) => (s ? { team: s.tm, pos: s.pos, games: s.g, fpts: s.fpts, fpts_per_game: s.fpg, rank: s.rk } : null);
+const statLine = (s, detail) =>
+  s
+    ? {
+        team: s.tm, pos: s.pos, games: s.g, fpts: s.fpts, fpts_per_game: s.fpg, rank: s.rk,
+        per_game: { pts: s.pts, reb: s.reb, ast: s.ast, stl: s.st, blk: s.blk, to: s.to },
+        ...(detail ? { season_totals: s.tot, other_per_game_averages: s.avg } : {}),
+      }
+    : null;
+const gameLine = (x) => {
+  const { season, week, date, player, player_id, fpts, ...box } = x;
+  return { player, date, week, fpts, ...box };
+};
 
 // ---------- tools ----------
 function runTool(d, name, input) {
@@ -181,13 +207,33 @@ function runTool(d, name, input) {
           player: d.players[id].name,
           pos: d.players[id].pos,
           current_owner: owners[id] || "free agent or not rostered",
-          season_stats: statLine(stats[id]),
+          season_stats: statLine(stats[id], true),
           drafted: d.draft.filter((x) => x.player_id === id).map(({ season, round, pick, owner }) => ({ season, round, pick, owner })),
           weekly_scores_this_season: d.player_weeks_counted
             .filter((x) => x.player_id === id && x.season === cur)
             .map(({ week, owner, fpts, games }) => ({ week, owner, fpts, games })),
-          recent_games: d.game_log.filter((x) => x.player_id === id).slice(-5).map(({ date, fpts }) => ({ date, fpts })),
+          recent_games: d.game_log.filter((x) => x.player_id === id).slice(-5).map(gameLine),
         })),
+      };
+    }
+
+    case "get_games": {
+      const limit = Math.min(Math.max(input.limit || 10, 1), 25);
+      const ids = input.player ? findPlayerIds(d, input.player) : null;
+      if (ids && !ids.length) return { ...meta, error: "No player by that name in league data." };
+      const owners = currentRosterOwner(d);
+      let rows = d.game_log.filter((x) => x.season === cur);
+      if (input.date) rows = rows.filter((x) => x.date === input.date);
+      if (input.min_fpts != null) rows = rows.filter((x) => x.fpts >= input.min_fpts);
+      if (ids) rows = rows.filter((x) => ids.includes(x.player_id));
+      const dates = [...new Set(d.game_log.filter((x) => x.season === cur).map((x) => x.date))].sort();
+      rows = rows.slice().sort((a, b) => b.fpts - a.fpts);
+      return {
+        ...meta,
+        logged_dates: dates,
+        total_matching: rows.length,
+        games: rows.slice(0, limit).map((x) => ({ ...gameLine(x), owner: owners[x.player_id] || "free agent" })),
+        note: "Game dates are the Pacific game night the score was first seen; scores are the player's full game.",
       };
     }
 
@@ -264,7 +310,7 @@ async function askClaude(env, messages) {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 600,
+        max_tokens: 1500,
         system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
         tools: TOOLS,
         messages,

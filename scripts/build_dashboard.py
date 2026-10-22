@@ -162,7 +162,7 @@ def tracker_and_recap(standings, own, played):
         if m:
             heads[pid] = m.group(1)
     ps = json.load(open(D / "player_stats.json")) if (D / "player_stats.json").exists() else {}
-    stats = {k: v for k, v in ps.items() if k in players and k != "_season"}
+    stats = {k: {x: v[x] for x in ("rk", "g", "fpts", "fpg", "pts", "reb", "ast", "st", "blk", "to", "tm", "pos")} for k, v in ps.items() if k in players and k != "_season"}  # box score detail (tot/avg) goes to data.json only
     return {"players": players, "heads": heads, "stats": stats, "statsSeason": ps.get("_season", ""), "stints": {k: stints[k] for k in pids if k in stints},
             "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw, "bn": bn, "gl": gl,
             "seasonsAll": sorted({r["season"] for r in standings})}
@@ -183,10 +183,15 @@ def current_rosters(cur, nm):
     return {o: sorted(v, key=lambda x: x["player"]) for o, v in sorted(out.items())}
 
 
+BOX = ["pts", "reb", "ast", "st", "blk", "to", "min", "fgm", "fga", "ftm", "fta", "tpm", "tpa", "oreb", "dreb", "pf"]
+
+
 def export_json(data, cur, path):
     """Readable, self-describing copy of the data for other tools (served at /data.json)."""
     nm = lambda pid: (data["players"].get(pid) or ["#" + pid, ""])
     pl = lambda pid: {"id": pid, "name": nm(pid)[0], "pos": nm(pid)[1]}
+    box = lambda r: {k: float(r[k]) if k == "min" else int(float(r[k])) for k in BOX if r.get(k) not in (None, "")}
+    full_stats = json.load(open(D / "player_stats.json")) if (D / "player_stats.json").exists() else {}
     out = {
         "about": "Fantrax Platinum league data, rebuilt on every refresh. Scores are Fantrax FPts. Weeks are scoring periods (current season = %s)." % cur,
         "generated_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -204,9 +209,10 @@ def export_json(data, cur, path):
                                  for se, wk, o, pid, fp, gp in data["pw"]],
         "bench_weeks": [{"season": cur, "week": int(k.split("|")[1]), "owner": o, "player": nm(pid)[0], "player_id": pid, "fpts": fp}
                         for k, v in data["bn"].items() if k.startswith(cur + "|") for o, lst in v.items() for pid, fp in lst],
-        "game_log": [{"season": se, "week": wk, "date": d, "player": nm(pid)[0], "player_id": pid, "fpts": fp}
-                     for se, wk, d, pid, fp in data["gl"]],
-        "player_season_stats": {pid: {"name": nm(pid)[0], **v} for pid, v in data["stats"].items()},
+        "game_log": [{"season": r["season"], "week": int(r["period"]), "date": r["game_date"], "player": nm(r["player_id"])[0],
+                      "player_id": r["player_id"], "fpts": float(r["fpts"]), **box(r)}
+                     for r in (csv.DictReader(open(D / "game_log.csv")) if (D / "game_log.csv").exists() else [])],
+        "player_season_stats": {pid: {"name": nm(pid)[0], **v} for pid, v in full_stats.items() if pid != "_season"},
         "player_season_stats_season": data["statsSeason"],
         "current_rosters": current_rosters(cur, nm),
     }

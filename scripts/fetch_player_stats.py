@@ -6,7 +6,8 @@ plus a "_season" key with the season label.
 import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fetch_history import call, ROOT, read_rows
+from fetch_history import ROOT, read_rows
+from fantrax_stats import fetch_all
 
 
 def num(x):
@@ -21,21 +22,18 @@ def main():
     cfg = lg["leagues"]
     scored = any(r[0] == lg["current"] and r[5] not in ("", "0.0") for r in read_rows(ROOT / "data" / "matchups.csv"))
     season = lg["current"] if scored else sorted(cfg)[sorted(cfg).index(lg["current"]) - 1]  # live season once it has scores
-    lid, page, out = cfg[season], 1, {"_season": season}
-    while True:
-        d = call(lid, "getPlayerStats", {"statusOrTeamFilter": "ALL", "maxResultsPerPage": "500",
-                 "pageNumber": str(page), "timeframeTypeCode": "YEAR_TO_DATE"}, auth=False)
-        for r in d["statsTable"]:
-            c = [x["content"] for x in r["cells"]]  # Rk, Sta, FPts, FP/G, PTS, REB, AST, ST, BLK, TO
-            fpts, fpg = num(c[2]), num(c[3])
-            sc = r["scorer"]
-            out[sc["scorerId"]] = {"rk": int(c[0]) if c[0].isdigit() else None,
-                "g": round(fpts / fpg) if fpts and fpg else 0, "fpts": fpts, "fpg": fpg,
-                "pts": num(c[4]), "reb": num(c[5]), "ast": num(c[6]), "st": num(c[7]),
-                "blk": num(c[8]), "to": num(c[9]), "tm": sc.get("teamShortName"), "pos": sc.get("posShortNames")}
-        if page >= d["paginatedResultSet"]["totalNumPages"]:
-            break
-        page += 1
+    out = {"_season": season}
+    for pid, s in fetch_all(cfg[season], {"timeframeTypeCode": "YEAR_TO_DATE"}).items():
+        g, t, a = s["g"], s["tot"], s["avg"]
+        pg = lambda k: round(t[k] / g, 1) if g and t.get(k) is not None else None
+        out[pid] = {"rk": s["rk"], "g": g, "fpts": s["fpts"], "fpg": s["fpg"], "tm": s["tm"], "pos": s["pos"],
+                    # per-game box score (the dashboard player page shows these)
+                    "pts": pg("pts"), "reb": pg("reb"), "ast": pg("ast"), "st": pg("st"), "blk": pg("blk"), "to": pg("to"),
+                    # season totals of the six scoring stats, plus double/triple doubles
+                    "tot": t,
+                    # per-game averages of the other box score stats (minutes, shooting, rebounds split, fouls)
+                    "avg": a}
+    out = {k: v for k, v in out.items() if k == "_season" or v["g"]}
     json.dump(out, open(ROOT / "data" / "player_stats.json", "w"), separators=(",", ":"))
     print(len(out) - 1, "players", season, file=sys.stderr)
 
