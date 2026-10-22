@@ -168,6 +168,21 @@ def tracker_and_recap(standings, own, played):
             "seasonsAll": sorted({r["season"] for r in standings})}
 
 
+def current_rosters(cur, nm):
+    """Each owner's roster in the latest scoring period of the current season (for the site chatbot)."""
+    owner_by_tid = {(r["season"], r["team_id"]): r["owner"] for r in csv.DictReader(open(D / "owners.csv")) if r.get("team_id")}
+    rows = [r for r in csv.DictReader(open(D / "rosters.csv")) if r["season"] == cur]
+    if not rows:
+        return {}
+    last = max(int(r["period"]) for r in rows)
+    out = defaultdict(list)
+    for r in rows:
+        o = owner_by_tid.get((cur, r["team_id"]))
+        if o and int(r["period"]) == last:
+            out[o].append({"player": nm(r["player_id"])[0], "player_id": r["player_id"], "status": r["status"]})
+    return {o: sorted(v, key=lambda x: x["player"]) for o, v in sorted(out.items())}
+
+
 def export_json(data, cur, path):
     """Readable, self-describing copy of the data for other tools (served at /data.json)."""
     nm = lambda pid: (data["players"].get(pid) or ["#" + pid, ""])
@@ -193,6 +208,7 @@ def export_json(data, cur, path):
                      for se, wk, d, pid, fp in data["gl"]],
         "player_season_stats": {pid: {"name": nm(pid)[0], **v} for pid, v in data["stats"].items()},
         "player_season_stats_season": data["statsSeason"],
+        "current_rosters": current_rosters(cur, nm),
     }
     path.write_text(json.dumps(out, separators=(",", ":")))
 

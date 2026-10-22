@@ -1,0 +1,13 @@
+# Cloudflare Worker config for the league chatbot.
+# Deploy from this folder:  npx wrangler deploy
+# Set the key once:          npx wrangler secret put ANTHROPIC_API_KEY
+name = "league-bot"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# Optional per visitor rate limit (20 questions per minute per IP).
+# Uncomment to enable; the Worker uses it automatically when present.
+# [[ratelimits]]
+# name = "RATE_LIMITER"
+# namespace_id = "1001"
+# simple = { limit = 20, period = 60 }

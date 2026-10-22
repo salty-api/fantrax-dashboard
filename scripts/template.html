@@ -143,6 +143,7 @@ tr.cut td { border-bottom: 2px dashed #f97316; }
 .mrow > span { position: relative; z-index: 1; } .mrow .mn { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .mrow .pts { font-variant-numeric: tabular-nums; font-weight: 600; }
 @media (max-width: 600px) { .mlogo { width: 52px; height: 52px; border-radius: 10px; } .mside { gap: 8px; } .mhead { gap: 6px; } .mcols { column-gap: 8px; } .mrow { padding: 5px 5px; font-size: 12px; gap: 4px; } .mrow .mn .mute { display: none; } .mrow img.face { width: 18px; height: 18px; margin-right: 5px; } .mrow .pts { font-size: 12px; } .msec { font-size: 10px; } .mbox { padding: 16px 8px; } .mhead .tot { font-size: 26px; } }
 </style>
+<link rel="stylesheet" href="/chat/chat.css">
 </head>
 <body>
 <div class="tab-nav">
@@ -741,5 +742,6 @@ document.getElementById('tabs').innerHTML = TABS.map(([k, l]) => `<button class=
 window.addEventListener('hashchange', render);
 render();
 </script>
+<script src="/chat/chat.js" defer></script>
 </body>
 </html>
