@@ -1,7 +1,7 @@
 // League chat bubble. Talks to the Cloudflare Worker, which holds the API key.
 (function () {
   var WORKER_URL = "https://league-bot.fantraxrob.workers.dev"; // paste your Worker address here
-  var BOT_NAME = "League Bot";
+  var BOT_NAME = "Fantrax Platinum Support";
   var GREETING = "Ask me about standings, matchups, rosters, players, or league history.";
   var SUGGESTIONS = ["Who's winning this week?", "Show me the standings", "Who has the best record all time?"];
 

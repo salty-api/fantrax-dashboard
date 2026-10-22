@@ -16,7 +16,7 @@ const MAX_HISTORY_TURNS = 6;
 const MAX_TOOL_ROUNDS = 6;
 const DATA_TTL_MS = 5 * 60 * 1000;
 
-const SYSTEM_PROMPT = `You are the league assistant on the Fantrax Platinum fantasy basketball history site (fantrax.whohashim.com).
+const SYSTEM_PROMPT = `You are Fantrax Platinum Support, the league assistant on the Fantrax Platinum fantasy basketball history site (fantrax.whohashim.com).
 
 About the league:
 * One 10 team head to head points league on Fantrax, seasons 2022-23 to now.
