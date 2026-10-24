@@ -9,9 +9,11 @@ which adjusts for scheduling differences. A period is refreshed while it is live
 
 Fantrax has no per-game stats, so game_log.csv is built by snapshots: when a player's game count is exactly one more
 than the games already logged, the new game's score is period FPts minus the logged scores. Gaps of 2+ games are skipped.
+New games are only logged in the 11pm PT hour (or with LOG_GAMES=1), so a score is never saved mid-game
+(a game counts as played the moment it starts). Period totals in player_games.csv still refresh every run.
 game_date is the Pacific game night of the snapshot (the first run falls back to the date in the player's news icon).
 """
-import csv, datetime, json, re, sys, zoneinfo
+import csv, datetime, json, os, re, sys, zoneinfo
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fetch_history import ROOT
@@ -48,6 +50,7 @@ def main():
     old = list(csv.DictReader(open(path))) if path.exists() else []
     have = {int(r["period"]) for r in old if r["season"] == season}
     new, newlog = [], []
+    log_games = now.hour == 23 or os.environ.get("LOG_GAMES") == "1" or fresh_log
     for p in periods:
         end = ends.get(str(p))
         recent = end is not None and datetime.date.fromisoformat(end) + datetime.timedelta(days=2) >= today
@@ -68,7 +71,7 @@ def main():
             mine = [x for x in log + newlog if x["season"] == season and int(x["period"]) == p and x["player_id"] == pid]
             if len(mine) == 1 and g == 1 and not mine[0].get("pts"):  # legacy row logged before box scores: this is its only game
                 mine[0].update(cum)
-            if g - len(mine) == 1:
+            if log_games and g - len(mine) == 1:
                 gd = night
                 if fresh_log:
                     if 9 <= now.hour < 17:  # daytime: no games are being played, so anything seen was last night's

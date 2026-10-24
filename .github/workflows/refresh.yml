@@ -5,6 +5,8 @@ on:
     - cron: "0 14 * * 1"   # Mondays 14:00 UTC (7am PT / 10am ET), after the Sunday scoring period closes
     # Hourly at night PT: 00-07 UTC = 5pm-midnight PDT / 4pm-11pm PST. Off-peak minute :17 because GitHub delays or drops top-of-the-hour crons. No gate, so a delayed run still refreshes.
     - cron: "17 0-7 * * *"
+    # Game log is only written in the 11pm PT hour (fetch_games.py); second run at :47 retries if the :17 run is dropped. 06 UTC = 11pm PDT, 07 UTC = 11pm PST.
+    - cron: "47 6,7 * * *"
   workflow_dispatch:        # run it by hand from the Actions tab
 
 permissions:
