@@ -1,0 +1,11 @@
+# Cloudflare cron that dispatches the refresh workflow (GitHub's own cron is unreliable).
+# Deploy from this folder:  npx wrangler deploy
+# Set the token once:       npx wrangler secret put GITHUB_TOKEN
+#   (fine-grained PAT, repo salty-api/fantrax-dashboard only, Actions: read and write)
+name = "fantrax-cron"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[triggers]
+# UTC. Hourly 00:17-07:17 = 5pm-midnight PDT, plus Monday 14:00 UTC (7am PT).
+crons = ["17 0-7 * * *", "0 14 * * 1"]
