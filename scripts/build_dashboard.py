@@ -359,6 +359,7 @@ def main():
                      if m["season"] == cur and m["phase"] == "regular" and (f(m["away_pts"]) or 0) + (f(m["home_pts"]) or 0) == 0
                      and (cur, m["away"]) in own and (cur, m["home"]) in own]
     data.update(tracker_and_recap(standings, own, seasons))
+    data["gen"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     html = (ROOT / "scripts" / "template.html").read_text().replace("__DATA__", json.dumps(data, separators=(",", ":")))
     out = ROOT / "docs"
     out.mkdir(exist_ok=True)

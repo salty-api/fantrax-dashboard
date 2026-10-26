@@ -539,7 +539,7 @@ function viewRecap(season, wkArg) {
     blurb = L.join('\n');
   }
   const pi = wks.indexOf(wk), nav = i => wks[i] != null ? `location.hash='recap/${season}/${wks[i]}'` : '';
-  return `<h1>Weekly Recap</h1><div class="subtitle">${season} · ${wkLabel(season, wk)} · points from each team's counted lineup</div>
+  return `<h1>Weekly Recap</h1><div class="subtitle">${season} · ${wkLabel(season, wk)} · points from each team's counted lineup${season === pwSeasons[pwSeasons.length - 1] && D.gen ? ` · scores updated ${new Date(D.gen).toLocaleString('en-US', {timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'})}` : ''}</div>
   <div class="controls"><select onchange="location.hash='recap/'+this.value+'/${wk}'">${pwSeasons.map(x => `<option ${x === season ? 'selected' : ''}>${x}</option>`).join('')}</select>
   <button class="share" ${pi > 0 ? `onclick="${nav(pi - 1)}"` : 'disabled style="opacity:.4;cursor:default"'} title="Left arrow key">‹ Prev</button>
   <select onchange="location.hash='recap/${season}/'+this.value">${wks.map(w => `<option value="${w}" ${w === wk ? 'selected' : ''}>${wkLabel(season, w)}</option>`).join('')}</select>
