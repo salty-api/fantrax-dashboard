@@ -294,10 +294,61 @@ function viewSeasons(sel) {
   (po.length ? rounds.map((rd, i) => `<div class="mute" style="font-size:11px;margin:8px 0 4px">${i === rounds.length - 1 ? 'Final' : 'Round ' + (i + 1)}</div><table>` +
     po.filter(g => g.p === rd).map(g => `<tr><td>${ownerLink(g.a)}</td><td class="num ${g.ap > g.hp ? 'pos' : 'mute'}">${f1(g.ap)}</td><td class="mute" style="text-align:center">vs</td><td>${ownerLink(g.h)}</td><td class="num ${g.hp > g.ap ? 'pos' : 'mute'}">${f1(g.hp)}</td></tr>`).join('') + '</table>').join('') : '<div class="mute">No playoff data.</div>') +
   `</div></div>
-  <div class="section"><div class="section-title">Points for by owner</div><div class="chart-box"><canvas id="c_pf"></canvas></div></div>`;
+  <div class="section"><div class="section-title">Points for by owner</div><div class="chart-box"><canvas id="c_pf"></canvas></div></div>` +
+  (D.draft && D.draft[sel] ? `<div class="section"><div class="section-title">${sel} draft board</div>
+  <div class="controls" id="dbctl"></div><div id="dboard"></div></div>` : '');
+}
+/* ---------- Draft board ---------- */
+window._dm = window._dm || 'ppg';
+const DB_MODES = [['ppg', 'Points per game'], ['tot', 'Total points'], ['slot', 'vs. pick slot (PPG)']];
+function dbExpected(se, mode) {  // average result of the picks around this slot in finished seasons (missing stats count 0)
+  const seas = Object.entries(D.draft).filter(([k, d]) => d.done && d.maxg);
+  const val = p => mode === 'tot' ? (p[5] || 0) : (p[6] || 0);
+  const cur = D.draft[se], scale = mode === 'tot' ? (cur.maxg || 82) / (seas.reduce((a, [, d]) => a + d.maxg, 0) / seas.length) : 1;
+  return pick => {
+    const xs = []; for (const [, d] of seas) for (const p of d.picks) if (Math.abs(p[1] - pick) <= 6) xs.push(val(p));
+    return xs.length ? scale * xs.reduce((a, b) => a + b, 0) / xs.length : 0;
+  };
+}
+function dbColor(t) {  // t in [-1, 1]: blue (under) to white to orange (over)
+  const a = Math.min(1, Math.abs(t)), mix = (c, w) => Math.round(w + (c - w) * a);
+  return t >= 0 ? `rgb(${mix(234, 255)},${mix(138, 255)},${mix(40, 255)})` : `rgb(${mix(90, 255)},${mix(130, 255)},${mix(200, 255)})`;
+}
+function drawDraft(se) {
+  const d = D.draft[se], el = document.getElementById('dboard');
+  if (!el) return;
+  const mode = window._dm, has = d.maxg != null;
+  document.getElementById('dbctl').innerHTML = DB_MODES.map(([k, l]) => `<button class="share" style="${k === mode ? 'background:#f97316;color:#0f1117;border-color:#f97316;' : ''}margin-left:0;margin-right:6px" onclick="window._dm='${k}';drawDraft('${se}')">${l}</button>`).join('') +
+    `<span class="mute" style="font-size:11px">${has ? 'Full-season NBA stats for each drafted player' + (d.done ? '' : ' (season in progress)') + (mode === 'slot' ? ' · orange = beat what that slot usually returns here, blue = fell short' : '') : 'No player stats stored for this season'}</span>`;
+  const exp = has && mode === 'slot' ? dbExpected(se, 'ppg') : null;
+  const raw = p => p[4] == null ? null : mode === 'tot' ? p[5] : p[6];
+  const score = p => { const v = raw(p); return v == null || !p[4] ? null : exp ? v - exp(p[1]) : v; };
+  const sc = d.picks.map(score).filter(v => v != null).sort((a, b) => a - b);
+  const q = x => sc.length ? sc[Math.min(sc.length - 1, Math.floor(x * sc.length))] : 0;
+  const lo = q(0.05), hi = q(0.95), mid = q(0.5);
+  const tone = v => exp ? dbColor(v >= 0 ? v / Math.max(hi, 1e-9) : v / Math.max(-lo, 1e-9))
+                        : dbColor(v >= mid ? (v - mid) / Math.max(hi - mid, 1e-9) : (v - mid) / Math.max(mid - lo, 1e-9));
+  const teams = d.order, nR = Math.max(...d.picks.map(p => p[0]));
+  const by = {}; d.picks.forEach(p => by[p[0] + '|' + p[2]] = p);
+  let h = `<div style="overflow-x:auto"><table style="border-collapse:separate;border-spacing:3px;min-width:${teams.length * 112 + 40}px"><tr><th></th>${teams.map(o => `<th style="text-align:center;font-size:11px;vertical-align:bottom">${ownerLink(o)}<div class="mute" style="font-weight:400;font-size:10px">${esc(d.teams[o] || '')}</div></th>`).join('')}</tr>`;
+  for (let r = 1; r <= nR; r++) {
+    h += `<tr><td class="mute" style="font-size:11px;text-align:center;padding-right:4px">${r}<br>${r % 2 ? '→' : '←'}</td>`;
+    for (const o of teams) {
+      const p = by[r + '|' + o];
+      if (!p) { h += '<td></td>'; continue; }
+      const v = score(p), bg = v == null ? '#1a2030' : tone(v), dark = v != null;
+      const label = p[4] == null ? '' : !p[4] ? 'DNP' : exp ? (v >= 0 ? '+' : '−') + f1(Math.abs(v)) : mode === 'tot' ? f0(p[5]) : f1(p[6]);
+      h += `<td style="background:${bg};${dark ? 'color:#0f1117;' : ''}border-radius:6px;padding:5px 4px;text-align:center;vertical-align:top;font-size:11px;line-height:1.25" title="${esc(pname(p[3]))}: ${p[4] ? p[4] + ' GP, ' + f0(p[5]) + ' pts, ' + f1(p[6]) + ' per game' : 'no games'}">
+        <div style="display:flex;justify-content:space-between;font-size:9px;opacity:.75"><span>${r}.${String(p[1] - (r - 1) * teams.length).padStart(2, '0')} #${p[1]}</span><span>${esc(ppos(p[3]))}</span></div>
+        <div>${face(p[3])}</div><a class="pl" href="#whohas/${p[3]}" style="${dark ? 'color:#0f1117' : ''}">${esc(pname(p[3]))}</a><div style="font-weight:700">${label}</div></td>`;
+    }
+    h += '</tr>';
+  }
+  el.innerHTML = h + '</table></div>';
 }
 function afterSeasons(sel) {
   sel = sel || lastSeason;
+  if (D.draft && D.draft[sel]) drawDraft(sel);
   const rows = D.rows.filter(r => r.s === sel).sort((a, b) => b.pf - a.pf);
   chart(document.getElementById('c_pf'), {type: 'bar', data: {labels: rows.map(r => r.o), datasets: [{label: 'PF', data: rows.map(r => r.pf), backgroundColor: rows.map(r => col(r.o))}, {label: 'PA', data: rows.map(r => r.pa), backgroundColor: '#33415588'}]},
     options: {maintainAspectRatio: false, plugins: {legend: {position: 'bottom', labels: {boxWidth: 10}}}}});

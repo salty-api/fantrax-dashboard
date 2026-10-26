@@ -163,7 +163,31 @@ def tracker_and_recap(standings, own, played):
             heads[pid] = m.group(1)
     ps = json.load(open(D / "player_stats.json")) if (D / "player_stats.json").exists() else {}
     stats = {k: {x: v[x] for x in ("rk", "g", "fpts", "fpg", "pts", "reb", "ast", "st", "blk", "to", "tm", "pos")} for k, v in ps.items() if k in players and k != "_season"}  # box score detail (tot/avg) goes to data.json only
-    return {"players": players, "heads": heads, "stats": stats, "statsSeason": ps.get("_season", ""), "stints": {k: stints[k] for k in pids if k in stints},
+    # draft boards: per season, teams in round-1 order + every pick with the player's full-season stats (all NBA games, not just games on this team)
+    tname = {(r["season"], r["team_id"]): r["team"] for r in standings}
+    cur_season = ps.get("_season", "")
+    draft = {}
+    for r in csv.DictReader(open(D / "draft.csv")):
+        se, tid = r["season"], r["team_id"]
+        o = tid_owner.get((se, tid))
+        if not o:
+            continue
+        d = draft.setdefault(se, {"teams": {}, "picks": []})
+        d["teams"][o] = tname.get((se, tid), o)
+        d["picks"].append([int(r["round"]), int(r["pick"]), o, r["player_id"]])
+    for se, d in draft.items():
+        sf = D / f"player_stats_{se}.json"
+        st = json.load(open(sf)) if sf.exists() else (ps if se == cur_season else None)
+        d["order"] = [p[2] for p in sorted(d["picks"]) if p[0] == 1]
+        d["done"] = se != cur_season
+        for p in d["picks"]:
+            v = st.get(p[3]) if st else None
+            p += [v["g"], v["fpts"], v["fpg"]] if v and v.get("g") else ([0, 0, 0] if st else [None, None, None])
+            players.setdefault(p[3], names.get(p[3], ["#" + p[3], ""]))
+            if st and v and v.get("pos") and not players[p[3]][1]:
+                players[p[3]][1] = v["pos"]
+        d["maxg"] = max((v["g"] for k, v in st.items() if k != "_season"), default=0) if st else None
+    return {"draft": draft, "players": players, "heads": heads, "stats": stats, "statsSeason": ps.get("_season", ""), "stints": {k: stints[k] for k in pids if k in stints},
             "picks": {k: picks[k] for k in pids if k in picks}, "pw": pw, "bn": bn, "gl": gl,
             "seasonsAll": sorted({r["season"] for r in standings})}
 
