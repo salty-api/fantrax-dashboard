@@ -343,9 +343,9 @@ function drawDraft(se) {
       if (!p) { h += '<td></td>'; continue; }
       const v = score(p), bg = v == null ? '#1a2030' : tone(v), dark = v != null;
       const label = p[4] == null ? '' : !p[4] ? 'DNP' : exp ? (v >= 0 ? '+' : '−') + f1(Math.abs(v)) : mode === 'tot' ? f0(p[5]) : f1(p[6]);
-      h += `<td style="background:${bg};${dark ? 'color:#0f1117;' : ''}border-radius:6px;padding:4px 3px;text-align:center;vertical-align:top;font-size:11px;line-height:1.2;width:100px;height:86px;overflow:hidden" title="${esc(pname(p[3]))}: ${p[4] ? p[4] + ' GP, ' + f0(p[5]) + ' pts, ' + f1(p[6]) + ' per game' : 'no games'}">
+      h += `<td style="background:${bg};${dark ? 'color:#0f1117;' : ''}border-radius:6px;padding:4px 3px;text-align:center;vertical-align:top;font-size:11px;line-height:1.2;width:100px;height:74px;overflow:hidden" title="${esc(pname(p[3]))}: ${p[4] ? p[4] + ' GP, ' + f0(p[5]) + ' pts, ' + f1(p[6]) + ' per game' : 'no games'}">
         <div style="display:flex;justify-content:space-between;font-size:9px;opacity:.75"><span>${r}.${String(p[1] - (r - 1) * teams.length).padStart(2, '0')} #${p[1]}</span><span>${esc(ppos(p[3]))}</span></div>
-        <div style="height:30px">${face(p[3])}</div><a class="pl" href="#whohas/${p[3]}" style="display:block;max-width:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;${dark ? 'color:#0f1117' : ''}">${esc(shortName(pname(p[3])))}</a><div style="font-weight:700">${label}</div></td>`;
+        <div style="height:28px">${face(p[3])}</div><a class="pl" href="#whohas/${p[3]}" style="display:block;max-width:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;${dark ? 'color:#0f1117' : ''}">${esc(shortName(pname(p[3])))}</a><div style="font-weight:700">${label}</div></td>`;
     }
     h += '</tr>';
   }
