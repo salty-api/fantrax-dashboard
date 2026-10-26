@@ -314,6 +314,11 @@ function dbColor(t) {  // t in [-1, 1]: blue (under) to white to orange (over)
   const a = Math.min(1, Math.abs(t)), mix = (c, w) => Math.round(w + (c - w) * a);
   return t >= 0 ? `rgb(${mix(234, 255)},${mix(138, 255)},${mix(40, 255)})` : `rgb(${mix(90, 255)},${mix(130, 255)},${mix(200, 255)})`;
 }
+function shortName(n) {  // "Giannis Antetokounmpo" -> "G. Antetokounmpo" when too long for a square
+  if (n.length <= 14) return n;
+  const w = n.split(' '), suf = /^(Jr\.?|Sr\.?|II|III|IV)$/.test(w[w.length - 1]) ? ' ' + w.pop() : '';
+  return w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') + suf : n;
+}
 function drawDraft(se) {
   const d = D.draft[se], el = document.getElementById('dboard');
   if (!el) return;
@@ -330,7 +335,7 @@ function drawDraft(se) {
                         : dbColor(v >= mid ? (v - mid) / Math.max(hi - mid, 1e-9) : (v - mid) / Math.max(mid - lo, 1e-9));
   const teams = d.order, nR = Math.max(...d.picks.map(p => p[0]));
   const by = {}; d.picks.forEach(p => by[p[0] + '|' + p[2]] = p);
-  let h = `<div style="overflow-x:auto"><table style="border-collapse:separate;border-spacing:3px;min-width:${teams.length * 112 + 40}px"><tr><th></th>${teams.map(o => `<th style="text-align:center;font-size:11px;vertical-align:bottom">${ownerLink(o)}<div class="mute" style="font-weight:400;font-size:10px">${esc(d.teams[o] || '')}</div></th>`).join('')}</tr>`;
+  let h = `<div style="overflow-x:auto"><table style="border-collapse:separate;border-spacing:3px;table-layout:fixed;width:${teams.length * 106 + 40}px"><tr><th style="width:34px"></th>${teams.map(o => `<th style="width:100px;text-align:center;font-size:11px;vertical-align:bottom;overflow:hidden;white-space:nowrap;text-overflow:ellipsis"><a href="#owner/${encodeURIComponent(o)}" style="color:inherit;text-decoration:none">${esc(o)}</a><div class="mute" style="font-weight:400;font-size:9px;text-transform:none;letter-spacing:0;overflow:hidden;text-overflow:ellipsis">${esc(d.teams[o] || '')}</div></th>`).join('')}</tr>`;
   for (let r = 1; r <= nR; r++) {
     h += `<tr><td class="mute" style="font-size:11px;text-align:center;padding-right:4px">${r}<br>${r % 2 ? '→' : '←'}</td>`;
     for (const o of teams) {
@@ -338,9 +343,9 @@ function drawDraft(se) {
       if (!p) { h += '<td></td>'; continue; }
       const v = score(p), bg = v == null ? '#1a2030' : tone(v), dark = v != null;
       const label = p[4] == null ? '' : !p[4] ? 'DNP' : exp ? (v >= 0 ? '+' : '−') + f1(Math.abs(v)) : mode === 'tot' ? f0(p[5]) : f1(p[6]);
-      h += `<td style="background:${bg};${dark ? 'color:#0f1117;' : ''}border-radius:6px;padding:5px 4px;text-align:center;vertical-align:top;font-size:11px;line-height:1.25" title="${esc(pname(p[3]))}: ${p[4] ? p[4] + ' GP, ' + f0(p[5]) + ' pts, ' + f1(p[6]) + ' per game' : 'no games'}">
+      h += `<td style="background:${bg};${dark ? 'color:#0f1117;' : ''}border-radius:6px;padding:4px 3px;text-align:center;vertical-align:top;font-size:11px;line-height:1.2;width:100px;height:86px;overflow:hidden" title="${esc(pname(p[3]))}: ${p[4] ? p[4] + ' GP, ' + f0(p[5]) + ' pts, ' + f1(p[6]) + ' per game' : 'no games'}">
         <div style="display:flex;justify-content:space-between;font-size:9px;opacity:.75"><span>${r}.${String(p[1] - (r - 1) * teams.length).padStart(2, '0')} #${p[1]}</span><span>${esc(ppos(p[3]))}</span></div>
-        <div>${face(p[3])}</div><a class="pl" href="#whohas/${p[3]}" style="${dark ? 'color:#0f1117' : ''}">${esc(pname(p[3]))}</a><div style="font-weight:700">${label}</div></td>`;
+        <div style="height:30px">${face(p[3])}</div><a class="pl" href="#whohas/${p[3]}" style="display:block;max-width:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;${dark ? 'color:#0f1117' : ''}">${esc(shortName(pname(p[3])))}</a><div style="font-weight:700">${label}</div></td>`;
     }
     h += '</tr>';
   }
