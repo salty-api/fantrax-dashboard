@@ -283,6 +283,14 @@ def main():
         end = ends.get(g["s"], {}).get(str(g["wk"]))
         g["live"] = bool(g["s"] == cur and ((end is not None and end >= today) or (end is None and g["wk"] == curmax)))
     final = [g for g in games if not g["live"]]
+    # Fantrax projections run high; scale team projections by actual/projected over finished weeks
+    pairs = [(g[k + "p"], g[k + "px"]) for g in final for k in "ah" if g.get(k + "px")]
+    pcal = round(sum(a for a, _ in pairs) / sum(x for _, x in pairs), 4) if pairs else 1.0
+    for g in games:
+        for k in "ah":
+            if g.get(k + "px") is not None:
+                g[k + "px"] = round(g[k + "px"] * pcal, 2)
+    print(f"projection calibration x{pcal} from {len(pairs)} team-weeks")
     played = {g["s"] for g in games}
     seasons = sorted(played)
 
