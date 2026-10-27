@@ -1,9 +1,9 @@
 season,period,team_id,player_id,fpts,status
 2026-27,1,wazrfqctmsc25eb8,0621c,0.0,Act
-2026-27,1,e7ctu5b1msc25eb8,04ewt,0.0,Act
 2026-27,1,7j0egupgmsc25eb8,06v5y,0.0,Act
-2026-27,1,u3bnomv3msc25eb8,06ccf,0.0,Act
+2026-27,1,e7ctu5b1msc25eb8,04ewt,0.0,Act
 2026-27,1,zbsh2iq2msc25eb8,06210,0.0,Act
+2026-27,1,u3bnomv3msc25eb8,06ccf,0.0,Act
 2026-27,1,64eyswtomsc25eb8,06v5n,0.0,Act
 2026-27,1,zdbv2x8ymsc25eb8,042nt,0.0,Act
 2026-27,1,oca9h5l7msc25eb8,05qtt,0.0,Act
@@ -15,8 +15,8 @@ season,period,team_id,player_id,fpts,status
 2026-27,1,wazrfqctmsc25eb8,06mk1,0.0,Act
 2026-27,1,wazrfqctmsc25eb8,04ewn,0.0,Act
 2026-27,1,u3bnomv3msc25eb8,06mk7,0.0,Act
-2026-27,1,u3bnomv3msc25eb8,051oi,0.0,Act
 2026-27,1,wazrfqctmsc25eb8,05qt1,0.0,Act
+2026-27,1,u3bnomv3msc25eb8,051oi,0.0,Act
 2026-27,1,e7ctu5b1msc25eb8,051on,0.0,Act
 2026-27,1,zdbv2x8ymsc25eb8,04848,0.0,Act
 2026-27,1,dee3tx9omsc25eb8,04qrn,0.0,Act
@@ -52,8 +52,8 @@ season,period,team_id,player_id,fpts,status
 2026-27,1,oca9h5l7msc25eb8,027pe,0.0,Act
 2026-27,1,dee3tx9omsc25eb8,02nfz,0.0,Act
 2026-27,1,u3bnomv3msc25eb8,0621k,0.0,Act
-2026-27,1,oca9h5l7msc25eb8,051or,0.0,Act
 2026-27,1,oca9h5l7msc25eb8,01eo9,0.0,Act
+2026-27,1,oca9h5l7msc25eb8,051or,0.0,Act
 2026-27,1,e7ctu5b1msc25eb8,076tk,0.0,Act
 2026-27,1,e7ctu5b1msc25eb8,005ki,0.0,Act
 2026-27,1,u3bnomv3msc25eb8,05ujs,0.0,Act
@@ -86,9 +86,9 @@ season,period,team_id,player_id,fpts,status
 2026-27,1,e7ctu5b1msc25eb8,049kd,0.0,Act
 2026-27,1,dee3tx9omsc25eb8,05uj9,0.0,Act
 2026-27,1,7j0egupgmsc25eb8,03nwk,0.0,Act
+2026-27,1,u3bnomv3msc25eb8,06mmf,0.0,Act
 2026-27,1,wazrfqctmsc25eb8,027p0,0.0,Act
 2026-27,1,yr8isikimsc25eb8,02nf9,0.0,Act
-2026-27,1,u3bnomv3msc25eb8,06mmf,0.0,Act
 2026-27,1,zbsh2iq2msc25eb8,076te,0.0,Act
 2026-27,1,64eyswtomsc25eb8,051p9,0.0,Act
 2026-27,1,u3bnomv3msc25eb8,06cei,0.0,Act
