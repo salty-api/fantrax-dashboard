@@ -501,7 +501,9 @@ function viewRecap(season, wkArg) {
   const close = wins.slice().sort((a, b) => (a.pts - a.oppts) - (b.pts - b.oppts))[0];
   const isPO = games.length && games[0].ph === 'playoff';
   const regGames = FG.filter(g => g.s === season && g.ph === 'regular');
-  const regMax = Math.max(...D.games.filter(g => g.s === season && g.ph === 'regular').map(g => g.wk));
+  const regMaxSeen = Math.max(...D.games.filter(g => g.s === season && g.ph === 'regular').map(g => g.wk));
+  // season still in progress (no playoff games yet): future weeks aren't in the data, so assume the longest prior regular season
+  const regMax = D.games.some(g => g.s === season && g.ph === 'playoff') ? regMaxSeen : Math.max(regMaxSeen, ...D.games.filter(g => g.s < season && g.ph === 'regular').map(g => g.wk));
   const done = Math.max(0, ...regGames.filter(g => g.wk <= Math.min(wk, regMax)).map(g => g.wk));  // last finished week
   const latestDone = Math.max(0, ...regGames.map(g => g.wk));
   // standings through a week (regular season only)
