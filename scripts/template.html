@@ -144,6 +144,36 @@ tr.cut td { border-bottom: 2px dashed #f97316; }
 .mrow .bar { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(249,115,22,.18); }
 .mrow > span { position: relative; z-index: 1; } .mrow .mn { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .mrow .pts { font-variant-numeric: tabular-nums; font-weight: 600; }
 @media (max-width: 600px) { .mlogo { width: 52px; height: 52px; border-radius: 10px; } .mside { gap: 8px; } .mhead { gap: 6px; } .mcols { column-gap: 8px; } .mrow { padding: 5px 5px; font-size: 12px; gap: 4px; } .mrow .mn .mute { display: none; } .mrow img.face { width: 18px; height: 18px; margin-right: 5px; } .mrow .pts { font-size: 12px; } .msec { font-size: 10px; } .mbox { padding: 16px 8px; } .mhead .tot { font-size: 26px; } }
+
+/* mobile legibility + QoL */
+.tscroll { background: linear-gradient(to right, #0f1117 30%, rgba(15,17,23,0)) left center / 28px 100% no-repeat local, linear-gradient(to left, #0f1117 30%, rgba(15,17,23,0)) right center / 28px 100% no-repeat local, radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.55), rgba(0,0,0,0)) left center / 10px 100% no-repeat scroll, radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.55), rgba(0,0,0,0)) right center / 10px 100% no-repeat scroll; }
+.controls.stick { position: sticky; top: 48px; z-index: 20; background: #0f1117; padding: 8px 0; margin-top: -8px; border-bottom: 1px solid #1a2030; }
+.controls.stick select { max-width: 100%; }
+.search-wrap { position: relative; display: inline-block; max-width: 100%; }
+.search-wrap input.search { padding-right: 34px; }
+.search-wrap .clr { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: none; border: 0; color: #94a3b8; font-size: 20px; line-height: 1; width: 32px; height: 32px; cursor: pointer; }
+.nomatch { color: #f87171; font-size: 12px; margin: -8px 0 12px; }
+#totop { position: fixed; right: 14px; bottom: 76px; z-index: 40; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; font-size: 18px; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s; }
+#totop.on { opacity: .92; pointer-events: auto; }
+@media (max-width: 600px) {
+  th { font-size: 11px; padding: 8px 6px; }
+  td { font-size: 13px; padding: 9px 6px; }
+  .subtitle { font-size: 13px; }
+  .section-title { font-size: 12px; }
+  .card .k, .stat .sk, .tls { font-size: 11px; }
+  .card .sub, .note, .px, .pick, .mute { font-size: 12px; }
+  .pill, .late { font-size: 11px; }
+  .tab-nav { height: 48px; }
+  .tab-btn { padding: 10px 12px; font-size: 13px; }
+  select, button.share { min-height: 40px; font-size: 15px; }
+  .controls.stick { top: 48px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .controls.stick select { flex: 1 1 40%; margin: 0; }
+  .controls.stick button.share { flex: 0 0 auto; margin: 0; }
+  .tscroll table:not(.heat) td:first-child, .tscroll table:not(.heat) th:first-child { position: sticky; left: 0; z-index: 2; background: #0f1117; box-shadow: 1px 0 0 #1e293b; }
+  .tscroll table tr:hover td:first-child { background: #111827; }
+  .search-wrap { display: block; } input.search { width: 100%; }
+  #totop { bottom: 84px; }
+}
 </style>
 <link rel="stylesheet" href="/chat/chat.css">
 </head>
@@ -598,7 +628,7 @@ function viewRecap(season, wkArg) {
   }
   const pi = wks.indexOf(wk), nav = i => wks[i] != null ? `location.hash='recap/${season}/${wks[i]}'` : '';
   return `<h1>Weekly Recap</h1><div class="subtitle">${season} · ${wkLabel(season, wk)} · points from each team's counted lineup${season === pwSeasons[pwSeasons.length - 1] && D.gen ? ` · scores updated ${new Date(D.gen).toLocaleString('en-US', {timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'})}` : ''}</div>
-  <div class="controls"><select onchange="location.hash='recap/'+this.value+'/${wk}'">${pwSeasons.map(x => `<option ${x === season ? 'selected' : ''}>${x}</option>`).join('')}</select>
+  <div class="controls stick"><select onchange="location.hash='recap/'+this.value+'/${wk}'">${pwSeasons.map(x => `<option ${x === season ? 'selected' : ''}>${x}</option>`).join('')}</select>
   <button class="share" ${pi > 0 ? `onclick="${nav(pi - 1)}"` : 'disabled style="opacity:.4;cursor:default"'} title="Left arrow key">‹ Prev</button>
   <select onchange="location.hash='recap/${season}/'+this.value">${wks.map(w => `<option value="${w}" ${w === wk ? 'selected' : ''}>${wkLabel(season, w)}</option>`).join('')}</select>
   <button class="share" ${pi < wks.length - 1 ? `onclick="${nav(pi + 1)}"` : 'disabled style="opacity:.4;cursor:default"'} title="Right arrow key">Next ›</button></div>
@@ -720,7 +750,7 @@ function afterRecap() {
 function stintLabel(se, a, b) { return !D.seasons.includes(se) ? 'current roster' : a === 1 && b >= 23 ? 'full season' : `wk ${a}-${b}`; }
 function viewWho(pid) {
   const list = Object.keys(D.players).sort((a, b) => pname(a).localeCompare(pname(b)));
-  const box = `<div class="controls"><input class="search" list="plist" placeholder="Search a player..." value="${pid && D.players[pid] ? pname(pid) : ''}" onchange="whoGo(this.value)"><datalist id="plist">${list.map(k => `<option value="${pname(k)}">`).join('')}</datalist>${pid && D.players[pid] ? `<button class="share" onclick="shareLink(this,'${pid}')">Copy share link</button>` : ''}</div>`;
+  const box = `<div class="controls"><span class="search-wrap"><input class="search" list="plist" placeholder="Search a player..." autocomplete="off" value="${pid && D.players[pid] ? pname(pid) : ''}" onchange="whoGo(this.value)"><button class="clr" aria-label="Clear" onclick="clearWho(this)">×</button></span><datalist id="plist">${list.map(k => `<option value="${pname(k)}">`).join('')}</datalist>${pid && D.players[pid] ? `<button class="share" onclick="shareLink(this,'${pid}')">Copy share link</button>` : ''}</div>`;
   if (!pid || !D.players[pid]) {
     const rows = Object.keys(D.stints).map(k => ({pid: k, owners: [...new Set(D.stints[k].map(x => x[1]))], n: D.stints[k].length}));
     const most = rows.sort((a, b) => b.owners.length - a.owners.length || b.n - a.n).slice(0, 15);
@@ -782,7 +812,14 @@ function shareLink(btn, pid) {
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(() => done(true), () => done(false));
   else { const t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); done(ok); }
 }
-function whoGo(name) { const k = Object.keys(D.players).find(k => pname(k).toLowerCase() === name.toLowerCase()); if (k) location.hash = 'whohas/' + k; }
+function whoGo(name) {
+  const q = name.trim().toLowerCase(), ks = Object.keys(D.players);
+  const k = ks.find(k => pname(k).toLowerCase() === q) || (q.length > 1 ? (ks.filter(k => pname(k).toLowerCase().includes(q)).length === 1 ? ks.find(k => pname(k).toLowerCase().includes(q)) : null) : null);
+  document.querySelectorAll('.nomatch').forEach(n => n.remove());
+  if (k) location.hash = 'whohas/' + k;
+  else if (q) { const i = document.querySelector('input.search'); if (i) i.closest('.controls').insertAdjacentHTML('afterend', '<div class="nomatch">No unique match for "' + esc(name) + '". Keep typing and pick from the list.</div>'); }
+}
+function clearWho(b) { const i = b.previousElementSibling; i.value = ''; document.querySelectorAll('.nomatch').forEach(n => n.remove()); i.focus(); }
 
 /* ---------- router ---------- */
 function render() {
@@ -796,10 +833,13 @@ function render() {
   document.querySelectorAll('#panels table').forEach(t => { const w = document.createElement('div'); w.className = 'tscroll'; t.parentNode.insertBefore(w, t); w.appendChild(t); });
   if (t === 'recap' && window._rs) { const u = '#recap/' + window._rs.join('/'); if (location.hash !== u) history.replaceState(null, '', u); }
   if (t === 'seasons') afterSeasons(x); if (t === 'whohas') afterWho(x); if (t === 'recap') afterRecap();
+  const ab = document.querySelector('.tab-btn.active'); if (ab) ab.scrollIntoView({inline: 'center', block: 'nearest'});
   window.scrollTo(0, 0);
 }
 document.getElementById('tabs').innerHTML = TABS.map(([k, l]) => `<button class="tab-btn" data-t="${k}" onclick="location.hash='${k}'">${l}</button>`).join('');
 window.addEventListener('hashchange', render);
+const tt = document.createElement('button'); tt.id = 'totop'; tt.setAttribute('aria-label', 'Back to top'); tt.textContent = '↑'; tt.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'}); document.body.appendChild(tt);
+window.addEventListener('scroll', () => tt.classList.toggle('on', window.scrollY > 700), {passive: true});
 render();
 </script>
 <script src="/chat/chat.js" defer></script>
