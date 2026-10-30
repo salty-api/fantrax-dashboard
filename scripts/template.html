@@ -597,7 +597,7 @@ function viewRecap(season, wkArg) {
   // season leaders through this week
   const sum = {}; D.pw.filter(x => x[0] === season && x[1] <= wk).forEach(x => { const k = x[3]; sum[k] = sum[k] || {pid: k, pts: 0, wks: 0, gp: 0, o: x[2]}; sum[k].pts += x[4]; sum[k].wks++; sum[k].gp += x[5] || 0; sum[k].o = x[2]; });
   const hasGp = Object.values(sum).some(x => x.gp > 0), ppg = x => x.gp ? x.pts / x.gp : 0;
-  const leaders = Object.values(sum).sort(hasGp ? (a, b) => ppg(b) - ppg(a) : (a, b) => b.pts - a.pts).slice(0, 10);
+  const minGp = 3, leaders = Object.values(sum).filter(x => !hasGp || x.gp >= minGp).sort(hasGp ? (a, b) => ppg(b) - ppg(a) : (a, b) => b.pts - a.pts).slice(0, 10);
   // Better than Wemby: latest game night's scores that beat Wemby's most recent game; show the 5 drafted latest
   const gl = D.gl.filter(x => x[0] === season), wembyId = Object.keys(D.players).find(k => /wembanyama/i.test(D.players[k][0]));
   const wGames = gl.filter(x => x[3] === wembyId).sort((a, b) => a[2] < b[2] ? 1 : -1), wLast = wGames[0];
@@ -681,7 +681,7 @@ function viewRecap(season, wkArg) {
     ...(hasGp ? [{h: 'FPts/G', k: x => f1(ppg(x)), v: x => ppg(x), num: 1}, {h: 'Games', k: x => x.gp, v: x => x.gp, num: 1}] : []),
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
     {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
-  ], leaders) + `<div class="note">Ranked by FPts per game to adjust for schedule differences. Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
+  ], leaders) + `<div class="note">Ranked by FPts per game to adjust for schedule differences; players need at least ${minGp} games to qualify. Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
   </div>
   <div class="section"><div class="section-title">Power rankings${done ? ' after ' + wkLabel(season, done) : ''}</div>` +
   (pwr.length ? `<div class="mute" style="font-size:12px;margin:-6px 0 10px">Average of each team's rank in last-3-week scoring and season all-play win %</div>` + T([
