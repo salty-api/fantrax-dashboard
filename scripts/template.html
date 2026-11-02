@@ -174,6 +174,36 @@ tr.cut td { border-bottom: 2px dashed #f97316; }
   .search-wrap { display: block; } input.search { width: 100%; }
   #totop { bottom: 84px; }
 }
+
+/* compact mobile: fit width, screenshot friendly */
+@media (max-width: 600px) {
+  .hm { display: none; }
+  table { font-size: 12px; }
+  th { font-size: 9px; letter-spacing: .03em; padding: 5px 3px; }
+  td { font-size: 12px; padding: 5px 3px; white-space: normal; }
+  td .name, td a.pl { max-width: 30vw; }
+  .logo { width: 16px; height: 16px; margin-right: 4px; }
+  img.face { width: 18px; height: 18px; margin-right: 4px; }
+  .px { font-size: 10px; }
+  .dbar { min-width: 0; width: 58px; margin-left: auto; height: 20px; line-height: 20px; }
+  .dbar b { padding-right: 3px; }
+  .tab-panel { padding: 14px 8px 60px; }
+  h1 { font-size: 18px; }
+  .subtitle { font-size: 12px; margin-bottom: 14px; }
+  .section { margin-bottom: 20px; }
+  .section-title { margin-bottom: 8px; padding-bottom: 5px; }
+  .heat th, .heat td { padding: 5px 1px; font-size: 11px; text-align: center; }
+  .heat th { font-size: 9px; }
+  .heat td:first-child, .heat th:first-child { text-align: left; padding-left: 3px; }
+  .heat td:first-child .logo { display: none; }
+  .heat td:first-child .name { max-width: 22vw; }
+  .tscroll table:not(.heat) td:first-child, .tscroll table:not(.heat) th:first-child { position: static; box-shadow: none; background: none; }
+  .card .v { font-size: 18px; } .stat .sv { font-size: 18px; }
+  .chart-box { height: 210px; }
+  .nl .logo { display: none; }
+  .ab { display: none; } .heat th .fn { display: none; } .heat th .ab { display: inline; }
+  #dboard table { width: auto !important; } #dboard th { width: 66px !important; } #dboard th, #dboard td { font-size: 10px !important; }
+}
 </style>
 <link rel="stylesheet" href="/chat/chat.css">
 </head>
@@ -203,8 +233,8 @@ function drawT(id) {
   const t = window['_t_' + id], el = document.getElementById(id);
   let rows = t.rows.slice();
   if (t.sort !== null) { const c = t.cols[t.sort]; rows.sort((a, b) => { const x = c.v(a), y = c.v(b); return (x < y ? -1 : x > y ? 1 : 0) * t.dir; }); }
-  el.innerHTML = '<thead><tr>' + t.cols.map((c, i) => `<th class="${c.num ? 'num' : ''} ${t.sort === i ? 'sorted' : ''}" onclick="sortT('${id}',${i})">${c.h}${t.sort === i ? (t.dir < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') + '</tr></thead><tbody>' +
-    rows.map(r => { const oc = t.onrow && t.onrow(r), rc = (t.rowcls && t.rowcls(r)) || '', cl = ((oc ? 'clk ' : '') + rc).trim(); return `<tr${cl ? ` class="${cl}"` : ''}${oc ? ` onclick="${oc}"` : ''}>` + t.cols.map(c => `<td class="${c.num ? 'num' : ''}">${c.k(r)}</td>`).join('') + '</tr>'; }).join('') + '</tbody>';
+  el.innerHTML = '<thead><tr>' + t.cols.map((c, i) => `<th class="${c.num ? 'num' : ''} ${t.sort === i ? 'sorted' : ''} ${c.hm ? 'hm' : ''}" onclick="sortT('${id}',${i})">${c.h}${t.sort === i ? (t.dir < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') + '</tr></thead><tbody>' +
+    rows.map(r => { const oc = t.onrow && t.onrow(r), rc = (t.rowcls && t.rowcls(r)) || '', cl = ((oc ? 'clk ' : '') + rc).trim(); return `<tr${cl ? ` class="${cl}"` : ''}${oc ? ` onclick="${oc}"` : ''}>` + t.cols.map(c => `<td class="${c.num ? 'num' : ''}${c.hm ? ' hm' : ''}">${c.k(r)}</td>`).join('') + '</tr>'; }).join('') + '</tbody>';
 }
 function sortT(id, i) { const t = window['_t_' + id]; if (t.sort === i) t.dir *= -1; else { t.sort = i; t.dir = t.cols[i].num ? -1 : 1; } drawT(id); }
 let tid = 0;
@@ -266,18 +296,18 @@ function viewAlltime() {
   T([
     {h: 'Owner', k: a => ownerLink(a.o), v: a => a.o},
     {h: 'Titles', k: a => a.titles ? `<span class="champ">${a.titles}</span>` : '0', v: a => a.titles, num: 1},
-    {h: 'Finals', k: a => a.finals, v: a => a.finals, num: 1},
-    {h: 'Playoffs', k: a => a.playoffs, v: a => a.playoffs, num: 1},
+    {h: 'Finals', k: a => a.finals, v: a => a.finals, num: 1, hm: 1},
+    {h: 'Playoffs', k: a => a.playoffs, v: a => a.playoffs, num: 1, hm: 1},
     {h: 'Record', k: a => rec(a.w, a.l, a.t), v: a => a.w, num: 1},
     {h: 'Win %', k: a => pct(a.w, a.l, a.t), v: a => a.w / (a.w + a.l + a.t), num: 1},
     {h: 'PF', k: a => f0(a.pf), v: a => a.pf, num: 1},
-    {h: 'PA', k: a => f0(a.pa), v: a => a.pa, num: 1},
-    {h: 'PF/Season', k: a => f0(a.pf / a.seasons), v: a => a.pf / a.seasons, num: 1},
-    {h: 'Pts/Game', k: a => f1(a.pf / (a.w + a.l + a.t)), v: a => a.pf / (a.w + a.l + a.t), num: 1},
-    {h: 'PA/Game', k: a => f1(a.pa / (a.w + a.l + a.t)), v: a => a.pa / (a.w + a.l + a.t), num: 1},
+    {h: 'PA', k: a => f0(a.pa), v: a => a.pa, num: 1, hm: 1},
+    {h: 'PF/Season', k: a => f0(a.pf / a.seasons), v: a => a.pf / a.seasons, num: 1, hm: 1},
+    {h: 'Pts/Game', k: a => f1(a.pf / (a.w + a.l + a.t)), v: a => a.pf / (a.w + a.l + a.t), num: 1, hm: 1},
+    {h: 'PA/Game', k: a => f1(a.pa / (a.w + a.l + a.t)), v: a => a.pa / (a.w + a.l + a.t), num: 1, hm: 1},
     {h: 'Avg Rank', k: a => a.avg_rk.toFixed(1), v: a => a.avg_rk, num: 1},
-    {h: 'Playoff W-L', k: a => a.pw + '-' + a.pl, v: a => a.pw, num: 1},
-    {h: 'Seasons', k: a => a.seasons, v: a => a.seasons, num: 1},
+    {h: 'Playoff W-L', k: a => a.pw + '-' + a.pl, v: a => a.pw, num: 1, hm: 1},
+    {h: 'Seasons', k: a => a.seasons, v: a => a.seasons, num: 1, hm: 1},
   ], A) + `<div class="note">Pts/Game = points scored per weekly matchup (regular season). PF/Season = points per season.</div></div>
   <div class="section"><div class="section-title">Final finish by year</div>${finishGrid()}
   <div class="note">Playoff teams show their postseason finish (🏆 champion, 🥈 runner-up, T3 = lost in the semifinals); teams that missed the playoffs show their regular-season rank. Hover for the regular-season rank. Avg counts T3 as 3.5.</div></div>`;
@@ -317,7 +347,7 @@ function viewSeasons(sel) {
     {h: 'Owner', k: r => ownerLink(r.o) + (r.team !== r.o ? ` <span class="mute">${r.team}</span>` : ''), v: r => r.o},
     {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
     {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
-    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
+    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1, hm: 1},
     {h: 'Finish', k: r => `<span class="pill ${r.fin}">${r.fin}</span>`, v: r => r.rk},
   ], rows) + `</div>
   <div class="section"><div class="section-title">${sel} playoffs</div>` +
@@ -411,7 +441,7 @@ function viewOwner(sel) {
     {h: 'Rank', k: r => r.rk, v: r => r.rk, num: 1},
     {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
     {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
-    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
+    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1, hm: 1},
     {h: 'Finish', k: r => `<span class="pill ${r.fin}">${r.fin}</span>`, v: r => r.rk},
   ], rows) + `</div>
   <div class="section"><div class="section-title">Head-to-head (all games)</div>` +
@@ -420,7 +450,7 @@ function viewOwner(sel) {
     {h: 'W-L', k: o => rec(h[o][0], h[o][1], h[o][2]), v: o => h[o][0] - h[o][1], num: 1},
     {h: 'Win %', k: o => pct(h[o][0], h[o][1], h[o][2]), v: o => h[o][0] / Math.max(1, h[o][0] + h[o][1] + h[o][2]), num: 1},
     {h: 'PF', k: o => f0(h[o][3]), v: o => h[o][3], num: 1},
-    {h: 'PA', k: o => f0(h[o][4]), v: o => h[o][4], num: 1},
+    {h: 'PA', k: o => f0(h[o][4]), v: o => h[o][4], num: 1, hm: 1},
     {h: 'Pt Diff / Game', k: o => { const n = h[o][0] + h[o][1] + h[o][2]; const d = n ? (h[o][3] - h[o][4]) / n : 0; return `<span class="${d >= 0 ? 'pos' : 'neg'}">${d >= 0 ? '+' : ''}${d.toFixed(1)}</span>`; }, v: o => { const n = h[o][0] + h[o][1] + h[o][2]; return n ? (h[o][3] - h[o][4]) / n : 0; }, num: 1},
     {h: 'Rivalry', k: o => `<a href="#rivalry/${encodeURIComponent(sel)}/${encodeURIComponent(o)}" class="mute">view</a>`, v: o => o},
   ], D.owners.filter(o => o !== sel)) + `</div>`;
@@ -436,7 +466,7 @@ function viewRecords() {
     {h: 'When', k: x => x.s + ' ' + ph(x), v: x => x.s + x.p},
   ], L, x => mqs(x.s, x.ph, x.p, x.o, x.opp));
   const mar = L => T([
-    {h: 'Winner', k: x => ownerLink(x.o), v: x => x.o},
+    {h: 'Winner', k: x => `<span class="nl">${ownerLink(x.o)}</span>`, v: x => x.o},
     {h: 'Score', k: x => f1(x.pts) + ' - ' + f1(x.oppts), v: x => x.pts, num: 1},
     {h: 'Margin', k: x => f1(x.pts - x.oppts), v: x => x.pts - x.oppts, num: 1},
     {h: 'Loser', k: x => ownerLink(x.opp), v: x => x.opp},
@@ -465,7 +495,7 @@ function viewRivalry(a, b) {
   const mine = g => g.a === a ? [g.ap, g.hp] : [g.hp, g.ap];
   const wa = gs.filter(g => mine(g)[0] > mine(g)[1]).length, wb = gs.filter(g => mine(g)[0] < mine(g)[1]).length;
   const dA = gs.reduce((s, g) => s + mine(g)[0] - mine(g)[1], 0);
-  const matrix = `<table class="heat"><tr><th></th>${D.owners.map(o => `<th style="text-align:center">${o}</th>`).join('')}</tr>` +
+  const matrix = `<table class="heat"><tr><th></th>${D.owners.map(o => `<th style="text-align:center"><span class="fn">${o}</span><span class="ab">${o.slice(0,3)}</span></th>`).join('')}</tr>` +
     D.owners.map(r => `<tr><td>${ownerLink(r)}</td>` + D.owners.map(c => {
       if (r === c) return '<td style="background:#0c0f18"></td>';
       const x = D.h2h[r][c], n = x[0] + x[1] + x[2], p = n ? (x[0] + x[2] / 2) / n : .5;
@@ -481,7 +511,7 @@ function viewRivalry(a, b) {
     {h: 'When', k: g => g.s + ' ' + ph(g), v: g => g.s + String(g.p).padStart(2, '0')},
     {h: a, k: g => f1(mine(g)[0]), v: g => mine(g)[0], num: 1},
     {h: b, k: g => f1(mine(g)[1]), v: g => mine(g)[1], num: 1},
-    {h: 'Winner', k: g => ownerCell(mine(g)[0] > mine(g)[1] ? a : mine(g)[0] < mine(g)[1] ? b : a) + (mine(g)[0] === mine(g)[1] ? ' (tie)' : ''), v: g => mine(g)[0] - mine(g)[1]},
+    {h: 'Winner', k: g => '<span class="nl">' + ownerCell(mine(g)[0] > mine(g)[1] ? a : mine(g)[0] < mine(g)[1] ? b : a) + '</span>' + (mine(g)[0] === mine(g)[1] ? ' (tie)' : ''), v: g => mine(g)[0] - mine(g)[1]},
     {h: 'Margin', k: g => f1(Math.abs(mine(g)[0] - mine(g)[1])), v: g => Math.abs(mine(g)[0] - mine(g)[1]), num: 1},
   ], gs, g => mqs(g.s, g.ph, g.p, g.a, g.h)) : '<div class="mute">No games played between these two.</div>') + `</div>
   <div class="section"><div class="section-title">All matchups (row owner's record vs column; click a cell)</div>${matrix}</div>`;
@@ -649,9 +679,9 @@ function viewRecap(season, wkArg) {
     {h: 'Owner', k: r => ownerLink(r.o) + (mark[r.o] === 'y' ? ' <span class="clinch y" title="Clinched a playoff spot">y</span>' : mark[r.o] === 'e' ? ' <span class="clinch e" title="Eliminated from playoff contention">e</span>' : ''), v: r => r.o},
     {h: 'Record', k: r => rec(r.w, r.l, r.t), v: r => r.w, num: 1},
     {h: 'PF', k: r => f0(r.pf), v: r => r.pf, num: 1},
-    {h: 'PF/G', k: r => f1(r.pf / (r.w + r.l + r.t)), v: r => r.pf / (r.w + r.l + r.t), num: 1},
-    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1},
-    {h: 'PA/G', k: r => f1(r.pa / (r.w + r.l + r.t)), v: r => r.pa / (r.w + r.l + r.t), num: 1},
+    {h: 'PF/G', k: r => f1(r.pf / (r.w + r.l + r.t)), v: r => r.pf / (r.w + r.l + r.t), num: 1, hm: 1},
+    {h: 'PA', k: r => f0(r.pa), v: r => r.pa, num: 1, hm: 1},
+    {h: 'PA/G', k: r => f1(r.pa / (r.w + r.l + r.t)), v: r => r.pa / (r.w + r.l + r.t), num: 1, hm: 1},
     ...(showSos ? [{h: 'Rem. SOS', k: r => sos[r.o] ? (sos[r.o].v * 100).toFixed(0) + '% <span class="mute">(' + sos[r.o].n + ' g)</span>' : '-', v: r => sos[r.o] ? sos[r.o].v : 0, num: 1}] : []),
     {h: '+/-', k: r => r.mv > 0 ? `<span class="up">▲${r.mv}</span>` : r.mv < 0 ? `<span class="down">▼${-r.mv}</span>` : '<span class="mute">-</span>', v: r => r.mv, num: 1},
   ], curRows, null, r => N && r.rk === N && N < curRows.length ? 'cut' : '') + `<div class="note">${N ? `Top ${N} make the playoffs (dashed line). ` : ''}<span class="clinch y">y</span> clinched, <span class="clinch e">e</span> eliminated (ties count as undecided).${showSos ? ' Rem. SOS = average all-play win % of remaining opponents; higher is harder.' : ''}</div>` : `<div class="mute" style="padding:14px 4px">Standings post when ${wkLabel(season, wk)} ends.</div>`) + `</div>
@@ -680,7 +710,7 @@ function viewRecap(season, wkArg) {
     {h: 'Owner', k: x => ownerLink(x.o), v: x => x.o},
     ...(hasGp ? [{h: 'FPts/G', k: x => f1(ppg(x)), v: x => ppg(x), num: 1}, {h: 'Games', k: x => x.gp, v: x => x.gp, num: 1}] : []),
     {h: 'FPts', k: x => f0(x.pts), v: x => x.pts, num: 1},
-    {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1},
+    {h: 'Wks counted', k: x => x.wks, v: x => x.wks, num: 1, hm: 1},
   ], leaders) + `<div class="note">Ranked by FPts per game to adjust for schedule differences; players need at least ${minGp} games to qualify. Weeks a player sat on the bench or was on someone else's team are not counted, so these are not full-season totals.</div></div>
   </div>
   <div class="section"><div class="section-title">Power rankings${done ? ' after ' + wkLabel(season, done) : ''}</div>` +
