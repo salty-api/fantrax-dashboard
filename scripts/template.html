@@ -224,7 +224,11 @@ const pct = (w, l, t) => { const g = w + l + t; return g ? ((w + t / 2) / g * 10
 const rec = (w, l, t) => w + '-' + l + (t ? '-' + t : '');
 const ph = g => (g.ph === 'playoff' ? 'Playoffs' : 'Wk ' + g.p);
 const slug = o => o.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const logo = o => `<img class="logo" src="logos/${slug(o)}.webp" alt="" onerror="this.style.display='none'">`;
+// Season-specific logo (logos/<season>/<owner>.webp) when a season is given, falling back to the default logos/<owner>.webp.
+// window.LS is the season of the view being drawn, set only when it is the latest season (see render / viewRecap).
+const logoImg = (o, se, cls) => { const s = slug(o); return se ? `<img class="${cls}" src="logos/${se}/${s}.webp" data-s="${s}" alt="" onerror="logoErr(this)">` : `<img class="${cls}" src="logos/${s}.webp" alt="" onerror="this.style.display='none'">`; };
+function logoErr(i) { if (i.dataset.fb) { i.style.display = 'none'; return; } i.dataset.fb = 1; i.src = 'logos/' + i.dataset.s + '.webp'; }
+const logo = (o, se = window.LS) => logoImg(o, se, 'logo');
 const ownerCell = o => `${logo(o)}<span class="name">${o}</span>`;
 const ownerLink = o => `<a href="#owner/${encodeURIComponent(o)}" style="color:inherit;text-decoration:none">${ownerCell(o)}</a>`;
 
@@ -266,7 +270,7 @@ function openMatch(s, phs, p, a, h) {
   const series = hist.length < (live ? 1 : 2) ? 'First meeting' : wA === wH ? `Series tied ${wA}-${wH}${tt ? '-' + tt : ''}` : `${wA > wH ? g.a : g.h} leads the series ${Math.max(wA, wH)}-${Math.min(wA, wH)}${tt ? '-' + tt : ''}`;
   const A = side(g.a, g.ap, g.ap > g.hp, g.apx), H = side(g.h, g.hp, g.hp > g.ap, g.hpx);
   const mv = [...A.ps, ...H.ps].sort((x, y) => y[4] - x[4])[0];
-  const hd = (X, right) => { const big = `<img class="mlogo" src="logos/${slug(X.o)}.webp" alt="" onerror="this.style.display='none'">`, txt = `<div class="mtxt"><div class="nm">${X.o}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`; return `<div class="mside${right ? ' r' : ''}">${right ? txt + big : big + txt}</div>`; };
+  const hd = (X, right) => { const big = logoImg(X.o, s === lastSeason ? s : null, 'mlogo'), txt = `<div class="mtxt"><div class="nm">${X.o}</div><div class="tot ${X.win ? 'w' : 'l'}">${f1(X.pts)}</div>${pxs(X.px)}</div>`; return `<div class="mside${right ? ' r' : ''}">${right ? txt + big : big + txt}</div>`; };
   document.getElementById('mb').innerHTML = `<button class="mx" onclick="closeMatch()">×</button>
     <div class="mhead">${hd(A, 0)}<div class="vs">vs</div>${hd(H, 1)}</div>
     <div class="msub">${g.s} · ${wkLabel(g.s, g.wk)} ${live ? '' : ' · ' + (g.ap === g.hp ? 'Tie' : `${g.ap > g.hp ? g.a : g.h} won by ${f1(Math.abs(g.ap - g.hp))}`)}${mv ? ` · Top scorer: ${pname(mv[3])} (${f1(mv[4])})` : ''} · counted lineup only</div>
@@ -334,6 +338,7 @@ function finishGrid() {
 
 function viewSeasons(sel) {
   sel = sel || lastSeason;
+  window.LS = sel === lastSeason ? sel : null;
   const rows = D.rows.filter(r => r.s === sel).sort((a, b) => a.rk - b.rk);
   const po = FG.filter(g => g.s === sel && g.ph === 'playoff');
   const rounds = [...new Set(po.map(g => g.p))].sort((a, b) => a - b);
@@ -539,6 +544,7 @@ function poN(season) {  // playoff field size: teams in round 1 (falls back to t
 }
 function viewRecap(season, wkArg) {
   season = pwSeasons.includes(season) ? season : pwSeasons[pwSeasons.length - 1];
+  window.LS = season === lastSeason ? season : null;
   const wks = [...new Set(D.pw.filter(x => x[0] === season).map(x => x[1]))].sort((a, b) => a - b);
   const wk = wks.includes(+wkArg) ? +wkArg : wks[wks.length - 1];
   window._rs = [season, wk]; window._rwks = wks;
@@ -851,7 +857,7 @@ function render() {
   const [tab, x, y] = (location.hash.slice(1) || 'recap').split('/');
   const t = TABS.find(v => v[0] === tab) ? tab : 'recap';
   charts.splice(0).forEach(c => c.destroy());
-  tid = 0;
+  tid = 0; window.LS = null;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
   const v = {alltime: () => viewAlltime(), seasons: () => viewSeasons(x), owner: () => viewOwner(x), records: () => viewRecords(), rivalry: () => viewRivalry(x, y), recap: () => viewRecap(x, y), whohas: () => viewWho(x)}[t]();
   document.getElementById('panels').innerHTML = `<div class="tab-panel active">${v}</div>`;
