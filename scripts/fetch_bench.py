@@ -56,8 +56,13 @@ def main():
         try:
             page, rows = 1, []
             while True:
-                d = call(lid, "getPlayerStats", {"statusOrTeamFilter": "ALL_TAKEN", "timeframeTypeCode": "BY_PERIOD", "period": str(p),
-                                                  "maxResultsPerPage": "500", "pageNumber": str(page)})
+                # BY_PERIOD ignores `period` once a week is over; BY_DATE with the week's own dates works for any week
+                pe = datetime.date.fromisoformat(end)
+                ps = datetime.date.fromisoformat(ends[str(p - 1)]) + datetime.timedelta(days=1) if str(p - 1) in ends else pe - datetime.timedelta(days=6)
+                d = call(lid, "getPlayerStats", {"statusOrTeamFilter": "ALL_TAKEN", "timeframeTypeCode": "BY_DATE", "startDate": ps.isoformat(),
+                                                  "endDate": pe.isoformat(), "maxResultsPerPage": "500", "pageNumber": str(page)})
+                hdr = [h.get("shortName") for h in d["tableHeader"]["cells"]]
+                assert hdr[:3] == ["Sta", "Ros", "FPts"], f"unexpected columns {hdr[:3]}"
                 rows += d["statsTable"]
                 if page >= d["paginatedResultSet"]["totalNumPages"]:
                     break
@@ -68,9 +73,9 @@ def main():
         got = []
         for r in rows:
             c = r["cells"]
-            tid, pid = c[1].get("teamId"), r["scorer"]["scorerId"]
+            tid, pid = c[0].get("teamId"), r["scorer"]["scorerId"]  # BY_DATE columns: Sta, Ros, FPts, FP/G (no Rk)
             if tid and (tid, pid) not in counted[p]:
-                got.append({"season": season, "period": p, "team_id": tid, "player_id": pid, "fpts": num(c[3]["content"]), "status": c[2]["content"]})
+                got.append({"season": season, "period": p, "team_id": tid, "player_id": pid, "fpts": num(c[2]["content"]), "status": c[1]["content"]})
         if got:
             old = [r for r in old if not (r["season"] == season and int(r["period"]) == p)]
             new += got

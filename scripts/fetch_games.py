@@ -57,7 +57,14 @@ def main():
         if p in have and not recent:
             continue
         try:
-            snap = fetch_all(lid, {"timeframeTypeCode": "BY_PERIOD", "period": str(p)})
+            # BY_PERIOD ignores `period` once a week is over (returns the current week, so a finished week
+            # would be wiped to nothing); BY_DATE with the week's own dates works for any week.
+            pe = datetime.date.fromisoformat(end)
+            ps = datetime.date.fromisoformat(ends[str(p - 1)]) + datetime.timedelta(days=1) if str(p - 1) in ends else pe - datetime.timedelta(days=6)
+            snap = fetch_all(lid, {"timeframeTypeCode": "BY_DATE", "startDate": ps.isoformat(), "endDate": pe.isoformat()})
+            if not snap or not any(r["g"] for r in snap.values()):
+                print(f"period {p}: no games returned, keeping existing rows")
+                continue
         except Exception as e:  # nice-to-have; never break the refresh
             print(f"period {p}: skipped ({e})")
             continue
